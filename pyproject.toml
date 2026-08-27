@@ -1,0 +1,9 @@
+[project]
+name = "formal-project-bootstrap"
+version = "0.5.0"
+description = "A formal operating substrate for bounded autonomous agent projects."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.ruff]
+line-length = 100

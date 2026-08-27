@@ -1,0 +1,45 @@
+name: Implementation work
+description: Bounded implementation work under an existing formal contract.
+title: "[implementation] "
+labels: ["implementation"]
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What condition should change?
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Authority / parent intent
+      description: Link the controlling definition, PRD, contract, or parent issue.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and exclusions
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / blockers
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+    validations:
+      required: true
+  - type: textarea
+    id: effects
+    attributes:
+      label: Allowed and protected effects
