@@ -1,0 +1,36 @@
+name: Normative change
+description: Propose a change to the bootstrap's formal operating contract.
+title: "[normative] "
+labels: ["normative-change"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Observed failure mode
+      description: What evidence shows the current formal model is insufficient?
+    validations:
+      required: true
+  - type: textarea
+    id: existing
+    attributes:
+      label: Existing mechanisms considered
+      description: Explain why reference, binding, specialization, constraint, projection, qualification, or composition does not close the gap.
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed irreducible distinction
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: Syntax, schema, behavior, semantics, authority, and evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: conformance
+    attributes:
+      label: Required conformance/evidence

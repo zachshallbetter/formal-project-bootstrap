@@ -1,0 +1,32 @@
+name: Formal contradiction
+description: Record incompatible claims without silently reconciling them.
+title: "[contradiction] "
+labels: ["contradiction"]
+body:
+  - type: textarea
+    id: sources
+    attributes:
+      label: Conflicting sources
+      description: Name exact artifacts, versions, and relevant sections.
+    validations:
+      required: true
+  - type: textarea
+    id: conflict
+    attributes:
+      label: Contradiction
+      description: State the incompatible claims without resolving them.
+    validations:
+      required: true
+  - type: textarea
+    id: precedence
+    attributes:
+      label: Current precedence
+      description: Which source controls under AUTHORITY.md, if determinable?
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact / blocked work
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence

@@ -1,0 +1,60 @@
+{
+  "projectId": "<PROJECT_ID>",
+  "projectName": "<PROJECT_NAME>",
+  "profileVersion": "0.5.0",
+  "profileStatus": "provisional",
+  "intentRef": "PROJECT_INTENT.md",
+  "authorityRef": "docs/AUTHORITY_MODEL.md",
+  "bindingsRef": "bindings/PROJECT_BINDINGS.yaml",
+  "contextSourcesRef": "CONTEXT_SOURCES.json",
+  "operatingMode": "new|existing",
+  "executionProvider": {
+    "name": "<PROVIDER_NAME>",
+    "workGraph": "<ADAPTER_OR_SYSTEM>",
+    "repository": "<ADAPTER_OR_SYSTEM>",
+    "dispatch": "<ADAPTER_OR_SYSTEM>",
+    "verification": "<ADAPTER_OR_SYSTEM>",
+    "protection": "<ADAPTER_OR_SYSTEM>",
+    "observability": "<OPTIONAL>"
+  },
+  "serviceOperations": [
+    {
+      "service": "<SERVICE>",
+      "interface": "official-cli|official-api|connector",
+      "allowedEnvironments": [
+        "local",
+        "staging"
+      ],
+      "allowedEffects": [
+        "read",
+        "reversible-write"
+      ],
+      "protectedEffects": [
+        "production-deploy",
+        "credential-create",
+        "billing-change"
+      ]
+    }
+  ],
+  "authorityBindings": {
+    "projectMutation": "<ACTOR_OR_ROLE>",
+    "qualification": "<ACTOR_OR_ROLE>",
+    "promotion": "<ACTOR_OR_ROLE>",
+    "productionOperation": "<ACTOR_OR_ROLE>",
+    "deviation": "<ACTOR_OR_ROLE>"
+  },
+  "autonomy": {
+    "frontierReselection": true,
+    "continueOnLocalizedBlocker": true,
+    "maxConcurrentMutationClaims": 2,
+    "humanEscalation": "decision-boundaries-only"
+  },
+  "contextPolicy": {
+    "compiledContextRequired": true,
+    "generatedContextNormative": false,
+    "requireContextLock": true,
+    "refreshOnMaterialSourceChange": true
+  },
+  "profiles": [],
+  "formalResourceManifest": "FORMAL_RESOURCE_MANIFEST.json"
+}

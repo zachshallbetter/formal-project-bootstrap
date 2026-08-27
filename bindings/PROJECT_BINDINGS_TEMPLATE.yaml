@@ -1,0 +1,27 @@
+project:
+  id: "<PROJECT_ID>"
+  name: "<PROJECT_NAME>"
+
+concept_bindings:
+  - local: "<LOCAL_CONCEPT>"
+    source: "<SOURCE_ID>"
+    imported: "<SOURCE_CONCEPT>"
+    relation: "exact|equivalent|constrained|extended|analogue|conflicting|unmapped"
+    authority: "<CANONICAL_SOURCE>"
+    compatibility_effect: "none|semantic-change|authority-change|evidence-change|unknown"
+    notes: ""
+
+authority_bindings:
+  - effect: "<PROTECTED_EFFECT>"
+    holder: "<ACTOR_OR_ROLE>"
+    scope: "<SCOPE>"
+    expires: null
+
+provider_bindings:
+  work_graph: "<SYSTEM>"
+  repository: "<SYSTEM>"
+  dispatch: "<SYSTEM>"
+  verification: "<SYSTEM>"
+  protection: "<SYSTEM>"
+
+deviations: []
