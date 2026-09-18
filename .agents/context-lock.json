@@ -1,6 +1,6 @@
 {
   "format": "2",
-  "generatorVersion": "0.5.0",
+  "generatorVersion": "0.5.1",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "repositoryState": {
@@ -8,8 +8,18 @@
     "validationRole": "provenance",
     "repositories": []
   },
-  "aggregateSourceDigest": "443017db69c4efade48e90d7dfd5464a7f2bff56b67218297cb251631d50d87e",
+  "aggregateSourceDigest": "b3a01693842d5d5d7f39a4b598d2cbe49118ec5378015b81c3a757dc7284e946",
   "sources": [
+    {
+      "path": ".agents/llms-fpb.txt",
+      "bytes": 8090,
+      "sha256": "a0c4fbd572cead906403a5ecf1738fcf31662b3331a90f8e72de32d05044e054"
+    },
+    {
+      "path": ".agents/llms-full-fpb.txt",
+      "bytes": 168500,
+      "sha256": "787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610"
+    },
     {
       "path": ".agents/skills/compile-context/SKILL.md",
       "bytes": 561,
@@ -87,8 +97,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 3056,
-      "sha256": "c599d33cfa649bace0bf0d8e8f7170168c3f5dca2c3bd17e517b4b4ec4ae365e"
+      "bytes": 4066,
+      "sha256": "06640b82f7721b01aa0017a2ab012e8efcf21c9b5fdf42966a4c6fc3c4b12c76"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -133,12 +143,12 @@
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
       "bytes": 1714,
-      "sha256": "5022b4369fcdc69ca1016b4b70becb8da40794c7449929156495fdbcb02b3494"
+      "sha256": "dc85c7470f335570e83103d544031e36cba6725bfb634b043fe9eb2f162f0d10"
     },
     {
       "path": "README.md",
       "bytes": 8413,
-      "sha256": "b83665cddb246b89c7ade93979c62dd0a68b4e1e7aaf7f5b26fd3f3727f432e6"
+      "sha256": "a053425280beb50c2e2c45e8cd732aa746a9451fe7b0a34629d9dff3fc9d5fe2"
     },
     {
       "path": "SECURITY.md",
@@ -153,7 +163,7 @@
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "a0ad50640139a524f86591157145bf1d4674ea9c065bfea21558f0f7b04430c8"
+      "sha256": "aba951626c8690ce493cbc8f018205bb468003f61fbf00fd3d3c71cebabc0177"
     },
     {
       "path": "VERSIONING.md",
@@ -182,8 +192,8 @@
     },
     {
       "path": "docs/AUTHORITY_MODEL.md",
-      "bytes": 1806,
-      "sha256": "88b1e04c7a04f1ab69b621ab7f469307485a251859f32f55649ddc5d7a5f0135"
+      "bytes": 2592,
+      "sha256": "abc1aac1d90b78a5e084549ef4f15e3a299f0894e521040f85261ea55acf5fc0"
     },
     {
       "path": "docs/BOOTSTRAP_SEQUENCE.md",
@@ -222,8 +232,8 @@
     },
     {
       "path": "docs/FORMAL_RESOURCES.md",
-      "bytes": 1388,
-      "sha256": "97ed475de695455df13b2af1e64adb55d5f3819d0246d84f14ff4d4a747a55ae"
+      "bytes": 2845,
+      "sha256": "bf93374182ba0212c7e64328a751c9dc3cfacd816779f983eca50f9157851289"
     },
     {
       "path": "docs/INITIAL_EPICS_TEMPLATE.md",
@@ -242,8 +252,8 @@
     },
     {
       "path": "docs/NEGATIVE_KNOWLEDGE.md",
-      "bytes": 611,
-      "sha256": "509a811ac1b5e649fa17495f5671b38c92e58f83b4f015c0f170b9e9f5261ac2"
+      "bytes": 2169,
+      "sha256": "01ef93bc7c5b75ce991d6ed0cd78faba1d8e6cdc8f1b43b10231025a0975a91e"
     },
     {
       "path": "docs/NEGATIVE_RESULTS.md",
@@ -322,8 +332,13 @@
     },
     {
       "path": "scripts/check-all.py",
-      "bytes": 726,
-      "sha256": "5cefa869d4dab91f4a9e97f45e5f68c7df92332f77dc259e9a2e6a2fb7b47946"
+      "bytes": 787,
+      "sha256": "87f1790333077e95d0800cc6b9ace0aa66d4a0f36bf7a18918a608b2aa66dffb"
+    },
+    {
+      "path": "scripts/check-negative-results.py",
+      "bytes": 7397,
+      "sha256": "ca0766679ddbaec8045f3da28a40d2a4837d0b6789dba5e44b499980d883946b"
     },
     {
       "path": "scripts/gen-context.py",

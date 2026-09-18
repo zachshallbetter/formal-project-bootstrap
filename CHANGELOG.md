@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.1 — Instrument stratification and upstream-first repair
+
+- Authority model: added instrument stratification — wherever two record types
+  attach to one consequential effect, the authorizing instrument is declared and
+  the weaker grants nothing; "authorization by the cheaper record" named as an
+  illegal pattern (incident provenance: semantic-cms NR-scms-001).
+- Formal resources: added consumption model (pinned dependencies; a synced copy
+  is a cache of the pin, not a fork), upstream-first repair (re-pin as a
+  compatibility event), and upstream debt subordinated to the deviation
+  instrument (deviation authorizes first; the debt record references it and
+  ages; the ratchet is memory and pressure, never permission).
+- Negative knowledge: named two drafting failure classes (authorization by the
+  cheaper record; descriptive-to-normative contamination).
+- Doc-level, additive release: no schema, script, or required-file changes;
+  projects on 0.5.0 re-pin without structural migration.
+
 ## 0.5.0 — Existing-project adoption
 
 - Added a first-class existing-project adoption/reconciliation contract.

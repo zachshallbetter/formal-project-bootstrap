@@ -1,19 +1,39 @@
 {
   "files": [
     {
-      "bytes": 11912,
+      "bytes": 6148,
+      "path": ".DS_Store",
+      "sha256": "93b11ce6edcf086cfa5c332ba4d860ee79dd64dd27032e34cf583d864a94aff1"
+    },
+    {
+      "bytes": 6148,
+      "path": ".agents/.DS_Store",
+      "sha256": "6d5132834d93f56d2389300daed43ee107995c8f67bc5b16181d42f93137db6f"
+    },
+    {
+      "bytes": 12080,
       "path": ".agents/context-lock.json",
-      "sha256": "70d67e9404019c635789a058cb3963197553bd04459dfae9e5684b786f27d90b"
+      "sha256": "b64847b0cc06dac400790dc6151a88fff13ddc8e73a7d204bd049d547efc0215"
     },
     {
-      "bytes": 349094,
+      "bytes": 8090,
+      "path": ".agents/llms-fpb.txt",
+      "sha256": "a0c4fbd572cead906403a5ecf1738fcf31662b3331a90f8e72de32d05044e054"
+    },
+    {
+      "bytes": 168500,
+      "path": ".agents/llms-full-fpb.txt",
+      "sha256": "787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610"
+    },
+    {
+      "bytes": 357905,
       "path": ".agents/llms-full.txt",
-      "sha256": "c5d0e2d58f825f41d69db2990eb7e1586f8ec3914149ee41c2ea95a5d509f0a8"
+      "sha256": "1e50e2e58a15254074844c20fc3b2c3263f7bf8318a5a0df4ec2bf066925861d"
     },
     {
-      "bytes": 8312,
+      "bytes": 8432,
       "path": ".agents/llms.txt",
-      "sha256": "35f169fb797a6f9c3e9a57d3e743c6e66a71c24bd7a77ec5b873ec08e4bbc31e"
+      "sha256": "f412543e540d93dba7bf66c9c13db3cb2fcaf108ad57fbb3bca5988aaa8b6a62"
     },
     {
       "bytes": 561,
@@ -266,9 +286,9 @@
       "sha256": "c27fc5594ef31ff4574582b4c6f2e69dc684bb897b9f9455fce1b50ca44f968a"
     },
     {
-      "bytes": 1005,
+      "bytes": 2169,
       "path": "docs/NEGATIVE_KNOWLEDGE.md",
-      "sha256": "cb1e5e5b1f3748fc9f879ca9e5e3914a043c44c707ee082dc3fee1878a79889f"
+      "sha256": "01ef93bc7c5b75ce991d6ed0cd78faba1d8e6cdc8f1b43b10231025a0975a91e"
     },
     {
       "bytes": 2132,
@@ -346,9 +366,14 @@
       "sha256": "a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987"
     },
     {
-      "bytes": 726,
+      "bytes": 787,
       "path": "scripts/check-all.py",
-      "sha256": "5cefa869d4dab91f4a9e97f45e5f68c7df92332f77dc259e9a2e6a2fb7b47946"
+      "sha256": "87f1790333077e95d0800cc6b9ace0aa66d4a0f36bf7a18918a608b2aa66dffb"
+    },
+    {
+      "bytes": 7397,
+      "path": "scripts/check-negative-results.py",
+      "sha256": "ca0766679ddbaec8045f3da28a40d2a4837d0b6789dba5e44b499980d883946b"
     },
     {
       "bytes": 7015,

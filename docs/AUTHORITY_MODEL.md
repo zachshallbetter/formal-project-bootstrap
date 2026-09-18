@@ -10,6 +10,14 @@ CAPABILITY != PERMISSION != EVIDENCE != QUALIFICATION != PROMOTION AUTHORITY
 
 Tool access, repository access, model capability, expertise, confidence and peer consensus do not create authority.
 
+## Instrument stratification
+
+Wherever two record types can attach to one consequential effect, the governing state declares which instrument **authorizes** the effect and which merely observes, remembers, or pressures. The weaker instrument grants nothing.
+
+A debt entry, receipt, evidence record, observation, or claim never substitutes for the authorizing instrument, however faithfully it is recorded. **Authorization by the cheaper record** is a named illegal pattern; every normative change is checked against it.
+
+(Incident provenance: a debt-ratchet clause once permitted deploying a locally patched dependency merely by recording the debt, bypassing the deviation requirement — caught in owner review, not by drafting or verification. semantic-cms NR-scms-001, 2026-08-28.)
+
 ## Effect classes
 
 ```text
