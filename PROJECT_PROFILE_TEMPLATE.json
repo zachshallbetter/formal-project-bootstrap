@@ -1,7 +1,7 @@
 {
   "projectId": "<PROJECT_ID>",
   "projectName": "<PROJECT_NAME>",
-  "profileVersion": "0.5.0",
+  "profileVersion": "0.5.1",
   "profileStatus": "provisional",
   "intentRef": "PROJECT_INTENT.md",
   "authorityRef": "docs/AUTHORITY_MODEL.md",

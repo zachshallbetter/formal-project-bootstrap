@@ -54,6 +54,26 @@ Prefer immutable revisions or content digests. `latest` is not a pin.
 
 If an immutable revision cannot be established, record the limitation instead of fabricating one.
 
+## Consumption
+
+Resources are consumed as pinned dependencies: a package or crate dependency, a schema-pack import, or a mechanical sync from the pinned revision. A synced copy is a cache of the pin, not a fork.
+
+Local modification of consumed code or specifications is prohibited except under a recorded deviation (see the authority model).
+
+## Upstream-first repair
+
+When a capability is needed, broken, or missing in a resource, the change is made in the owning project under that project's own authority and process; the consuming project then re-pins the new revision.
+
+A re-pin is a compatibility event: it carries a declared compatibility statement and may trigger re-qualification.
+
+## Upstream debt
+
+The debt record is memory and pressure, never permission.
+
+Deploying a locally patched resource requires the deviation instrument **first** — owner-authorized, bounded, with the upstream fix landing as its reversal trigger. At deviation approval, the patch is captured as a diff against the owning project (a receipt, never a vendored fork) and a debt is registered (e.g. `records/upstream-debts.jsonl`, optional) **referencing the deviation**.
+
+Registered debts age: a standing warning that escalates, so neither the deviation nor its debt sits open indefinitely. Closing the debt (upstream fix landed, re-pinned) discharges the deviation. A deployed local patch without a live deviation is a violation however faithfully its debt is recorded.
+
 ## Missing companions
 
 Do not invent missing schemas, conformance fixtures, companion protocols, or research conclusions to make a resource look complete.

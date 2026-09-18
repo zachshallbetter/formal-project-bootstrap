@@ -1,4 +1,97 @@
 # PROJECT COMPILED CONTEXT
+Generator: 0.5.1
+Source digest: b3a01693842d5d5d7f39a4b598d2cbe49118ec5378015b81c3a757dc7284e946
+
+> Generated projection. Canonical sources remain authoritative.
+
+
+========================================================================
+FILE: .agents/llms-fpb.txt
+========================================================================
+
+# Project Context Index
+> Generator: 0.5.0
+> Source digest: `443017db69c4efade48e90d7dfd5464a7f2bff56b67218297cb251631d50d87e`
+
+> Generated projection. Canonical sources remain authoritative.
+
+- `.agents/skills/compile-context/SKILL.md` | 561 bytes | `10c8156d05da083eddb606769183d8cabf4f924c241a3e3b462ef76f7aecf28d`
+- `.agents/skills/coordinate-workers/SKILL.md` | 593 bytes | `6be105841accc1f67dc11e12541b3b343fa2029a0ff6e5085c907b36381ba57b`
+- `.agents/skills/operate-frontier/SKILL.md` | 725 bytes | `d3a6730cc1e450feb4840060025899d4a4d17d6c935a8b3ea57ee4302d651172`
+- `.agents/skills/reconcile-project/SKILL.md` | 648 bytes | `ed45e3b970480a0bed390757fef2d9abe2471bf37835d764f939022600995333`
+- `.agents/skills/verify-outcome/SKILL.md` | 599 bytes | `331bcc9c5179eef021d9edf48e76bedcaaef6fed17f97e91c6d20a20f1199117`
+- `.github/ISSUE_TEMPLATE/config.yml` | 45 bytes | `e71bea835ed1158881306294d96968f125b0b0c5eff66cd94df559336bd0b210`
+- `.github/ISSUE_TEMPLATE/contradiction.yml` | 869 bytes | `0121c80807bf626da11d55572b054c37a5ee9b81df21f68d4fa9cb3b05688b9e`
+- `.github/ISSUE_TEMPLATE/implementation.yml` | 1093 bytes | `90431f96bc760e862bdf3e2316fee4054cd58095edaaab7a4af7c350a0c7a411`
+- `.github/ISSUE_TEMPLATE/protocol-change.yml` | 1082 bytes | `8326f3fd31de252e6dd2ddcbc66d7069de275c16855efc03edf8cf54622d372d`
+- `.github/dependabot.yml` | 115 bytes | `214d940291cfd9b997df6bc72802aac3ddcbb4895843195a94453f97215075ca`
+- `.github/pull_request_template.md` | 520 bytes | `387755381fa073d8ccce6dbd45c54ad634d05c24153f0714724ebcae66ba6b3f`
+- `.github/workflows/ci.yml` | 917 bytes | `ef9e1f2e278246cf09031f45b48a70c3ba3b56dd6389378350acc2fc9efeb3f1`
+- `.github/workflows/release.yml` | 869 bytes | `c089b55dcbf975b443fe1fc85c6d81b45f1fa50c3c89e7ecb8122aa0eb6bfd28`
+- `AGENTS.md` | 6896 bytes | `cd8cbb05cc70b8d03f69bf45026ff70fdee09a264bb29d0ac4bcb4b753685caf`
+- `AUTHORITY.md` | 1436 bytes | `9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb`
+- `CHANGELOG.md` | 3056 bytes | `c599d33cfa649bace0bf0d8e8f7170168c3f5dca2c3bd17e517b4b4ec4ae365e`
+- `CODE_OF_CONDUCT.md` | 404 bytes | `7592f346c7f6aaa166bc865c2ff6e1c7b06bdac73440947471f19bd140755649`
+- `CONTEXT_SOURCES_TEMPLATE.json` | 914 bytes | `1a0e0db180b061204f20b4a550f8b634fb2a220569592bd63fed13eb875dda0e`
+- `CONTRIBUTING.md` | 804 bytes | `48dbdd4f2ce101462939d3d825e2885cb0cfb3d047e03134be1bff9848d3e9c7`
+- `FORMAL_RESOURCE_MANIFEST_TEMPLATE.json` | 277 bytes | `9327b7c5db0d6442e2bb829d8cf0447db2192a7d88eed9914d4e6ab60bfe52f4`
+- `GOVERNANCE.md` | 1154 bytes | `ff29e964319543fc484a051487d1a5abd4a5f73d3419c38d1acd02a670927898`
+- `LICENSE.md` | 329 bytes | `9f76f776e9c50f3a29cca1a1a20c00f4a937c3e48c3ed089eef96544d4fc9645`
+- `NEW_AGENT_PROMPT.md` | 854 bytes | `eced591fb8fb893bba4426e254f44776cae1bf3f148a6e81a01402d427ad60a2`
+- `PROJECT_INTENT_TEMPLATE.md` | 1259 bytes | `b63c26018d4f9614ed8c7de14e002767a3e0d2d02b058ed26ab889e81d46440f`
+- `PROJECT_PROFILE_TEMPLATE.json` | 1714 bytes | `5022b4369fcdc69ca1016b4b70becb8da40794c7449929156495fdbcb02b3494`
+- `README.md` | 8413 bytes | `b83665cddb246b89c7ade93979c62dd0a68b4e1e7aaf7f5b26fd3f3727f432e6`
+- `SECURITY.md` | 729 bytes | `a2db8db78760d8b8b31a64b2bf573a40d03db8ea170f57201050cba37d6c4950`
+- `SUPPORT.md` | 455 bytes | `3c4f79ac4998cd7901854b0e896ea1a4853b454b485bb6315c90ab5b36f36a51`
+- `VERSION` | 6 bytes | `a0ad50640139a524f86591157145bf1d4674ea9c065bfea21558f0f7b04430c8`
+- `VERSIONING.md` | 1215 bytes | `23cbefd0c825d42c470916944c0945b82dbeeac85f609a8adc8a769a42bc8528`
+- `bindings/PROJECT_BINDINGS_TEMPLATE.yaml` | 670 bytes | `e091bb0730ec0e5e26eeeb6d7cb3312c88a23be508e1d4af8c5e0614551dcb2b`
+- `contracts/README.md` | 387 bytes | `574c6218c0c957efb2eb3bfa4bf51fbf3ab0165cc81a033a249d4ba4cc2af78e`
+- `docs/AGENT_CAPABILITIES.md` | 1095 bytes | `9dd7e5efd745a85880c8b428ab41d25c994c033e7f5d1376a6defd343cbfdb68`
+- `docs/ALIGNMENT.md` | 1588 bytes | `9e241f47e102b9feeb3b8e6bff3c95a146d69384f196eefc2327b363a96bf7a0`
+- `docs/AUTHORITY_MODEL.md` | 1806 bytes | `88b1e04c7a04f1ab69b621ab7f469307485a251859f32f55649ddc5d7a5f0135`
+- `docs/BOOTSTRAP_SEQUENCE.md` | 6140 bytes | `82d04fa96aa477837c64b61a7c5f9e7617d0e325ef3e205dbd037f6ff1e91d51`
+- `docs/CONFORMANCE.md` | 3027 bytes | `91a89475f94537685db35af38306d5455ee9bb30488fb5247527293a2e0320ba`
+- `docs/CONTEXT_COMPILATION.md` | 1601 bytes | `214a8af8fa1e25b6488f293d43842efce0225cf40aba460a8ae99d5c850d3599`
+- `docs/EVIDENCE_METHOD.md` | 1039 bytes | `a7422b9cc99adfc462a8c6d44ee883f9483c1127fbcaf0f44b1328d1d30fd4c9`
+- `docs/EXECUTION_PIPELINE.md` | 1861 bytes | `529c01ec25ac7d0552a19d591514244ec7bbe3f1966f1dd38d2c2f69494ba2db`
+- `docs/EXECUTION_PROVIDER_CONTRACT.md` | 1669 bytes | `e9587fea1bd67229f6588600512e6b9539d510ba000c0190b2c05f67eda0cf19`
+- `docs/EXISTING_PROJECT_ADOPTION.md` | 4530 bytes | `6cfaf7daa1669ed717571ecd43e3b5950151d39641d1adaff6a16843a954c6c7`
+- `docs/FORMAL_RESOURCES.md` | 1388 bytes | `97ed475de695455df13b2af1e64adb55d5f3819d0246d84f14ff4d4a747a55ae`
+- `docs/INITIAL_EPICS_TEMPLATE.md` | 1234 bytes | `c3e6414393bbfb7905b4113f10571a695204538c19bbab90b5a486e7ae6a3039`
+- `docs/LANDING_AND_PROMOTION.md` | 1135 bytes | `675a228edb135427a399e08c7fdf3a983a7802da5a20d63deb83af40fe366a23`
+- `docs/MULTI_AGENT_COORDINATION.md` | 2078 bytes | `c27fc5594ef31ff4574582b4c6f2e69dc684bb897b9f9455fce1b50ca44f968a`
+- `docs/NEGATIVE_KNOWLEDGE.md` | 611 bytes | `509a811ac1b5e649fa17495f5671b38c92e58f83b4f015c0f170b9e9f5261ac2`
+- `docs/NEGATIVE_RESULTS.md` | 2132 bytes | `8bc6f6625735e60d062e08c32f834252a3ae4e05307f855d6810a3f1372c8a4c`
+- `docs/RECOVERY.md` | 1115 bytes | `b084f0a4bbad4012bd9d2525a07239e38ff4f563bbdefbd8491518fec14882e9`
+- `docs/SKILLS_INDEX.md` | 763 bytes | `05da80f8e5564e351603f467963cf5820c5ddaf78187566c2da7d1abae2754a5`
+- `docs/STATUS.md` | 858 bytes | `d60b249cbfad130320e43e98a697f1a4a3ca0be6214ed8ee514ec7fde1d8eaac`
+- `docs/WORK_GRAPH.md` | 1790 bytes | `427012a108e0b551cf656690da51c74675d0aa99cb138b8d4cf61bfa32691a22`
+- `profiles/commercialization/PROFILE.yaml` | 392 bytes | `6006599d1b19c7e05eb1e91c11f167b6b208eb9a6df701b049e0acf527310bb1`
+- `profiles/commercialization/README.md` | 593 bytes | `dcf3a7722a3ddd37b3da716c7b6aafe0b4eb1fa3747ea22c38bcb8a4722a454b`
+- `profiles/commercialization/protocols/calp/PROTOCOL.md` | 19501 bytes | `c0392c0308e1ced596d290a3d11b4c6a09cfbfb3a02847a5b7845e86c7e20c01`
+- `profiles/commercialization/protocols/pgp/PROTOCOL.md` | 19237 bytes | `78999b3ec2dfbe340753f27aa9a6f74c979d8ca99b6494663016ae5623c5c497`
+- `pyproject.toml` | 222 bytes | `067f13910d35a368ae2b1c0e3b38ee481646bfa625743d1f2f75e99caed5cfa7`
+- `requirements-dev.txt` | 33 bytes | `42e59b5e5dc9e97d062b24e0296b7362736ea5ffa07d58cc48744969d370da01`
+- `schemas/agent-message.schema.json` | 2269 bytes | `88c346d6ce2cf34d3bba9f35e2ef54e77776707b125b22bbc4ecc910ac33bedc`
+- `schemas/context-lock.schema.json` | 2526 bytes | `395e44e6dcc74b3169463d96e5db4836befdd1cae8ffc19857645c4e8ea5993b`
+- `schemas/formal-resource-manifest.schema.json` | 1676 bytes | `465c3eae445d530087e1149d7f14e267400b32df00fa5b506e0b3af278a9b928`
+- `schemas/work-disposition.schema.json` | 2062 bytes | `a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987`
+- `scripts/check-all.py` | 726 bytes | `5cefa869d4dab91f4a9e97f45e5f68c7df92332f77dc259e9a2e6a2fb7b47946`
+- `scripts/gen-context.py` | 7015 bytes | `4cab5cf07c5a69e7afd728844393958223495e3c01d339c0c8d6dbde8bb51322`
+- `scripts/init-project.py` | 7380 bytes | `cf6621a3009cf11b2ace7b6e98e18ae26617fb4057b2592397943811f536bd2d`
+- `scripts/package-release.py` | 3221 bytes | `5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa`
+- `scripts/validate-bootstrap.py` | 4120 bytes | `b3881974ac4d1259a0fa084c1aa80bfcdc1af4b3873f05c9057697e61bb1fb95`
+- `scripts/validate-formal-files.py` | 1411 bytes | `bbb1f14e50d543401e82641551eaf505821df47370a2c9697272414524a1ab65`
+- `tests/test_repository.py` | 5818 bytes | `42ae14d8b4abadd820b83e093eb05ce375d9482fb4143c8ae1800d711d0f36b8`
+- `vendor/README.md` | 280 bytes | `d7ab6f7ffd70d64f61a8b36b8d12b691b1d3cc38c3d48b815bacd8d88bb4aeb0`
+
+
+========================================================================
+FILE: .agents/llms-full-fpb.txt
+========================================================================
+
+# PROJECT COMPILED CONTEXT
 Generator: 0.5.0
 Source digest: 443017db69c4efade48e90d7dfd5464a7f2bff56b67218297cb251631d50d87e
 
@@ -5498,6 +5591,6632 @@ def main() -> int:
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
     run(sys.executable, "scripts/package-release.py", "--output", "dist", "--verify-reproducible")
     print("OK all gates")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/gen-context.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Deterministically compile canonical project sources into agent context projections."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+POLICY_PATH = ROOT / "CONTEXT_SOURCES.json"
+FALLBACK_POLICY_PATH = ROOT / "CONTEXT_SOURCES_TEMPLATE.json"
+AGENTS = ROOT / ".agents"
+
+
+def sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def run_git(path: Path, args: list[str]) -> str | None:
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(path), *args],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except Exception:
+        return None
+
+
+def one_repo_state(path: Path, rel: str) -> dict | None:
+    commit = run_git(path, ["rev-parse", "HEAD"])
+    if not commit:
+        return None
+    branch = run_git(path, ["branch", "--show-current"]) or None
+    status = run_git(path, ["status", "--porcelain"])
+    remote = run_git(path, ["remote", "get-url", "origin"])
+    return {
+        "path": rel,
+        "commit": commit,
+        "branch": branch,
+        "dirty": bool(status),
+        "remote": remote,
+    }
+
+
+def repository_state() -> dict:
+    """Capture provenance only; context validity is source-digest based.
+
+    Exact HEAD cannot be a validity predicate for tracked generated files without
+    creating a self-reference. We still retain the observed Git state so agents can
+    identify the checkout that produced the projection.
+    """
+    root_state = one_repo_state(ROOT, ".")
+    if not root_state:
+        return {"available": False, "validationRole": "provenance", "repositories": []}
+
+    repos = [root_state]
+    raw = run_git(ROOT, ["submodule", "status", "--recursive"])
+    if raw:
+        for line in raw.splitlines():
+            parts = line.strip().lstrip("-+U").split()
+            if len(parts) < 2:
+                continue
+            rel = parts[1]
+            state = one_repo_state(ROOT / rel, rel)
+            if state:
+                repos.append(state)
+            else:
+                repos.append(
+                    {
+                        "path": rel,
+                        "commit": parts[0],
+                        "branch": None,
+                        "dirty": None,
+                        "remote": None,
+                    }
+                )
+    return {"available": True, "validationRole": "provenance", "repositories": repos}
+
+
+def load_policy() -> dict:
+    path = POLICY_PATH if POLICY_PATH.exists() else FALLBACK_POLICY_PATH
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def source_files(policy: dict) -> list[tuple[str, bytes]]:
+    ex_dirs = set(policy["excludeDirectories"])
+    ex_paths = set(policy["excludePaths"])
+    exts = set(policy["includeExtensions"])
+    include_files = set(policy.get("includeFiles", []))
+    max_bytes = int(policy["maxFileBytes"])
+    include_vendor = bool(policy.get("includeVendor", True))
+    result: list[tuple[str, bytes]] = []
+
+    for path in ROOT.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        parts = rel.split("/")
+        if any(part in ex_dirs for part in parts[:-1]):
+            continue
+        if not include_vendor and parts[0] == "vendor":
+            continue
+        if rel in ex_paths:
+            continue
+        if rel not in include_files and path.suffix.lower() not in exts:
+            continue
+        if path.stat().st_size > max_bytes:
+            continue
+        try:
+            data = path.read_bytes()
+            data.decode("utf-8")
+        except Exception:
+            continue
+        result.append((rel, data))
+
+    return sorted(result, key=lambda item: item[0])
+
+
+def build() -> tuple[dict, str, str]:
+    policy = load_policy()
+    sources = source_files(policy)
+    entries = [
+        {"path": rel, "bytes": len(data), "sha256": sha(data)} for rel, data in sources
+    ]
+    aggregate = sha(
+        "\n".join(f"{entry['path']}:{entry['sha256']}" for entry in entries).encode()
+    )
+    repos = repository_state()
+    lock = {
+        "format": "2",
+        "generatorVersion": VERSION,
+        "root": ".",
+        "validityBasis": "aggregate-source-digest",
+        "repositoryState": repos,
+        "aggregateSourceDigest": aggregate,
+        "sources": entries,
+    }
+
+    index = [
+        "# Project Context Index",
+        f"> Generator: {VERSION}",
+        f"> Source digest: `{aggregate}`",
+        "",
+        "> Generated projection. Canonical sources remain authoritative.",
+        "",
+    ]
+    full = [
+        "# PROJECT COMPILED CONTEXT",
+        f"Generator: {VERSION}",
+        f"Source digest: {aggregate}",
+        "",
+        "> Generated projection. Canonical sources remain authoritative.",
+        "",
+    ]
+
+    for rel, data in sources:
+        digest = sha(data)
+        index.append(f"- `{rel}` | {len(data)} bytes | `{digest}`")
+        full.extend(["", "=" * 72, f"FILE: {rel}", "=" * 72, "", data.decode("utf-8")])
+
+    return lock, "\n".join(index) + "\n", "\n".join(full) + "\n"
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check", action="store_true")
+    args = parser.parse_args()
+
+    lock, index, full = build()
+    AGENTS.mkdir(parents=True, exist_ok=True)
+
+    if args.check:
+        lock_path = AGENTS / "context-lock.json"
+        if not lock_path.exists():
+            print("STALE: context lock missing", file=sys.stderr)
+            return 2
+        current = json.loads(lock_path.read_text(encoding="utf-8"))
+        if current.get("aggregateSourceDigest") != lock["aggregateSourceDigest"]:
+            print("STALE: source digest differs", file=sys.stderr)
+            return 2
+        if current.get("generatorVersion") != VERSION:
+            print("STALE: generator version differs", file=sys.stderr)
+            return 2
+        if not (AGENTS / "llms.txt").exists() or not (AGENTS / "llms-full.txt").exists():
+            print("STALE: generated corpus missing", file=sys.stderr)
+            return 2
+        if (AGENTS / "llms.txt").read_text(encoding="utf-8") != index:
+            print("STALE: llms.txt differs", file=sys.stderr)
+            return 2
+        if (AGENTS / "llms-full.txt").read_text(encoding="utf-8") != full:
+            print("STALE: llms-full.txt differs", file=sys.stderr)
+            return 2
+        print(f"OK {lock['aggregateSourceDigest']}")
+        return 0
+
+    (AGENTS / "context-lock.json").write_text(
+        json.dumps(lock, indent=2) + "\n", encoding="utf-8"
+    )
+    (AGENTS / "llms.txt").write_text(index, encoding="utf-8")
+    (AGENTS / "llms-full.txt").write_text(full, encoding="utf-8")
+    print(f"generated {len(lock['sources'])} sources {lock['aggregateSourceDigest']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/init-project.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Instantiate Formal Project Bootstrap into a new or existing project."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+
+COPY_FILES = ["AGENTS.md", "NEW_AGENT_PROMPT.md"]
+COPY_DIRS = ["schemas", ".agents/skills", "contracts"]
+COPY_DOCS = [
+    "AGENT_CAPABILITIES.md",
+    "ALIGNMENT.md",
+    "AUTHORITY_MODEL.md",
+    "BOOTSTRAP_SEQUENCE.md",
+    "CONFORMANCE.md",
+    "CONTEXT_COMPILATION.md",
+    "EVIDENCE_METHOD.md",
+    "EXECUTION_PIPELINE.md",
+    "EXECUTION_PROVIDER_CONTRACT.md",
+    "EXISTING_PROJECT_ADOPTION.md",
+    "FORMAL_RESOURCES.md",
+    "INITIAL_EPICS_TEMPLATE.md",
+    "LANDING_AND_PROMOTION.md",
+    "MULTI_AGENT_COORDINATION.md",
+    "NEGATIVE_KNOWLEDGE.md",
+    "RECOVERY.md",
+    "SKILLS_INDEX.md",
+    "WORK_GRAPH.md",
+]
+SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py"]
+RECORD_FILES = [
+    "evidence.jsonl",
+    "negative-results.jsonl",
+    "deviations.jsonl",
+    "alignment.jsonl",
+]
+
+
+def render_text(text: str, project_id: str, project_name: str) -> str:
+    return text.replace("<PROJECT_ID>", project_id).replace("<PROJECT_NAME>", project_name)
+
+
+def write_candidate(out: Path, rel: str, content: bytes, collisions: list[str]) -> None:
+    target = out / rel
+    if not target.exists():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
+        return
+    if target.read_bytes() == content:
+        return
+    candidate = out / ".formal-bootstrap" / "candidates" / rel
+    candidate.parent.mkdir(parents=True, exist_ok=True)
+    candidate.write_bytes(content)
+    collisions.append(rel)
+
+
+def copy_tree_non_destructive(src: Path, out: Path, rel: str, collisions: list[str]) -> None:
+    for path in sorted(src.rglob("*")):
+        if not path.is_file():
+            continue
+        child_rel = str(Path(rel) / path.relative_to(src))
+        write_candidate(out, child_rel, path.read_bytes(), collisions)
+
+
+def append_alignment(out: Path, collisions: list[str]) -> None:
+    if not collisions:
+        return
+    record = {
+        "type": "bootstrap_collision",
+        "status": "unresolved",
+        "paths": sorted(collisions),
+        "meaning": "Existing project content differed from bootstrap candidates and was preserved.",
+        "requiredAction": "Reconcile authority and synthesize deliberately; do not copy over existing canonical state blindly.",
+    }
+    with (out / "records/alignment.jsonl").open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, sort_keys=True) + "\n")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--name", required=True)
+    parser.add_argument("--id", required=True)
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--mode", choices=["new", "existing"], default="new")
+    parser.add_argument("--profile", action="append", default=[])
+    args = parser.parse_args()
+
+    out = Path(args.output).resolve()
+    if args.mode == "new" and out.exists() and any(out.iterdir()):
+        print(f"REFUSED: new-mode output is not empty: {out}", file=sys.stderr)
+        return 2
+    out.mkdir(parents=True, exist_ok=True)
+
+    if (out / ".formal-bootstrap.json").exists():
+        print("REFUSED: project is already marked as initialized", file=sys.stderr)
+        return 2
+
+    (out / "records").mkdir(parents=True, exist_ok=True)
+    for name in RECORD_FILES:
+        (out / "records" / name).touch(exist_ok=True)
+
+    collisions: list[str] = []
+
+    for rel in COPY_FILES:
+        content = render_text((ROOT / rel).read_text(encoding="utf-8"), args.id, args.name).encode()
+        write_candidate(out, rel, content, collisions)
+
+    for rel in COPY_DIRS:
+        copy_tree_non_destructive(ROOT / rel, out, rel, collisions)
+
+    for name in COPY_DOCS:
+        write_candidate(out, f"docs/{name}", (ROOT / "docs" / name).read_bytes(), collisions)
+
+    for name in SCRIPT_FILES:
+        write_candidate(out, f"scripts/{name}", (ROOT / "scripts" / name).read_bytes(), collisions)
+
+    intent = render_text(
+        (ROOT / "PROJECT_INTENT_TEMPLATE.md").read_text(encoding="utf-8"), args.id, args.name
+    ).encode()
+    write_candidate(out, "PROJECT_INTENT.md", intent, collisions)
+
+    profile = json.loads((ROOT / "PROJECT_PROFILE_TEMPLATE.json").read_text(encoding="utf-8"))
+    profile["projectId"] = args.id
+    profile["projectName"] = args.name
+    profile["profileVersion"] = VERSION
+    profile["operatingMode"] = args.mode
+    profile["profiles"] = args.profile
+    write_candidate(out, "PROJECT_PROFILE.json", (json.dumps(profile, indent=2) + "\n").encode(), collisions)
+
+    context = json.loads((ROOT / "CONTEXT_SOURCES_TEMPLATE.json").read_text(encoding="utf-8"))
+    write_candidate(out, "CONTEXT_SOURCES.json", (json.dumps(context, indent=2) + "\n").encode(), collisions)
+
+    resources = render_text(
+        (ROOT / "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json").read_text(encoding="utf-8"),
+        args.id,
+        args.name,
+    ).encode()
+    write_candidate(out, "FORMAL_RESOURCE_MANIFEST.json", resources, collisions)
+
+    bindings = render_text(
+        (ROOT / "bindings/PROJECT_BINDINGS_TEMPLATE.yaml").read_text(encoding="utf-8"),
+        args.id,
+        args.name,
+    ).encode()
+    write_candidate(out, "bindings/PROJECT_BINDINGS.yaml", bindings, collisions)
+
+    selected_profiles = []
+    for name in args.profile:
+        src = ROOT / "profiles" / name
+        if not src.exists():
+            print(f"REFUSED: unknown profile {name}", file=sys.stderr)
+            return 2
+        copy_tree_non_destructive(src, out, f"profiles/{name}", collisions)
+        selected_profiles.append(name)
+
+    if not (out / "README.md").exists():
+        (out / "README.md").write_text(
+            f"# {args.name}\n\nProject intent and operation are defined by `PROJECT_INTENT.md`, `AGENTS.md`, and `PROJECT_PROFILE.json`.\n",
+            encoding="utf-8",
+        )
+
+    (out / "VERSION").write_text(VERSION + "\n", encoding="utf-8")
+
+    marker = {
+        "format": "2",
+        "bootstrap": "formal-project-bootstrap",
+        "bootstrapVersion": VERSION,
+        "projectId": args.id,
+        "projectName": args.name,
+        "mode": args.mode,
+        "profiles": selected_profiles,
+        "createdAt": datetime.now(timezone.utc).isoformat(),
+        "unresolvedBootstrapCollisions": sorted(collisions),
+    }
+    (out / ".formal-bootstrap.json").write_text(json.dumps(marker, indent=2) + "\n", encoding="utf-8")
+    append_alignment(out, collisions)
+
+    if collisions:
+        print("INITIALIZED WITH UNRESOLVED COLLISIONS:")
+        for path in sorted(collisions):
+            print(f"  {path}")
+        print("Existing-project admission is incomplete until .formal-bootstrap/candidates and authority overlaps are reconciled.")
+        return 3
+
+    subprocess.check_call([sys.executable, str(out / "scripts/gen-context.py")], cwd=out)
+    subprocess.check_call(
+        [sys.executable, str(out / "scripts/validate-bootstrap.py"), "--check-context"], cwd=out
+    )
+    print(f"initialized {args.id} ({args.mode}) at {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/package-release.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Build a deterministic release ZIP plus manifest/checksum."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import tempfile
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+EXCLUDE_DIRS = {".git", "dist", "build", "__pycache__", ".pytest_cache", ".venv", "venv"}
+EXCLUDE_FILES = {"PACKAGE_MANIFEST.json"}
+FIXED_DATE = (2026, 1, 1, 0, 0, 0)
+
+
+def sha(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def release_files() -> list[tuple[str, bytes]]:
+    items = []
+    for path in ROOT.rglob("*"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        parts = rel.split("/")
+        if any(part in EXCLUDE_DIRS for part in parts[:-1]):
+            continue
+        if rel in EXCLUDE_FILES:
+            continue
+        items.append((rel, path.read_bytes()))
+    return sorted(items, key=lambda item: item[0])
+
+
+def build_zip(target: Path) -> tuple[dict, str]:
+    files = release_files()
+    manifest = {
+        "format": "1",
+        "package": "formal-project-bootstrap",
+        "version": VERSION,
+        "files": [
+            {"path": rel, "bytes": len(data), "sha256": sha(data)} for rel, data in files
+        ],
+    }
+    manifest_bytes = (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode()
+    prefix = f"formal-project-bootstrap-v{VERSION}/"
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(target, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+        for rel, data in files + [("PACKAGE_MANIFEST.json", manifest_bytes)]:
+            info = zipfile.ZipInfo(prefix + rel, FIXED_DATE)
+            info.create_system = 3
+            mode = 0o755 if rel.startswith("scripts/") and rel.endswith(".py") else 0o644
+            info.external_attr = mode << 16
+            archive.writestr(info, data, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+
+    digest = sha(target.read_bytes())
+    return manifest, digest
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output", default="dist")
+    parser.add_argument("--verify-reproducible", action="store_true")
+    args = parser.parse_args()
+
+    out = Path(args.output)
+    if not out.is_absolute():
+        out = ROOT / out
+    zip_path = out / f"formal-project-bootstrap-v{VERSION}.zip"
+    manifest, digest = build_zip(zip_path)
+    (out / f"formal-project-bootstrap-v{VERSION}.manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (out / f"formal-project-bootstrap-v{VERSION}.sha256").write_text(
+        f"{digest}  {zip_path.name}\n", encoding="utf-8"
+    )
+
+    if args.verify_reproducible:
+        with tempfile.TemporaryDirectory() as tmp:
+            second = Path(tmp) / zip_path.name
+            _, digest2 = build_zip(second)
+            if digest2 != digest:
+                raise SystemExit("NONDETERMINISTIC: release hashes differ")
+
+    print(f"{zip_path} {digest}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/validate-bootstrap.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Validate either the bootstrap repository or an initialized project."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+COMMON = [
+    "VERSION",
+    "AGENTS.md",
+    "docs/AUTHORITY_MODEL.md",
+    "docs/ALIGNMENT.md",
+    "docs/BOOTSTRAP_SEQUENCE.md",
+    "docs/CONTEXT_COMPILATION.md",
+    "docs/EVIDENCE_METHOD.md",
+    "docs/EXECUTION_PIPELINE.md",
+    "docs/EXECUTION_PROVIDER_CONTRACT.md",
+    "docs/FORMAL_RESOURCES.md",
+    "docs/LANDING_AND_PROMOTION.md",
+    "docs/MULTI_AGENT_COORDINATION.md",
+    "docs/NEGATIVE_KNOWLEDGE.md",
+    "docs/RECOVERY.md",
+    "docs/SKILLS_INDEX.md",
+    "docs/WORK_GRAPH.md",
+    "schemas/agent-message.schema.json",
+    "schemas/context-lock.schema.json",
+    "schemas/formal-resource-manifest.schema.json",
+    "schemas/work-disposition.schema.json",
+    "scripts/gen-context.py",
+]
+REPOSITORY_ONLY = [
+    "README.md",
+    "AUTHORITY.md",
+    "VERSIONING.md",
+    "GOVERNANCE.md",
+    "PROJECT_INTENT_TEMPLATE.md",
+    "PROJECT_PROFILE_TEMPLATE.json",
+    "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json",
+    "CONTEXT_SOURCES_TEMPLATE.json",
+    "bindings/PROJECT_BINDINGS_TEMPLATE.yaml",
+    "scripts/init-project.py",
+    "scripts/package-release.py",
+]
+PROJECT_ONLY = [
+    "README.md",
+    ".formal-bootstrap.json",
+    "PROJECT_INTENT.md",
+    "PROJECT_PROFILE.json",
+    "FORMAL_RESOURCE_MANIFEST.json",
+    "CONTEXT_SOURCES.json",
+    "bindings/PROJECT_BINDINGS.yaml",
+    "records/evidence.jsonl",
+    "records/negative-results.jsonl",
+    "records/deviations.jsonl",
+    "records/alignment.jsonl",
+]
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check-context", action="store_true")
+    args = parser.parse_args()
+
+    project_mode = (ROOT / ".formal-bootstrap.json").exists()
+    required = COMMON + (PROJECT_ONLY if project_mode else REPOSITORY_ONLY)
+    missing = [path for path in required if not (ROOT / path).exists()]
+    if missing:
+        print("MISSING:", *missing, sep="\n  ", file=sys.stderr)
+        return 2
+
+    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    if not version or version.startswith("v"):
+        print("INVALID: VERSION must contain bare SemVer", file=sys.stderr)
+        return 2
+
+    json_paths = [
+        "schemas/agent-message.schema.json",
+        "schemas/context-lock.schema.json",
+        "schemas/formal-resource-manifest.schema.json",
+        "schemas/work-disposition.schema.json",
+    ]
+    if project_mode:
+        json_paths += [
+            "PROJECT_PROFILE.json",
+            "FORMAL_RESOURCE_MANIFEST.json",
+            "CONTEXT_SOURCES.json",
+            ".formal-bootstrap.json",
+        ]
+    else:
+        json_paths += [
+            "PROJECT_PROFILE_TEMPLATE.json",
+            "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json",
+            "CONTEXT_SOURCES_TEMPLATE.json",
+        ]
+
+    for path in json_paths:
+        json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+    profile_path = ROOT / ("PROJECT_PROFILE.json" if project_mode else "PROJECT_PROFILE_TEMPLATE.json")
+    profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    if profile.get("profileVersion") != version:
+        print("INVALID: project profile version != VERSION", file=sys.stderr)
+        return 2
+
+    resource_path = ROOT / ("FORMAL_RESOURCE_MANIFEST.json" if project_mode else "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json")
+    resources = json.loads(resource_path.read_text(encoding="utf-8"))
+    expected_id = profile.get("projectId")
+    if resources.get("projectId") != expected_id:
+        print("INVALID: formal resource manifest projectId != profile projectId", file=sys.stderr)
+        return 2
+
+    if args.check_context:
+        rc = subprocess.call([sys.executable, str(ROOT / "scripts/gen-context.py"), "--check"])
+        if rc:
+            return rc
+
+    mode = "project" if project_mode else "repository"
+    print(f"OK {mode} structure v{version}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/validate-formal-files.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Validate JSON Schemas, formal JSON instances, and YAML when dependencies exist."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def main() -> int:
+    try:
+        import yaml
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        print("SKIP formal-file validation: install requirements-dev.txt for full gate")
+        return 0
+
+    schemas = {}
+    schema_paths = sorted((ROOT / "schemas").glob("*.schema.json"))
+    for path in schema_paths:
+        schema = json.loads(path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        schemas[path.name] = schema
+
+    resource_template = json.loads((ROOT / "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json").read_text(encoding="utf-8"))
+    Draft202012Validator(schemas["formal-resource-manifest.schema.json"]).validate(resource_template)
+
+    yaml_paths = list(ROOT.glob("*.yaml")) + list((ROOT / "bindings").glob("*.yaml"))
+    yaml_paths += list((ROOT / "profiles").rglob("*.yaml")) + list((ROOT / ".github").rglob("*.yml"))
+    for path in sorted(set(yaml_paths)):
+        yaml.safe_load(path.read_text(encoding="utf-8"))
+
+    print(f"OK formal files: {len(schema_paths)} schemas, 1 formal JSON instance, {len(set(yaml_paths))} yaml")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: tests/test_repository.py
+========================================================================
+
+from __future__ import annotations
+
+import hashlib
+import json
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+
+
+class RepositoryTests(unittest.TestCase):
+    def run_ok(self, *args: str, cwd: Path = ROOT) -> subprocess.CompletedProcess:
+        return subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=True)
+
+    def test_version_is_single_source_for_profile(self):
+        profile = json.loads((ROOT / "PROJECT_PROFILE_TEMPLATE.json").read_text(encoding="utf-8"))
+        self.assertEqual(profile["profileVersion"], VERSION)
+        self.assertIn(f"**Version:** {VERSION}", (ROOT / "README.md").read_text(encoding="utf-8"))
+
+    def test_context_generation_is_deterministic(self):
+        self.run_ok(sys.executable, "scripts/gen-context.py")
+        first_index = (ROOT / ".agents/llms.txt").read_bytes()
+        first_full = (ROOT / ".agents/llms-full.txt").read_bytes()
+        first_lock = json.loads((ROOT / ".agents/context-lock.json").read_text(encoding="utf-8"))
+        self.run_ok(sys.executable, "scripts/gen-context.py")
+        second_lock = json.loads((ROOT / ".agents/context-lock.json").read_text(encoding="utf-8"))
+        self.assertEqual(first_index, (ROOT / ".agents/llms.txt").read_bytes())
+        self.assertEqual(first_full, (ROOT / ".agents/llms-full.txt").read_bytes())
+        self.assertEqual(first_lock["aggregateSourceDigest"], second_lock["aggregateSourceDigest"])
+        self.assertEqual(first_lock["validityBasis"], "aggregate-source-digest")
+        self.assertEqual(first_lock["repositoryState"]["validationRole"], "provenance")
+
+    def test_initializer_produces_valid_new_project(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "project"
+            self.run_ok(
+                sys.executable,
+                "scripts/init-project.py",
+                "--name", "Fixture Project",
+                "--id", "fixture-project",
+                "--mode", "new",
+                "--output", str(out),
+            )
+            marker = json.loads((out / ".formal-bootstrap.json").read_text(encoding="utf-8"))
+            self.assertEqual(marker["bootstrapVersion"], VERSION)
+            self.assertEqual(marker["mode"], "new")
+            profile = json.loads((out / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))
+            self.assertEqual(profile["projectId"], "fixture-project")
+            self.assertEqual(profile["operatingMode"], "new")
+            resources = json.loads((out / "FORMAL_RESOURCE_MANIFEST.json").read_text(encoding="utf-8"))
+            self.assertEqual(resources["projectId"], "fixture-project")
+            for name in ["evidence.jsonl", "negative-results.jsonl", "deviations.jsonl", "alignment.jsonl"]:
+                self.assertTrue((out / "records" / name).exists())
+            self.run_ok(sys.executable, "scripts/validate-bootstrap.py", "--check-context", cwd=out)
+
+    def test_existing_mode_preserves_conflicting_authority(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "existing"
+            out.mkdir()
+            original = "# Existing project authority\n"
+            (out / "AGENTS.md").write_text(original, encoding="utf-8")
+            cp = subprocess.run(
+                [
+                    sys.executable, "scripts/init-project.py",
+                    "--name", "Existing Fixture",
+                    "--id", "existing-fixture",
+                    "--mode", "existing",
+                    "--output", str(out),
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(cp.returncode, 3)
+            self.assertEqual((out / "AGENTS.md").read_text(encoding="utf-8"), original)
+            self.assertTrue((out / ".formal-bootstrap/candidates/AGENTS.md").exists())
+            alignment = (out / "records/alignment.jsonl").read_text(encoding="utf-8")
+            self.assertIn("bootstrap_collision", alignment)
+
+    def test_release_is_reproducible(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.run_ok(
+                sys.executable,
+                "scripts/package-release.py",
+                "--output", tmp,
+                "--verify-reproducible",
+            )
+            archive = Path(tmp) / f"formal-project-bootstrap-v{VERSION}.zip"
+            checksum = Path(tmp) / f"formal-project-bootstrap-v{VERSION}.sha256"
+            self.assertTrue(archive.exists())
+            declared = checksum.read_text(encoding="utf-8").split()[0]
+            actual = hashlib.sha256(archive.read_bytes()).hexdigest()
+            self.assertEqual(declared, actual)
+
+    def test_json_artifacts_parse(self):
+        for path in [
+            "PROJECT_PROFILE_TEMPLATE.json",
+            "CONTEXT_SOURCES_TEMPLATE.json",
+            "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json",
+            "schemas/agent-message.schema.json",
+            "schemas/context-lock.schema.json",
+            "schemas/formal-resource-manifest.schema.json",
+            "schemas/work-disposition.schema.json",
+        ]:
+            json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+    def test_bootstrap_sequence_does_not_require_synthetic_b5_b8(self):
+        text = (ROOT / "docs/BOOTSTRAP_SEQUENCE.md").read_text(encoding="utf-8")
+        self.assertIn("should manufacture", text)
+        self.assertIn("NOT OBSERVED", text)
+        self.assertIn("Gate B6 — Candidate / landing / evidence separation", text)
+        self.assertIn("Gate B7 — Multi-agent coordination", text)
+        self.assertIn("Gate B8 — Recovery", text)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+========================================================================
+FILE: vendor/README.md
+========================================================================
+
+# Pinned external resources
+
+Materialize protocol/specification dependencies here or bind another locally addressable immutable location.
+
+Every external dependency must be represented in `FORMAL_RESOURCE_MANIFEST.json`.
+
+Do not vendor generated summaries as normative resources.
+
+
+
+========================================================================
+FILE: .agents/skills/compile-context/SKILL.md
+========================================================================
+
+---
+name: compile-context
+description: Use after canonical source changes or before consequential execution when generated context may be stale. Rebuilds and verifies deterministic project context.
+---
+
+# Compile Context
+
+1. Correct canonical sources first.
+2. Run `python3 scripts/gen-context.py`.
+3. Run `python3 scripts/gen-context.py --check`.
+4. Verify branch/commit/dirty state in `.agents/context-lock.json`.
+5. Use `.agents/llms.txt` to locate relevant material.
+6. Load only bounded excerpts for a work item.
+7. Never patch generated context manually.
+
+
+========================================================================
+FILE: .agents/skills/coordinate-workers/SKILL.md
+========================================================================
+
+---
+name: coordinate-workers
+description: Use when two or more workers operate concurrently, exchange findings, hand off work, supersede approaches, or need shared namespace allocation.
+---
+
+# Coordinate Workers
+
+1. Allocate disjoint workspaces and mutable scopes.
+2. Reserve scarce namespaces.
+3. Route evidence-bearing AgentMessages.
+4. Revalidate work whose assumptions were invalidated by peers.
+5. Transfer claims explicitly on handoff.
+6. Preserve superseded/reverted work as evidence when useful.
+7. Serialize project-wide state transitions.
+8. Never treat peer consensus as authority.
+
+
+========================================================================
+FILE: .agents/skills/operate-frontier/SKILL.md
+========================================================================
+
+---
+name: operate-frontier
+description: Use to autonomously execute Ready work across a project. Handles selection, claim, isolation, bounded execution, localized blockers, release and frontier reselection.
+---
+
+# Operate Frontier
+
+1. Reconcile.
+2. Select a Ready, unclaimed, dependency-satisfied item within authority/budget.
+3. Claim and isolate.
+4. Compile issue context from current context lock.
+5. Execute the smallest correct change.
+6. On a local blocker: record, release/park, notify affected peers, reselect.
+7. On a global stop: prepare the smallest decision packet and stop.
+8. On candidate completion: submit for evaluation/qualification required by the issue.
+9. Record disposition, release claim and continue.
+
+
+========================================================================
+FILE: .agents/skills/reconcile-project/SKILL.md
+========================================================================
+
+---
+name: reconcile-project
+description: Use at project/session start, after material source changes, after external provider changes, or when state may be stale. Reconstructs current state read-only before mutation.
+---
+
+# Reconcile Project
+
+1. Verify project/profile/formal-source identity.
+2. Verify repository, branch, commit, submodules and dirty state.
+3. Verify context lock and regenerate if stale.
+4. Refresh live work graph, claims, provider state, evidence and blockers.
+5. Record contradictions and null-result limitations.
+6. Do not repair in the reconciliation pass.
+7. Return the current lawful Ready frontier and global stop state.
+
+
+========================================================================
+FILE: .agents/skills/verify-outcome/SKILL.md
+========================================================================
+
+---
+name: verify-outcome
+description: Use before recommending Done/Verified, promotion, release, or a consequential claim. Evaluates a frozen candidate against declared acceptance and evidence requirements.
+---
+
+# Verify Outcome
+
+1. Freeze candidate identity/revision.
+2. Read acceptance and evidence requirements.
+3. Execute exact checks and negative paths.
+4. Bind results to environment/revision.
+5. Distinguish executed, skipped, contradicted and human-required evidence.
+6. Do not edit the candidate during the verification pass.
+7. Return supported maturity, limitations and missing evidence.
+
+
+========================================================================
+FILE: .github/ISSUE_TEMPLATE/config.yml
+========================================================================
+
+blank_issues_enabled: true
+contact_links: []
+
+
+========================================================================
+FILE: .github/ISSUE_TEMPLATE/contradiction.yml
+========================================================================
+
+name: Formal contradiction
+description: Record incompatible claims without silently reconciling them.
+title: "[contradiction] "
+labels: ["contradiction"]
+body:
+  - type: textarea
+    id: sources
+    attributes:
+      label: Conflicting sources
+      description: Name exact artifacts, versions, and relevant sections.
+    validations:
+      required: true
+  - type: textarea
+    id: conflict
+    attributes:
+      label: Contradiction
+      description: State the incompatible claims without resolving them.
+    validations:
+      required: true
+  - type: textarea
+    id: precedence
+    attributes:
+      label: Current precedence
+      description: Which source controls under AUTHORITY.md, if determinable?
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact / blocked work
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+
+
+========================================================================
+FILE: .github/ISSUE_TEMPLATE/implementation.yml
+========================================================================
+
+name: Implementation work
+description: Bounded implementation work under an existing formal contract.
+title: "[implementation] "
+labels: ["implementation"]
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What condition should change?
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Authority / parent intent
+      description: Link the controlling definition, PRD, contract, or parent issue.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and exclusions
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / blockers
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+    validations:
+      required: true
+  - type: textarea
+    id: effects
+    attributes:
+      label: Allowed and protected effects
+
+
+========================================================================
+FILE: .github/ISSUE_TEMPLATE/protocol-change.yml
+========================================================================
+
+name: Normative change
+description: Propose a change to the bootstrap's formal operating contract.
+title: "[normative] "
+labels: ["normative-change"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Observed failure mode
+      description: What evidence shows the current formal model is insufficient?
+    validations:
+      required: true
+  - type: textarea
+    id: existing
+    attributes:
+      label: Existing mechanisms considered
+      description: Explain why reference, binding, specialization, constraint, projection, qualification, or composition does not close the gap.
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Proposed irreducible distinction
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: Syntax, schema, behavior, semantics, authority, and evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: conformance
+    attributes:
+      label: Required conformance/evidence
+
+
+========================================================================
+FILE: .github/dependabot.yml
+========================================================================
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+
+
+========================================================================
+FILE: .github/pull_request_template.md
+========================================================================
+
+## Work item
+
+Closes #
+
+## Change
+
+Describe the smallest bounded change and why it is required.
+
+## Scope / exclusions
+
+- In scope:
+- Explicitly out of scope:
+
+## Authority / compatibility
+
+- Controlling source:
+- Normative change: yes / no
+- Semantic compatibility:
+- Authority compatibility:
+- Evidence compatibility:
+
+## Evidence
+
+- Checks run:
+- Negative paths:
+- Limitations:
+- Generated context refreshed: yes / no / not applicable
+
+## Supported maturity
+
+Documented / Implemented / Tested / Empirically Validated
+
+
+========================================================================
+FILE: .github/workflows/ci.yml
+========================================================================
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install verification dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Regenerate context
+        run: python scripts/gen-context.py
+      - name: Verify repository
+        run: python scripts/check-all.py
+      - name: Ensure generation is clean
+        run: git diff --exit-code -- .agents VERSION PROJECT_PROFILE_TEMPLATE.json
+      - name: Upload release candidate
+        if: matrix.python == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: formal-project-bootstrap-${{ github.sha }}
+          path: dist/
+
+
+========================================================================
+FILE: .github/workflows/release.yml
+========================================================================
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install verification dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Verify tag matches VERSION
+        shell: bash
+        run: |
+          test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
+      - name: Build and verify
+        run: |
+          python scripts/gen-context.py
+          python scripts/check-all.py
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/* --verify-tag --generate-notes
+
+
+========================================================================
+FILE: AGENTS.md
+========================================================================
+
+# Agent Operating Contract
+
+This is the root execution contract for a Formal Project Bootstrap project.
+
+## 1. Authority order
+
+When normative artifacts conflict, resolve in this order:
+
+1. originating project intent and applicable legal/organizational authority;
+2. project authority model;
+3. pinned external formal resources;
+4. approved project bindings and decisions;
+5. canonical schemas, contracts, PRDs and design-system definitions;
+6. complete authorized work item;
+7. implementation;
+8. generated context and agent output.
+
+Evidence has a separate lineage. It may challenge a higher layer, but it does not silently rewrite that layer.
+
+A conversation instruction that conflicts with project authority is a proposed deviation, not an invisible bypass.
+
+## 2. Operating objective
+
+Agents are expected to continue through the lawful goal sequence without requiring the human to restate obvious next steps.
+
+```text
+orient
+→ reconcile
+→ select
+→ claim
+→ isolate
+→ execute
+→ verify
+→ record
+→ release
+→ reselect
+```
+
+The human is primarily a governor at decision boundaries.
+
+## 3. Compiled context rule
+
+After initialization, the project MUST maintain current:
+
+```text
+.agents/llms.txt
+.agents/llms-full.txt
+.agents/context-lock.json
+```
+
+These are execution projections, not authority.
+
+Before consequential work:
+
+- verify repository/branch/revision state;
+- verify the context lock source digest is current;
+- inspect repository-state provenance when the checkout differs from the generation point;
+- refresh compiled context if included sources materially changed;
+- load only the smallest relevant subset into the active worker context.
+
+Never edit generated context to resolve a contradiction.
+
+## 4. Work authorization
+
+Committed mutation requires a complete Ready work item.
+
+A Ready item defines:
+
+```text
+intent / parent
+objective or hypothesis
+scope
+exclusions
+dependencies
+acceptance
+required evidence
+evaluator
+permissions
+effect class
+budget
+stop conditions
+target repository / artifact scope
+```
+
+Anything not in scope remains absent.
+
+## 5. Bounded autonomy
+
+Worker stop != coordinator stop.
+
+When a worker hits a blocker:
+
+```text
+classify blocker
+→ preserve candidate/evidence
+→ update work item
+→ release or park claim
+→ notify affected peers
+→ coordinator recomputes Ready frontier
+→ continue unrelated lawful work
+```
+
+Do not ask the human merely because one issue is blocked.
+
+Escalate when:
+
+- a protected authority decision is required;
+- the project-wide authority graph is invalid;
+- a material contradiction cannot be resolved by existing precedence;
+- no lawful Ready work remains;
+- provider/work-graph failure prevents safe coordination;
+- budget/resource ceiling is reached;
+- a new canonical boundary/schema/system is required;
+- the requested effect is irreversible or outside delegated authority.
+
+## 6. Blocked decomposition
+
+“Blocked” is not permission to stop thinking.
+
+Before marking a whole item blocked, split:
+
+```text
+decision-dependent work
+decision-independent work
+evidence collection
+detector/gate work
+documentation correction
+```
+
+Complete lawful independent portions when they remain inside the issue contract.
+
+## 7. Isolation and concurrency
+
+- One mutation claim owns one bounded scope.
+- Parallel workers use isolated branches/worktrees/sandboxes.
+- Two workers do not own the same file or mutable namespace unless explicitly partitioned.
+- Allocate scarce identifiers before dispatch.
+- Never modify another worker's uncommitted state.
+- Re-read live state before concluding from an absence.
+
+## 8. Multi-agent communication
+
+Agents may exchange observations, evidence, contradictions, handoff requests and supersession notices.
+
+A message is not authority.
+
+If a peer message materially invalidates a current assumption, the receiving agent MUST revalidate before continuing.
+
+Agents may:
+
+```text
+continue
+pause
+handoff
+supersede
+revert own candidate
+abandon own candidate
+```
+
+Useful abandoned work remains evidence or a negative result.
+
+## 9. Service and CLI operation
+
+Prefer official CLIs/APIs declared by the project profile.
+
+Tool availability is capability, not permission.
+
+Before mutation verify:
+
+```text
+provider/account/project/environment
+target resource identity
+current revision/state
+authorized effect class
+rollback/recovery when required
+```
+
+Record durable service mutations as evidence/receipts.
+
+Do not create credentials, widen permissions, change billing, or bypass a service boundary unless explicitly authorized.
+
+## 10. Human override / deviation
+
+Do not translate “just do it anyway” into an untracked rule violation.
+
+A deviation must record:
+
+```text
+authority
+rule being deviated from
+reason
+scope
+allowed effect
+expiration / closure
+recovery if applicable
+required evidence
+```
+
+Once recorded, the agent re-evaluates applicability under the changed governing state.
+
+## 11. Status honesty
+
+Keep independent:
+
+```text
+Work:
+Backlog → Ready → In progress → In review → Done → Verified
+
+Implementation:
+Documented != Implemented != Tested != Empirically Validated
+
+Evidence:
+Observed / Reproduced / Not re-executed / Contradicted / Inconclusive
+
+Operation:
+Unknown / Healthy / Degraded / Blocked / Retired
+```
+
+Domain profiles may add their own state machines. They may not collapse these.
+
+## 12. Completion
+
+Every worker returns a typed disposition with:
+
+```text
+work item
+repository/artifact + revision
+context digest
+candidate identity
+changes/outputs
+commands/checks
+evidence
+negative paths
+limitations
+blockers
+peer-impact messages
+recommended work-item transition
+claim release state
+```
+
+“Done” means the declared completion contract was satisfied, not that the worker stopped.
+
+## 13. Evidence, negative knowledge, and landing
+
+Use `docs/EVIDENCE_METHOD.md` for evidence dispositions and provenance. Persist material failures in `records/negative-results.jsonl` rather than rediscovering them.
+
+When integration occurs, follow `docs/LANDING_AND_PROMOTION.md`; candidate verification, landing, landed-state verification, evidence closure, and promotion remain separate states.
+
+## 14. Recovery
+
+When context, claims, branches, provider state, or worker ownership becomes stale or inconsistent, stop unsafe mutation and use `docs/RECOVERY.md`. Preserve useful WIP and reconstruct from canonical state. Hidden conversational memory is not a recovery mechanism.
+
+## 15. Formal resources
+
+`FORMAL_RESOURCE_MANIFEST.json` records only resources that materially constrain this project. Importance does not imply authority. Missing companions remain missing. See `docs/FORMAL_RESOURCES.md`.
+
+## 16. Anti-bloat rule
+
+Before adding a canonical concept ask whether the need can be handled by:
+
+```text
+reference
+binding
+specialization
+constraint
+projection
+qualification
+composition
+```
+
+Only an irreducible distinction earns a new canonical concept.
+
+
+========================================================================
+FILE: AUTHORITY.md
+========================================================================
+
+# Authority and Conflict Resolution
+
+**Status:** Canonical repository doctrine  
+**Applies to:** the Formal Project Bootstrap repository itself
+
+## Resolution order
+
+When repository artifacts disagree, the first applicable item controls:
+
+1. `AUTHORITY.md` and accepted governance decisions;
+2. `AGENTS.md` for execution behavior;
+3. versioned normative contracts, schemas, and profile protocol sources;
+4. canonical documentation and templates;
+5. executable tooling and tests;
+6. generated context, package manifests, release archives, examples, and other derivatives.
+
+External protocols bound by a project retain their own internal authority. This repository does not silently rewrite them.
+
+## Conflict rule
+
+A lower layer may expose a contradiction but cannot resolve it by changing the meaning of a higher layer. Record the conflict, preserve evidence, and either correct the lower layer or approve a normative change at the controlling layer.
+
+Generated artifacts never become authority by convenience. Edit the canonical source and regenerate.
+
+## Evidence
+
+Evidence is orthogonal to precedence. New evidence may challenge doctrine and trigger review, but evidence does not silently mutate the definition it evaluates.
+
+## Supersession
+
+A normative replacement must identify the artifact it supersedes, compatibility impact, migration rule when required, and retained provenance. Historical releases remain immutable evidence.
+
+
+========================================================================
+FILE: CHANGELOG.md
+========================================================================
+
+# Changelog
+
+## 0.5.1 — Instrument stratification and upstream-first repair
+
+- Authority model: added instrument stratification — wherever two record types
+  attach to one consequential effect, the authorizing instrument is declared and
+  the weaker grants nothing; "authorization by the cheaper record" named as an
+  illegal pattern (incident provenance: semantic-cms NR-scms-001).
+- Formal resources: added consumption model (pinned dependencies; a synced copy
+  is a cache of the pin, not a fork), upstream-first repair (re-pin as a
+  compatibility event), and upstream debt subordinated to the deviation
+  instrument (deviation authorizes first; the debt record references it and
+  ages; the ratchet is memory and pressure, never permission).
+- Negative knowledge: named two drafting failure classes (authorization by the
+  cheaper record; descriptive-to-normative contamination).
+- Doc-level, additive release: no schema, script, or required-file changes;
+  projects on 0.5.0 re-pin without structural migration.
+
+## 0.5.0 — Existing-project adoption
+
+- Added a first-class existing-project adoption/reconciliation contract.
+- Added C4c conformance for non-destructive migration into materially pre-existing projects.
+- Clarified that initializer collisions mean admitted-but-unreconciled state, not permission to overwrite project authority.
+- Made existing-mode agents discover, preserve, bind, minimally fill gaps, then compile/qualify before normal operation.
+- Kept B5–B8 conditional; adoption must not manufacture behavioral evidence.
+
+
+All notable changes to Formal Project Bootstrap are recorded here.
+
+## [0.4.0] - 2026-08-27
+
+### Added
+- complete project-local formal-resource, evidence, negative-knowledge, landing/promotion, recovery, and skills-index definitions;
+- `FORMAL_RESOURCE_MANIFEST.json` project artifact and schema;
+- persistent project records for evidence, negative results, deviations, and alignment;
+- non-destructive `--mode existing` initialization with explicit collision candidates and alignment records;
+- explicit conformance distinction between directed cross-project testing (C4a) and behavioral transfer without evaluator restatement (C4b).
+
+### Changed
+- B0–B4 remain normal bootstrap proof gates; B5–B8 are conditional operational observations and must not be manufactured during ordinary initialization;
+- B6 is now explicitly candidate/landing/evidence separation, B7 multi-agent coordination, and B8 recovery;
+- `NEW_AGENT_PROMPT.md` is intentionally thin and no longer restates blocker or peer-coordination response sequences;
+- generalized the old protocol-only resource manifest into a formal-resource manifest covering protocols, PRDs, architectures, design/token systems, schemas, policy, research, benchmarks, and references;
+- generated projects now retain project-specific record ledgers from initialization.
+
+### Research correction
+- directed conformance and spontaneous behavioral transfer are no longer treated as the same claim. A worker that is told the target response may establish conformance but not unprompted transfer.
+
+## [0.3.0] - 2026-08-27
+
+### Added
+- repository-grade authority, versioning, governance, contribution, security, and support documents;
+- CI and release workflows;
+- issue and pull-request templates aligned to evidence and authority rules;
+- deterministic release packaging and checksums;
+- project initializer;
+- repository conformance and release tests;
+- explicit repository-state provenance without making generated context self-referential.
+
+### Changed
+- version became canonical through `VERSION`;
+- context validity became source-digest based while Git state remained provenance.
+
+## [0.2.0] - 2026-08-27
+
+- compressed the bootstrap into a generic formal operating kernel;
+- made compiled context required but non-normative;
+- added bounded blocker reselection, multi-agent coordination, formal deviations, alignment bindings, and optional commercialization profile.
+
+## [0.1.0] - 2026-08-27
+
+- initial commercialization-oriented project bootstrap candidate.
+
+
+========================================================================
+FILE: CODE_OF_CONDUCT.md
+========================================================================
+
+# Code of Conduct
+
+Contributors are expected to keep technical disagreement specific, evidence-based, and respectful. Critique claims, contracts, implementations, and evidence rather than people.
+
+Harassment, threats, discrimination, doxxing, credential exposure, or deliberate disruption are not acceptable.
+
+Maintainers may moderate participation to preserve a safe and productive project environment.
+
+
+========================================================================
+FILE: CONTEXT_SOURCES_TEMPLATE.json
+========================================================================
+
+{
+  "format": "2",
+  "description": "Deterministic source-selection policy for generated project context.",
+  "includeExtensions": [
+    ".md",
+    ".txt",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".rs",
+    ".ts",
+    ".tsx",
+    ".js",
+    ".jsx",
+    ".py",
+    ".sh",
+    ".sql",
+    ".c",
+    ".h",
+    ".cpp",
+    ".hpp",
+    ".proto",
+    ".graphql",
+    ".css",
+    ".html"
+  ],
+  "excludeDirectories": [
+    ".git",
+    "node_modules",
+    "target",
+    "dist",
+    "build",
+    "coverage",
+    "__pycache__",
+    ".cache",
+    "release"
+  ],
+  "excludePaths": [
+    ".agents/llms.txt",
+    ".agents/llms-full.txt",
+    ".agents/context-lock.json",
+    "PACKAGE_MANIFEST.json"
+  ],
+  "maxFileBytes": 1048576,
+  "includeVendor": true,
+  "note": "Full corpus is for deterministic search/transport. Active worker context should still be issue-bounded.",
+  "includeFiles": [
+    "VERSION"
+  ]
+}
+
+
+========================================================================
+FILE: CONTRIBUTING.md
+========================================================================
+
+# Contributing
+
+Contributions are welcome when they preserve the bootstrap's central property: a small formal kernel that increases agent autonomy by reducing consequential ambiguity.
+
+## Before changing anything
+
+1. Read `AUTHORITY.md`, `AGENTS.md`, and `GOVERNANCE.md`.
+2. Open or select a complete issue.
+3. Classify the change as editorial, repository capability, or normative.
+4. Prefer the smallest change that closes the evidenced gap.
+
+## Checks
+
+Run:
+
+```bash
+make check
+```
+
+For a release candidate, also run:
+
+```bash
+make package
+```
+
+## Pull requests
+
+A pull request should identify the issue, scope, exclusions, evidence, checks run, limitations, compatibility impact, and whether generated context was refreshed.
+
+Normative changes must not be hidden inside implementation or cleanup PRs.
+
+
+========================================================================
+FILE: FORMAL_RESOURCE_MANIFEST_TEMPLATE.json
+========================================================================
+
+{
+  "format": "1",
+  "projectId": "<PROJECT_ID>",
+  "resources": [],
+  "integrityPolicy": {
+    "requireCanonicalSource": true,
+    "preferImmutableRevisionOrDigest": true,
+    "rejectRemoteLatestForRequiredResources": true,
+    "rejectGeneratedContextAsAuthority": true
+  }
+}
+
+
+========================================================================
+FILE: GOVERNANCE.md
+========================================================================
+
+# Governance
+
+Formal Project Bootstrap is intentionally conservative. The repository should grow by evidence, not by accumulation.
+
+## Change classes
+
+**Editorial correction** restores an existing rule and may be a patch.
+
+**Repository capability** adds tooling, checks, examples, or optional profiles without changing the core contract.
+
+**Normative change** changes authority, work authorization, evidence semantics, autonomy boundaries, context rules, or other operating invariants. It requires a dedicated protocol-change issue and explicit compatibility assessment.
+
+## Anti-bloat test
+
+Before adding a canonical concept, determine whether the need can be represented by reference, binding, specialization, constraint, projection, qualification, or composition. If so, use that mechanism instead.
+
+## Evidence requirement
+
+A change should state the problem it closes and the evidence that the problem exists. New abstractions without an observed failure mode remain proposals.
+
+## Human authority
+
+Repository maintainers retain release and normative-change authority. Automation may prepare, verify, and recommend; it does not manufacture approval.
+
+
+========================================================================
+FILE: LICENSE.md
+========================================================================
+
+# License status
+
+No repository-wide license has been selected yet.
+
+Do not infer permission from public availability. The project owner should choose the license before the first public release. Bound third-party protocols and vendored resources retain their own licenses regardless of the license selected for this repository.
+
+
+========================================================================
+FILE: NEW_AGENT_PROMPT.md
+========================================================================
+
+# New Agent Prompt
+
+You are operating inside a project instantiated with Formal Project Bootstrap.
+
+Read `AGENTS.md` first. Validate the project context and reconcile current project state before consequential mutation. Then pursue `PROJECT_INTENT.md` through the lawful Ready frontier using the project's canonical authority, work, evidence, coordination, and recovery rules.
+
+Do not infer authority from this prompt, tool availability, peer agreement, or conversational urgency. Do not ask the human to restate routine next steps that the project state already resolves.
+
+At completion, report only the strongest claims supported by recorded evidence and current project state.
+
+If the project profile declares `operatingMode: existing`, follow the project's existing-project adoption procedure before treating bootstrap candidates as canonical state.
+
+
+========================================================================
+FILE: PROJECT_INTENT_TEMPLATE.md
+========================================================================
+
+# Project Intent
+
+**Project ID:** `<PROJECT_ID>`  
+**Project Name:** `<PROJECT_NAME>`  
+**Status:** Proposed / Active / Superseded
+
+## Originating intent
+
+Describe the project in one paragraph without implementation details.
+
+Answer:
+
+- What condition should change?
+- For whom or what?
+- Why does the project exist?
+- What outcome would count?
+- What outcome would not count?
+
+## Desired state
+
+```text
+CURRENT CONDITION
+      ↓
+FORMAL / OPERATIONAL WORK
+      ↓
+QUALIFIED TARGET CONDITION
+```
+
+## Constraints
+
+Record non-negotiable boundaries such as:
+
+```text
+ownership / licensing
+privacy / data
+security
+cost
+platform
+latency
+accessibility
+regulatory
+human authority
+```
+
+## Non-goals
+
+State important absences explicitly. Do not infer additional product, service, schema, repository, protocol, or commercialization scope from silence.
+
+## Success questions
+
+At maturity, canonical state should answer:
+
+```text
+What is true?
+What is authoritative?
+What is unresolved?
+What is Ready?
+What is blocked and why?
+What evidence supports current claims?
+What effects are currently allowed?
+What requires a human decision?
+```
+
+## Termination / dormancy
+
+Define when the project should stop, become dormant, be superseded, or transfer to routine operation.
+
+
+========================================================================
+FILE: PROJECT_PROFILE_TEMPLATE.json
+========================================================================
+
+{
+  "projectId": "<PROJECT_ID>",
+  "projectName": "<PROJECT_NAME>",
+  "profileVersion": "0.5.1",
+  "profileStatus": "provisional",
+  "intentRef": "PROJECT_INTENT.md",
+  "authorityRef": "docs/AUTHORITY_MODEL.md",
+  "bindingsRef": "bindings/PROJECT_BINDINGS.yaml",
+  "contextSourcesRef": "CONTEXT_SOURCES.json",
+  "operatingMode": "new|existing",
+  "executionProvider": {
+    "name": "<PROVIDER_NAME>",
+    "workGraph": "<ADAPTER_OR_SYSTEM>",
+    "repository": "<ADAPTER_OR_SYSTEM>",
+    "dispatch": "<ADAPTER_OR_SYSTEM>",
+    "verification": "<ADAPTER_OR_SYSTEM>",
+    "protection": "<ADAPTER_OR_SYSTEM>",
+    "observability": "<OPTIONAL>"
+  },
+  "serviceOperations": [
+    {
+      "service": "<SERVICE>",
+      "interface": "official-cli|official-api|connector",
+      "allowedEnvironments": [
+        "local",
+        "staging"
+      ],
+      "allowedEffects": [
+        "read",
+        "reversible-write"
+      ],
+      "protectedEffects": [
+        "production-deploy",
+        "credential-create",
+        "billing-change"
+      ]
+    }
+  ],
+  "authorityBindings": {
+    "projectMutation": "<ACTOR_OR_ROLE>",
+    "qualification": "<ACTOR_OR_ROLE>",
+    "promotion": "<ACTOR_OR_ROLE>",
+    "productionOperation": "<ACTOR_OR_ROLE>",
+    "deviation": "<ACTOR_OR_ROLE>"
+  },
+  "autonomy": {
+    "frontierReselection": true,
+    "continueOnLocalizedBlocker": true,
+    "maxConcurrentMutationClaims": 2,
+    "humanEscalation": "decision-boundaries-only"
+  },
+  "contextPolicy": {
+    "compiledContextRequired": true,
+    "generatedContextNormative": false,
+    "requireContextLock": true,
+    "refreshOnMaterialSourceChange": true
+  },
+  "profiles": [],
+  "formalResourceManifest": "FORMAL_RESOURCE_MANIFEST.json"
+}
+
+
+========================================================================
+FILE: README.md
+========================================================================
+
+# Formal Project Bootstrap
+
+**Status:** Candidate reusable project substrate  
+**Version:** 0.5.1
+
+Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
+
+It is deliberately small at the top. It does not define a product domain, business model, UI system, physics model, or research method. Projects bind those things as explicit profiles and formal sources.
+
+## Governing thesis
+
+> **Autonomy increases as consequential ambiguity decreases.**
+
+A project should be able to answer from canonical state:
+
+```text
+What are we trying to change?
+What is authoritative?
+What is true now?
+What work is Ready?
+What may this actor change?
+What evidence is required?
+What is unresolved?
+What can proceed without the blocked item?
+What requires a human decision?
+```
+
+The agent is an execution substrate. It is not the source of project truth.
+
+## Operating model
+
+```text
+ORIGINATING INTENT
+      ↓
+FORMAL RESOURCES + PINS
+      ↓
+PROJECT BINDINGS + AUTHORITY
+      ↓
+COMPILED PROJECT CONTEXT
+      ↓
+LIVE RECONCILIATION
+      ↓
+READY WORK FRONTIER
+      ↓
+CLAIM + ISOLATION
+      ↓
+BOUNDED EXECUTION
+      ↓
+CANDIDATE + EVIDENCE
+      ↓
+INDEPENDENT EVALUATION
+      ↓
+QUALIFICATION / PROMOTION
+      ↓
+RECONCILIATION
+      └────────────→ NEXT READY FRONTIER
+```
+
+A blocked item terminates or parks that claim, not the project. Unless a global stop condition holds, the coordinator recomputes the Ready frontier and continues lawful work.
+
+## Why compiled context exists
+
+Canonical sources and compiled context are intentionally different things.
+
+Canonical sources include specifications, protocols, PRDs, schemas, design systems, research, source code, tests, decisions, evidence, and work records.
+
+Compiled context consists of:
+
+```text
+.agents/llms.txt
+.agents/llms-full.txt
+.agents/context-lock.json
+```
+
+These are required operating artifacts once a project is initialized because they make the formal environment cheap for agents to search and load. They are always generated, rebuildable, non-normative, and downstream of canonical sources.
+
+Context validity is source-digest based. Git branch/commit/submodule state is retained as provenance so agents can bound branch-specific or absence claims without creating an impossible self-reference where a generated file must contain the hash of the commit that contains itself.
+
+> **Never repair authority by editing generated context. Repair the source and recompile.**
+
+## Quick start
+
+Validate this repository:
+
+```bash
+python3 scripts/gen-context.py
+python3 scripts/check-all.py
+```
+
+Initialize a new project:
+
+```bash
+python3 scripts/init-project.py \
+  --name "My Project" \
+  --id my-project \
+  --mode new \
+  --output ../my-project
+```
+
+Add an optional profile only when it is actually required:
+
+```bash
+python3 scripts/init-project.py \
+  --name "Commercial Project" \
+  --id commercial-project \
+  --mode new \
+  --profile commercialization \
+  --output ../commercial-project
+```
+
+The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and compiled context; then it runs the project validator. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
+
+## Core invariants
+
+1. Intent governs implementation.
+2. One canonical statement; many references.
+3. Pinned formal sources outrank generated context.
+4. Chat/tool capability does not silently grant project authority.
+5. Committed mutation requires a complete authorized work item or an explicitly recorded deviation.
+6. Worker completion does not equal issue promotion.
+7. Evidence strength does not grant promotion authority.
+8. Candidate authorship and independent evaluation remain separate where practical.
+9. Negative, contradictory, partial, and inconclusive results are retained.
+10. Blockers are typed and localized; unrelated Ready work continues.
+11. Human attention is consumed at decision boundaries, not routine execution boundaries.
+12. Agents may communicate, hand off, pause, supersede, and revert their own work; peer agreement does not manufacture authority.
+13. Official service CLIs/APIs are preferred operational boundaries when the project profile explicitly authorizes them.
+14. Generated context is refreshed from selected canonical sources before consequential work.
+15. New abstractions are added only for irreducible distinctions that cannot be represented by binding, specialization, constraint, projection, qualification, or composition.
+
+## Qualification discipline
+
+Normal initialization proves B0–B4. B5–B8 are conditional operational observations and must not be manufactured merely to make a report green. If no legitimate blocker, landing, concurrent worker, or recovery event occurs, record `NOT OBSERVED` / `NOT EXECUTED`.
+
+The bootstrap may define the operating rule being tested. A transfer experiment seeking behavioral evidence should not restate that rule again in the worker prompt. See `docs/BOOTSTRAP_SEQUENCE.md` and `docs/CONFORMANCE.md`.
+
+## Repository structure
+
+```text
+AUTHORITY.md                       repository conflict-resolution authority
+AGENTS.md                          root project execution contract
+GOVERNANCE.md                      normative-change and anti-bloat rules
+VERSION / VERSIONING.md            release identity and compatibility policy
+PROJECT_INTENT_TEMPLATE.md         originating intent template
+PROJECT_PROFILE_TEMPLATE.json      runtime/project bindings template
+FORMAL_RESOURCE_MANIFEST.json    pinned formal dependencies
+CONTEXT_SOURCES_TEMPLATE.json      deterministic context-source policy
+NEW_AGENT_PROMPT.md                thin worker entry prompt
+bindings/                          semantic and authority bindings
+contracts/                         extension point for project contracts
+docs/                              operating definitions, conformance, and retained negative results
+schemas/                           machine-readable coordination/context schemas
+scripts/                           init, context, validation, and release tooling
+tests/                             repository conformance tests
+.agents/skills/                    narrow reusable operating procedures
+profiles/commercialization/        optional CALP/PGP overlay
+.github/                           CI, release, issue, and PR workflow definitions
+```
+
+## Conformance
+
+Conformance is layered. Structural success is not operational or empirical validation.
+
+```text
+C0 Structural
+C1 Context
+C2 Bootstrap
+C3 Operational
+C4a Directed cross-project conformance
+C4b Behavioral transfer
+C5 Comparative empirical
+```
+
+See `docs/CONFORMANCE.md` for the exact boundaries.
+
+## Verification
+
+The complete repository gate is:
+
+```bash
+python3 scripts/check-all.py
+```
+
+For full YAML/JSON-Schema verification install the optional verification dependencies first:
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+```
+
+Release artifacts are deterministic:
+
+```bash
+python3 scripts/package-release.py --output dist --verify-reproducible
+```
+
+A tag `vX.Y.Z` is releasable only when it equals `VERSION`; the release workflow verifies, packages, and publishes the resulting archive, manifest, and SHA-256 file.
+
+## Status honesty
+
+Formal Project Bootstrap v0.5.1 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
+
+## License
+
+No repository-wide license has been selected yet. See `LICENSE.md`. Bound external resources retain their own licenses regardless of the license eventually chosen here.
+
+
+========================================================================
+FILE: SECURITY.md
+========================================================================
+
+# Security Policy
+
+## Supported releases
+
+Security fixes are applied to the current release line unless a maintainer explicitly declares otherwise.
+
+## Reporting
+
+Do not publish credentials, tokens, private endpoints, or exploitable details in a public issue. Use the repository host's private security-reporting channel when available.
+
+A useful report includes the affected version, boundary, expected invariant, observed behavior, reproduction conditions, and likely impact. Do not include live secrets.
+
+## Bootstrap security boundary
+
+This repository defines operating patterns; it does not grant access to external services. Generated projects must bind service operations explicitly. Tool availability is never authority.
+
+
+========================================================================
+FILE: SUPPORT.md
+========================================================================
+
+# Support
+
+Use issues for reproducible defects, contradictions, and bounded enhancement proposals.
+
+Questions that are specific to a bound protocol or project belong with that authority rather than being redefined here.
+
+When reporting a bootstrap problem, include the Formal Project Bootstrap version, project mode (`new` or `existing`), relevant profile/bindings, failing command or transition, and the weakest maturity claim supported by the evidence.
+
+
+========================================================================
+FILE: VERSION
+========================================================================
+
+0.5.1
+
+
+========================================================================
+FILE: VERSIONING.md
+========================================================================
+
+# Versioning
+
+The repository follows Semantic Versioning for the **Formal Project Bootstrap release**.
+
+- **Major:** breaks the bootstrap contract, generated-project shape, required schemas, or operating invariants.
+- **Minor:** adds backward-compatible repository capability, schema fields, profiles, checks, or tooling.
+- **Patch:** corrections that restore stated behavior without changing the contract.
+
+The canonical release version is the contents of `VERSION`. Tooling reads it; do not duplicate a hard-coded version in executable code.
+
+## Independent external versions
+
+Pinned protocols, profiles, and project bindings keep their own versions. A Formal Project Bootstrap release does not imply that CALP, PGP, IEPE, FE, SES, or any other bound source shares its version or maturity.
+
+## Compatibility is explicit
+
+Matching version numbers never imply cross-layer compatibility. When a project imports another formal source, declare syntax, schema, behavior, semantic, authority, and evidence compatibility in the binding/manifest.
+
+## Generated context
+
+Generated context has no independent semantic version. It is identified by generator version, aggregate source digest, and repository-state provenance.
+
+
+========================================================================
+FILE: bindings/PROJECT_BINDINGS_TEMPLATE.yaml
+========================================================================
+
+project:
+  id: "<PROJECT_ID>"
+  name: "<PROJECT_NAME>"
+
+concept_bindings:
+  - local: "<LOCAL_CONCEPT>"
+    source: "<SOURCE_ID>"
+    imported: "<SOURCE_CONCEPT>"
+    relation: "exact|equivalent|constrained|extended|analogue|conflicting|unmapped"
+    authority: "<CANONICAL_SOURCE>"
+    compatibility_effect: "none|semantic-change|authority-change|evidence-change|unknown"
+    notes: ""
+
+authority_bindings:
+  - effect: "<PROTECTED_EFFECT>"
+    holder: "<ACTOR_OR_ROLE>"
+    scope: "<SCOPE>"
+    expires: null
+
+provider_bindings:
+  work_graph: "<SYSTEM>"
+  repository: "<SYSTEM>"
+  dispatch: "<SYSTEM>"
+  verification: "<SYSTEM>"
+  protection: "<SYSTEM>"
+
+deviations: []
+
+
+========================================================================
+FILE: contracts/README.md
+========================================================================
+
+# Project-local interaction contracts
+
+Create explicit interaction contracts only for consequential effects that need them.
+
+Do not pre-author a large registry.
+
+Examples might include:
+
+```text
+deploy.production
+publish.release
+price.change
+data.delete
+asset.promote
+contract.execute
+```
+
+Use the pinned interaction protocol or project authority model that actually governs the effect.
+
+
+========================================================================
+FILE: docs/AGENT_CAPABILITIES.md
+========================================================================
+
+# Agent Capabilities
+
+Prefer a small execution-role set. Domain specialization belongs in skills, work packets and profiles rather than permanent agent identities.
+
+## Coordinator
+
+Maintains live project state and lawful Ready frontier.
+
+Does not invent authority, scope or evidence.
+
+## Worker
+
+Executes one bounded work item in an isolated surface.
+
+May use domain skills supplied by the issue context.
+
+## Evaluator
+
+Independently evaluates a frozen candidate against declared acceptance/evidence obligations. No candidate edits during the evaluation pass.
+
+## Reconciler
+
+Read-only reconstruction of current repository/provider/work/evidence state.
+
+## Context Compiler
+
+Produces deterministic project corpus and bounded work packets. Never changes canonical meaning.
+
+## Why this is small
+
+“Asset scout,” “market researcher,” “pilot designer,” “OCR reviewer,” “UI implementer,” etc. are task capabilities, not authorities.
+
+Creating a named agent for every activity increases duplicated doctrine and routing burden. Specialize the work; keep the execution roles stable.
+
+
+========================================================================
+FILE: docs/ALIGNMENT.md
+========================================================================
+
+# Formal Source Alignment
+
+The project may compose many independently evolving definitions. Alignment is explicit; it is never inferred from similar wording or matching version numbers.
+
+## Relation vocabulary
+
+Use the smallest sufficient relation:
+
+```text
+DEFINES
+IMPORTS
+BINDS_EXACTLY
+SPECIALIZES
+CONSTRAINS
+EXTENDS
+MAPS_AS_ANALOGUE
+SUPERSEDES
+CONTRADICTS
+IMPLEMENTS
+REALIZES
+EVIDENCES
+QUALIFIES
+PROJECTS
+DEVIATES_FROM
+```
+
+A contradiction is a representable state, not a reason to create another document.
+
+## Compatibility dimensions
+
+Version compatibility is multidimensional:
+
+```text
+syntax
+schema
+behavior
+semantics
+authority
+evidence
+```
+
+A dependency may be API-compatible and semantically incompatible.
+
+## One-authority rule
+
+Do not add a second glossary, architecture definition, workflow contract, status store, skill body or protocol copy to make drift disappear.
+
+Keep one canonical statement and reference it.
+
+## Drift handling
+
+When two sources disagree:
+
+1. identify both source identities and revisions;
+2. classify each source's authority role;
+3. record the relation/contradiction;
+4. apply existing precedence for current operation;
+5. create bounded work if normative resolution is required;
+6. regenerate downstream context only after source correction.
+
+## Promotion test for a new abstraction
+
+Before adding a canonical concept ask:
+
+```text
+Can this be referenced?
+Can it be bound?
+Can it be specialized?
+Can it be constrained?
+Can it be projected?
+Can it be qualified?
+Can it be composed?
+```
+
+Only if all fail should a new canonical concept be considered.
+
+
+========================================================================
+FILE: docs/AUTHORITY_MODEL.md
+========================================================================
+
+# Authority Model
+
+## Principle
+
+Authority is the right to cause a protected effect under scope.
+
+```text
+CAPABILITY != PERMISSION != EVIDENCE != QUALIFICATION != PROMOTION AUTHORITY
+```
+
+Tool access, repository access, model capability, expertise, confidence and peer consensus do not create authority.
+
+## Instrument stratification
+
+Wherever two record types can attach to one consequential effect, the governing state declares which instrument **authorizes** the effect and which merely observes, remembers, or pressures. The weaker instrument grants nothing.
+
+A debt entry, receipt, evidence record, observation, or claim never substitutes for the authorizing instrument, however faithfully it is recorded. **Authorization by the cheaper record** is a named illegal pattern; every normative change is checked against it.
+
+(Incident provenance: a debt-ratchet clause once permitted deploying a locally patched dependency merely by recording the debt, bypassing the deviation requirement — caught in owner review, not by drafting or verification. semantic-cms NR-scms-001, 2026-08-28.)
+
+## Effect classes
+
+```text
+E0  observational
+E1  reversible internal mutation
+E2  reversible/compensable operational mutation
+E3  consequential external commitment
+E4  durable/irreversible effect
+```
+
+Projects may refine these classes but must not silently weaken a higher-level protected effect.
+
+## Minimum generic authorities
+
+A project should bind effects rather than proliferating role names.
+
+```text
+project mutation
+qualification
+promotion
+production operation
+deviation
+```
+
+Domain profiles add only the authorities they actually need.
+
+## Protected-effect rule
+
+An operation is applicable only when all are true:
+
+```text
+operation exists
+∧ current state permits it
+∧ dependencies permit it
+∧ actor has scoped authority
+∧ budget permits it
+∧ required evidence/checks exist
+∧ recovery requirements are satisfied
+```
+
+Technical possibility is irrelevant.
+
+## Human deviation
+
+A human may intentionally change the governing state. The safe form is a recorded deviation:
+
+```ts
+interface Deviation {
+  id: string;
+  authorityRef: string;
+  ruleRef: string;
+  reason: string;
+  scope: string[];
+  allowedEffects: string[];
+  createdAt: string;
+  expiresAt?: string;
+  recovery?: string;
+  evidenceRequired?: string[];
+}
+```
+
+A deviation does not rewrite the original rule. It is bounded, owned, visible and closable.
+
+## Failure
+
+If an effect is possible but unauthorized:
+
+```text
+AUTHORITY_MISSING
+mutation = none
+record blocker
+release/park claim
+continue unrelated Ready work
+```
+
+
+========================================================================
+FILE: docs/BOOTSTRAP_SEQUENCE.md
+========================================================================
+
+# Bootstrap Sequence
+
+The bootstrap establishes a usable operating substrate without manufacturing evidence for capabilities that have not naturally occurred.
+
+## Existing-project entry
+
+When `PROJECT_PROFILE.json` or the initializer identifies `operatingMode: existing`, read `EXISTING_PROJECT_ADOPTION.md` before treating bootstrap files as project authority. Existing-project admission is non-destructive and remains incomplete until collisions and authority are reconciled.
+
+## Phase 0 — Project identity
+
+Instantiate and finalize:
+
+```text
+PROJECT_INTENT.md
+PROJECT_PROFILE.json
+FORMAL_RESOURCE_MANIFEST.json
+bindings/PROJECT_BINDINGS.yaml
+CONTEXT_SOURCES.json
+records/
+```
+
+Bind the minimum authority and execution provider required by originating intent.
+
+No mutation becomes Ready while material project identity is unresolved.
+
+## Phase 1 — Pin formal resources
+
+Materialize only resources that materially constrain the project.
+
+For every external resource, record where available:
+
+```text
+identity
+kind
+version
+immutable revision or digest
+canonical source
+local mount or address
+authority role
+compatibility standing
+```
+
+Resource importance does not imply normative authority. Generated context is never a formal-resource authority.
+
+### Gate B0 — Resource integrity
+
+Pass only when every required resource is addressable and no required dependency relies on an unpinned `latest`, an unverifiable summary, or generated context as its canonical source.
+
+## Phase 2 — Compile project context
+
+Run:
+
+```bash
+python3 scripts/gen-context.py
+python3 scripts/gen-context.py --check
+```
+
+Produce:
+
+```text
+.agents/llms.txt
+.agents/llms-full.txt
+.agents/context-lock.json
+```
+
+### Gate B1 — Context reproducibility
+
+Pass only when unchanged canonical inputs regenerate the same aggregate source digest and generated context.
+
+Repository/branch/nested-repository state is provenance. Generated context must not participate in the identity it is attempting to describe.
+
+## Phase 3 — Read-only reconciliation
+
+Reconcile before creating or mutating work:
+
+```text
+project/repository identity
+branch/revision/nested repository state
+formal-resource pins
+authority and bindings
+existing implementation
+tests/gates
+live work and claims
+provider state where authorized
+evidence
+negative knowledge
+deviations
+alignment tensions
+```
+
+Do not repair during the reconciliation pass.
+
+### Gate B2 — Baseline reconciliation
+
+Pass when the current state has been reconstructed and unresolved findings are represented honestly as state, evidence, contradiction, blocker, or bounded work.
+
+## Phase 4 — Initialize the smallest useful work graph
+
+Create only enough work to establish the shortest lawful goal sequence toward originating intent.
+
+### Gate B3 — Ready contract
+
+Pass when at least one work item satisfies the complete Ready predicate in `WORK_GRAPH.md` without inventing missing authority or scope.
+
+## Phase 5 — Prove one reversible cycle
+
+Choose one lawful E0/E1 item and execute:
+
+```text
+reconcile
+→ select
+→ validate
+→ claim
+→ isolate
+→ assemble bounded context
+→ execute
+→ verify candidate
+→ record evidence
+→ release
+→ reconcile
+```
+
+### Gate B4 — Reversible operating cycle
+
+Pass when the cycle demonstrates bounded mutation, current source/context identity, claim isolation, evidence capture, honest disposition, cleanup, and work-state update.
+
+---
+
+# Conditional operational gates
+
+B5–B8 are capability observations, not prerequisites that normal project initialization should manufacture.
+
+**Do not create fake blockers, artificial stale state, unnecessary landings, or synthetic peer communication merely to obtain a PASS.**
+
+If a condition has not occurred, record `NOT OBSERVED` or `NOT EXECUTED` and continue lawful work.
+
+An explicit qualification experiment may arrange a safe scenario for one of these gates, but that evaluator instruction is outside the project's ordinary operating authority and must not be confused with spontaneous behavioral evidence.
+
+## Gate B5 — Frontier reselection
+
+When a legitimate localized blocker occurs while unrelated Ready work exists, observe whether project execution continues lawfully after blocker classification and claim disposition.
+
+PASS requires useful execution to continue without a human supplying the next work item.
+
+A blocked item by itself is not a PASS.
+
+## Gate B6 — Candidate / landing / evidence separation
+
+When work naturally reaches integration, preserve the distinctions:
+
+```text
+implementation exists
+!= candidate verified
+!= landed
+!= landed-state verified
+!= evidence closed
+!= promoted
+```
+
+PASS requires recorded identities for the candidate and landed state, verification appropriate to each, and no self-promotion by implication.
+
+If the project has no landing event yet, record `NOT OBSERVED`.
+
+## Gate B7 — Multi-agent coordination
+
+When two or more workers are genuinely concurrent, observe whether evidence-bearing communication materially participates in coordination while mutable scopes and authority remain bounded.
+
+PASS requires at least one material coordination event and no authority-by-consensus.
+
+No second worker means `NOT EXECUTED`, not failure.
+
+## Gate B8 — Recovery
+
+When a real stale claim, stale context, stale branch, interrupted worker, or inconsistent coordination state occurs, recover using `RECOVERY.md`.
+
+PASS requires detection, preservation of useful work, reconstruction from canonical state, lawful ownership/state repair, and resumption from a known condition without relying on hidden conversational memory.
+
+No recovery event means `NOT OBSERVED`.
+
+## Phase 6 — Add domain profiles only from intent
+
+Bind optional overlays only when originating intent actually requires them.
+
+Examples:
+
+```text
+commercialization
+physical simulation
+decision protocol
+semantic UI
+research/evaluation
+```
+
+A profile specializes the base environment. It does not redefine base operating semantics.
+
+## Phase 7 — Increase autonomy from evidence
+
+Raise concurrency, effect classes, external-service permissions, or model substitution only after observed runs support the change.
+
+
+========================================================================
+FILE: docs/CONFORMANCE.md
+========================================================================
+
+# Conformance
+
+Conformance is layered so one kind of success cannot be mistaken for another.
+
+## C0 — Structural
+
+Required canonical files, schemas, scripts, and repository metadata exist and parse.
+
+## C1 — Context
+
+Compiled context regenerates deterministically from canonical source selection and its aggregate source digest matches current inputs.
+
+## C2 — Bootstrap
+
+A project can be instantiated from the release and passes local structural/context validation with project-specific intent/profile/resource state finalized.
+
+## C3 — Operational
+
+A project completes at least one reversible end-to-end work cycle through authorization, execution, candidate verification, evidence recording, disposition, and claim release.
+
+## C4a — Directed cross-project conformance
+
+The unmodified bootstrap succeeds in an unrelated project under an explicitly arranged qualification scenario.
+
+This establishes that the environment can enact the specified behavior. It does **not** establish that the behavior would arise without evaluator steering.
+
+## C4b — Behavioral transfer
+
+The unmodified bootstrap succeeds in an unrelated project when the worker receives only the project objective and ordinary bootstrap entry instruction; target behaviors are not restated in the experiment prompt.
+
+Evidence may include natural blocker handling, frontier reselection, landing separation, coordination, recovery, authority restraint, and honest unsupported-state reporting.
+
+The project environment may of course contain its own canonical operating rules. The evaluator must not teach the tested response again in the worker prompt.
+
+## C4c — Existing-project adoption
+
+The unmodified bootstrap is adopted into a materially pre-existing project without replacing legitimate project authority, history, semantics, or operating boundaries.
+
+PASS requires evidence that:
+
+- pre-existing project identity and canonical authority were discovered before synthesis;
+- conflicting bootstrap candidates were preserved rather than overwriting project files;
+- bindings distinguish existing authority from bootstrap operating semantics;
+- existing tests/gates continue to pass or any regression is explicitly attributed;
+- unresolved contradictions remain represented;
+- generated context is rebuilt from reconciled sources; and
+- at least one bounded Ready item can execute after adoption without requiring the human to restate the migration procedure.
+
+C4c does not establish comparative advantage or long-running autonomy.
+
+## C5 — Comparative empirical evidence
+
+Preregistered comparative runs test a claimed effect of the formal environment against a baseline condition, controlling model/task conditions where practical.
+
+Examples include intervention count, premature stops, scope/authority violations, unsupported claims, recovery success, repeated failed approaches, evidence quality, context cost, and model capability required.
+
+A release must state the highest level actually established and the experimental condition used.
+
+
+========================================================================
+FILE: docs/CONTEXT_COMPILATION.md
+========================================================================
+
+# Context Compilation
+
+Compiled context is required operating infrastructure after project initialization. It is never normative authority.
+
+## Outputs
+
+```text
+.agents/llms.txt
+.agents/llms-full.txt
+.agents/context-lock.json
+```
+
+`llms.txt` is the search/navigation index. `llms-full.txt` is the deterministic transport/search corpus. `context-lock.json` binds those projections to the exact selected source contents and records Git repository state observed when compilation occurred.
+
+## Validity
+
+Context validity is determined by the aggregate digest of selected canonical sources. Repository HEAD is retained as **provenance**, not used as a self-referential validity predicate: a tracked generated file cannot contain the hash of the commit that contains itself.
+
+A changed branch or commit therefore triggers reconciliation, not automatic semantic invalidity. If selected source contents changed, the digest changes and the context is stale. If Git state changed but selected sources did not, the corpus remains content-valid, while branch-specific/absence claims must still be rechecked against live repository state.
+
+## Rules
+
+- Never edit generated context to fix authority.
+- Regenerate after material canonical-source changes.
+- Record exact repository/nested-repository state before consequential work.
+- Treat null search results as bounded by the checkout represented, not as universal absence.
+- Active workers load only issue-relevant excerpts even though the full corpus is available.
+
+## Commands
+
+```bash
+python3 scripts/gen-context.py
+python3 scripts/gen-context.py --check
+```
+
+
+========================================================================
+FILE: docs/EVIDENCE_METHOD.md
+========================================================================
+
+# Evidence Method
+
+Evidence records what was actually established against an identifiable artifact, environment, revision, or participant condition.
+
+Evidence does not acquire authority merely by existing.
+
+## Core outcomes
+
+Use the weakest accurate disposition:
+
+```text
+observed
+reproduced
+not_reexecuted
+contradicted
+inconclusive
+human_required
+```
+
+`not_reexecuted` is not refutation.
+`contradicted` must preserve the conflicting observation.
+`human_required` cannot be closed synthetically by an agent.
+
+## Required provenance
+
+Record where relevant:
+
+```text
+claim or work item
+artifact/revision
+environment
+procedure/commands
+result
+negative paths
+limitations
+producer/evaluator
+context or repository identity
+```
+
+Do not manufacture precision the environment does not expose.
+
+## Maturity
+
+Never collapse:
+
+```text
+Documented
+Implemented
+Tested
+Empirically Validated
+```
+
+Nor:
+
+```text
+candidate verified
+landed
+landed-state verified
+evidence closed
+promoted
+```
+
+Evidence strength and promotion authority are separate dimensions.
+
+
+========================================================================
+FILE: docs/EXECUTION_PIPELINE.md
+========================================================================
+
+# Execution Pipeline
+
+## Coordinator loop
+
+```text
+PREFLIGHT
+→ RECONCILE
+→ COMPUTE READY FRONTIER
+→ SELECT
+→ VALIDATE
+→ CLAIM
+→ ISOLATE
+→ COMPILE CONTEXT
+→ EXECUTE
+→ CANDIDATE
+→ EVALUATE
+→ QUALIFY WHEN REQUIRED
+→ APPLY AUTHORIZED STATE
+→ RECORD
+→ RELEASE
+→ RECONCILE
+→ NEXT
+```
+
+## Local blocker semantics
+
+A worker may return:
+
+```text
+DONE
+BLOCKED
+FAILED
+SUPERSEDED
+ABANDONED
+WAITING_EXTERNAL
+```
+
+The coordinator then asks:
+
+```text
+Does this invalidate project-wide authority/safety?
+  yes → GLOBAL STOP / human decision
+  no  → update graph and recompute Ready frontier
+```
+
+Do not turn a local blocker into a conversational project halt.
+
+## Retry
+
+Retry only when:
+
+```text
+failure class is retryable
+∧ new information or changed state exists
+∧ declared recovery exists
+∧ retry budget remains
+```
+
+Never repeatedly send an unchanged blocker to the same worker.
+
+## Goal sequencing
+
+Before mutation, identify:
+
+```text
+prerequisites
+ordered work
+verification
+promotion/evidence
+cleanup
+```
+
+Continue through obvious lawful successors without waiting for a new prompt.
+
+## Findings outside scope
+
+Classify:
+
+```text
+in-scope
+related-out-of-scope
+decision-required
+```
+
+Fix only in-scope findings. Preserve the rest as work/evidence.
+
+## Human decision boundary
+
+Escalation packets should contain:
+
+```text
+decision needed
+why existing rules cannot decide
+affected work
+available alternatives
+evidence
+consequence of no decision
+smallest authority change required
+```
+
+The human should resolve the governing state, not micromanage implementation.
+
+## Model routing
+
+Use the smallest model that can satisfy the work contract.
+
+```text
+deterministic tool / validator first
+small model for mechanical bounded work
+larger model for unresolved architecture/strategy/contradiction
+```
+
+Model tier never grants authority.
+
+
+========================================================================
+FILE: docs/EXECUTION_PROVIDER_CONTRACT.md
+========================================================================
+
+# Execution Provider Contract
+
+A provider is implementation infrastructure. It is not project authority.
+
+## Required capabilities
+
+A conformant provider can support:
+
+```text
+work graph read/write
+claim/release
+dependency state
+isolated workspace
+source/revision identity
+bounded dispatch
+cancellation
+exact verification
+evidence capture
+protected-effect denial
+live reconciliation
+```
+
+## Official operational interfaces
+
+Prefer the service owner's official CLI/API/connector when practical.
+
+The project profile declares allowed interfaces and environments.
+
+An official CLI is useful because it provides a stable, typed service boundary. It does not enlarge permission.
+
+Before mutation the agent must identify:
+
+```text
+provider/account
+project
+environment
+target resource
+current state/revision
+requested effect
+authorized scope
+rollback/recovery
+```
+
+## Credential posture
+
+Prefer:
+
+```text
+short-lived
+scope-bound
+provider-mediated
+not printed
+not copied into project files
+```
+
+Agents do not create or widen credentials merely because a CLI supports it.
+
+## Live state
+
+Provider snapshots and local caches are hints.
+
+Live provider state controls reconciliation.
+
+## Failures
+
+Classify provider failure once.
+
+Do not continuously poll/retry quota, auth, billing, unavailable service or deterministic configuration failures.
+
+A localized provider blocker should release only affected work. A provider failure that makes claims/state unsafe is a global stop.
+
+## Replaceability
+
+A provider may be replaced only if these survive:
+
+```text
+work-state meaning
+authority
+candidate identity
+evidence lineage
+context identity
+recovery semantics
+conformance checks
+```
+
+
+========================================================================
+FILE: docs/EXISTING_PROJECT_ADOPTION.md
+========================================================================
+
+# Existing-Project Adoption
+
+Existing-project adoption is reconciliation, not installation. FPB arrives as an operating substrate; it does not acquire authority merely because it is newer.
+
+## Governing invariant
+
+```text
+existing project truth
++ FPB operating substrate
+!= project replacement
+```
+
+The adoption sequence is:
+
+```text
+observe
+→ classify
+→ preserve
+→ bind
+→ fill only missing operating gaps
+→ compile
+→ reconcile
+→ qualify
+→ operate
+```
+
+## Phase A — Read-only discovery
+
+Before consequential mutation, reconstruct from live project state where available:
+
+- project/repository identity, remotes, branch, revision, dirty state, nested repositories;
+- originating/current intent and explicit non-goals;
+- authority hierarchy and protected effects;
+- architecture, PRDs, schemas, design/token systems, policies, research, benchmarks;
+- existing agent instructions and execution conventions;
+- tests, CI, release/deployment surfaces and provider boundaries;
+- work graph, claims, evidence, negative results, known limitations and rejected approaches.
+
+Do not infer authority from filenames alone. Do not repair findings during discovery.
+
+## Phase B — Bootstrap admission
+
+Run the initializer with `--mode existing`.
+
+The initializer is non-destructive. When an FPB candidate conflicts with an existing path, the existing path remains untouched and the FPB candidate is staged under `.formal-bootstrap/candidates/`. The collision is an unresolved alignment fact, not permission to copy the candidate over the project.
+
+A non-zero collision disposition means **admitted but not reconciled**, not failed installation and not completed adoption.
+
+## Phase C — Reconciliation and binding
+
+For each collision or overlapping concept, determine the relationship before synthesis:
+
+```text
+exact
+equivalent
+constrained
+extended
+analogue
+conflicting
+unmapped
+```
+
+Prefer existing canonical project authority when it legitimately owns the concept. FPB should provide missing operating semantics by binding or specialization rather than by creating duplicate doctrine.
+
+Do not create a second glossary, architecture map, work authority, evidence model, or agent contract merely to make adoption look clean.
+
+If the project lacks a normalized `PROJECT_INTENT.md`, synthesize one from the strongest existing project evidence and record provenance. A generated placeholder is not project intent and must not be promoted as such.
+
+## Phase D — Minimal gap closure
+
+Introduce only missing operating primitives. Examples:
+
+- existing issue workflow → bind it;
+- existing CI/test gates → register them;
+- existing evidence ledger → retain it;
+- existing agent rules → reconcile them;
+- missing compiled context → add it;
+- missing negative-knowledge retention → add the smallest compatible record;
+- missing blocker/frontier semantics → add only the required operating contract.
+
+Tool availability never grants permission and provider access must not be widened merely to complete adoption.
+
+## Phase E — Context and baseline
+
+Compile context only after source authority and collisions are coherent enough to describe the project truthfully. Generated context is required for operation but remains non-normative.
+
+Run the normal B0–B4 sequence. B5–B8 remain conditional observations and must not be manufactured for adoption.
+
+## C4c qualification
+
+Existing-project adoption is qualified only when:
+
+```text
+identity preserved
+authority preserved
+history/negative knowledge preserved
+existing behavior preserved or regression classified
+bindings explicit
+contradictions retained
+context reproducible
+smallest Ready frontier established
+one bounded cycle completed
+```
+
+A migration may be useful while still remaining `PARTIAL` because of unresolved authority, contradictory intent, stale evidence, unavailable providers, or unexecuted operational gates. Preserve the weaker claim.
+
+## Stop conditions
+
+Stop and require a genuine decision when adoption would require:
+
+- replacing an existing canonical authority without precedence;
+- choosing between materially conflicting project identities or intents;
+- introducing a new canonical architecture/schema/service boundary;
+- weakening existing tests, security, deployment, or evidence gates;
+- widening provider permissions or creating credentials;
+- discarding unresolved contradiction or historical negative knowledge.
+
+Otherwise, unresolved local adoption findings become bounded work and the project continues through lawful Ready items.
+
+
+========================================================================
+FILE: docs/FORMAL_RESOURCES.md
+========================================================================
+
+# Formal Resources
+
+Formal resources are external or project-local bodies of knowledge that materially constrain the project.
+
+They are registered in `FORMAL_RESOURCE_MANIFEST.json`.
+
+## Resource kinds
+
+Typical kinds include:
+
+```text
+protocol
+PRD
+architecture
+design-system
+token-system
+schema-pack
+policy
+research-corpus
+benchmark
+reference
+```
+
+The list is open. Do not create a new kind when an existing one is sufficient.
+
+## Resource record
+
+A resource records, when applicable:
+
+```text
+id
+kind
+required
+version
+immutable revision or digest
+canonical source
+local mount or address
+authority role
+resource inventory
+compatibility standing
+```
+
+## Authority is separate from importance
+
+A research corpus can be highly valuable while remaining non-normative.
+A schema may be normative for serialization while irrelevant to project strategy.
+A generated context corpus is operationally important but never source authority.
+
+Do not collapse these distinctions.
+
+## Pinning
+
+Prefer immutable revisions or content digests. `latest` is not a pin.
+
+If an immutable revision cannot be established, record the limitation instead of fabricating one.
+
+## Consumption
+
+Resources are consumed as pinned dependencies: a package or crate dependency, a schema-pack import, or a mechanical sync from the pinned revision. A synced copy is a cache of the pin, not a fork.
+
+Local modification of consumed code or specifications is prohibited except under a recorded deviation (see the authority model).
+
+## Upstream-first repair
+
+When a capability is needed, broken, or missing in a resource, the change is made in the owning project under that project's own authority and process; the consuming project then re-pins the new revision.
+
+A re-pin is a compatibility event: it carries a declared compatibility statement and may trigger re-qualification.
+
+## Upstream debt
+
+The debt record is memory and pressure, never permission.
+
+Deploying a locally patched resource requires the deviation instrument **first** — owner-authorized, bounded, with the upstream fix landing as its reversal trigger. At deviation approval, the patch is captured as a diff against the owning project (a receipt, never a vendored fork) and a debt is registered (e.g. `records/upstream-debts.jsonl`, optional) **referencing the deviation**.
+
+Registered debts age: a standing warning that escalates, so neither the deviation nor its debt sits open indefinitely. Closing the debt (upstream fix landed, re-pinned) discharges the deviation. A deployed local patch without a live deviation is a violation however faithfully its debt is recorded.
+
+## Missing companions
+
+Do not invent missing schemas, conformance fixtures, companion protocols, or research conclusions to make a resource look complete.
+
+Missing remains explicit until supplied by the resource owner or project authority.
+
+
+========================================================================
+FILE: docs/INITIAL_EPICS_TEMPLATE.md
+========================================================================
+
+# Initial Epics Template
+
+Do not create all of these automatically. Instantiate only the epics required by observed project state.
+
+## Epic 0 — Operating substrate
+
+Prove:
+
+```text
+identity
+formal source pins
+authority
+context compilation
+work graph
+provider binding
+one reversible cycle
+blocker reselection
+```
+
+Exit: operating substrate `Tested`.
+
+## Epic 1 — Canonical domain definition
+
+Only if the project lacks a stable domain model/PRD/schema.
+
+Output should define the smallest sufficient concepts and boundaries.
+
+## Epic 2 — Existing-state audit
+
+For existing projects, compare canonical contract against implementation/live state. Convert fillable gaps into bounded issues. Retain absent/unknown/contradictory state.
+
+## Epic 3 — First end-to-end value path
+
+Implement the narrowest path that proves the project's originating intent.
+
+## Epic 4 — Qualification / evidence
+
+Close only the claims that matter to the first value path.
+
+## Epic 5 — Operational hardening
+
+Add production/service autonomy only after bounded evidence supports it.
+
+## Domain overlays
+
+Profiles may propose additional epics, but base project governance never assumes commercialization, UI, physics, research or deployment is required.
+
+
+========================================================================
+FILE: docs/LANDING_AND_PROMOTION.md
+========================================================================
+
+# Landing and Promotion
+
+Implementation, integration, evidence closure, and promotion are separate state transitions.
+
+## Required distinction
+
+```text
+candidate exists
+      ↓
+candidate verified
+      ↓
+landed/integrated
+      ↓
+landed state verified
+      ↓
+evidence closed
+      ↓
+promotion authorized
+```
+
+A project may omit stages that genuinely do not exist, but it may not silently merge stages that do.
+
+## Candidate identity
+
+Evaluation binds to a frozen candidate revision or artifact identity.
+
+Changing the candidate invalidates evaluation that depended on the prior identity.
+
+## Landing
+
+Landing means the candidate became part of the project system of record: for example a merge/fast-forward, accepted package revision, schema migration, or equivalent integration event.
+
+Landing does not prove the landed state behaves as the candidate did.
+
+## Post-landing verification
+
+Verify the actual landed identity when acceptance depends on integration.
+
+## Promotion
+
+Promotion is an authority decision. Passing tests, evaluator agreement, peer consensus, or landed status does not manufacture promotion authority.
+
+
+========================================================================
+FILE: docs/MULTI_AGENT_COORDINATION.md
+========================================================================
+
+# Multi-Agent Coordination
+
+## Principle
+
+Multiple workers are concurrent partial observers of one project, not independent authorities.
+
+Communication exists to exchange evidence and update planning assumptions.
+
+## Isolation
+
+Every mutation worker has:
+
+```text
+work item
+claim
+repository/artifact scope
+isolated workspace
+owned paths/namespaces
+context digest
+```
+
+Disjoint ownership is the default.
+
+Allocate scarce namespaces—migration numbers, gate IDs, ports, fixture keys, release names—before dispatch.
+
+## Communication
+
+Use `AgentMessage` for facts that may affect another worker.
+
+Message impacts:
+
+```text
+informational
+blocks
+unblocks
+supersedes
+requests_handoff
+requests_review
+invalidates_assumption
+```
+
+Messages carry source/revision/context identity so stale observations are visible.
+
+## Receiving a material message
+
+If the message intersects a live assumption:
+
+```text
+pause at safe checkpoint
+→ preserve current candidate
+→ inspect evidence
+→ re-read live state
+→ re-evaluate approach
+```
+
+Possible disposition:
+
+```text
+continue
+pause
+handoff
+supersede
+revert
+abandon
+```
+
+Reversion is not failure when a peer has established a better path.
+
+## Handoff
+
+A handoff names:
+
+```text
+from / to
+work item
+candidate/checkpoint
+owned paths
+what is complete
+what remains
+evidence
+known risks
+claim release/acquisition order
+```
+
+The receiving worker does not mutate until the old claim is released or the coordinator has transferred it.
+
+## Shared-state writes
+
+Coordinator or provider-native atomic mechanisms serialize:
+
+```text
+claims
+status promotion
+shared namespace allocation
+canonical evidence replacement
+project-wide decisions
+```
+
+Peers do not race to “help.”
+
+## No authority by coalition
+
+Two or twenty agents agreeing does not create:
+
+```text
+promotion authority
+permission
+ownership
+contract authority
+publication authority
+deviation authority
+```
+
+## Contradiction
+
+When peers disagree, preserve both claims and their evidence. Use existing precedence/evaluation. Do not erase disagreement through averaging or consensus prose.
+
+
+========================================================================
+FILE: docs/NEGATIVE_KNOWLEDGE.md
+========================================================================
+
+# Negative Knowledge
+
+A project retains useful failures so future workers do not repeatedly rediscover them.
+
+Persist material negative results in `records/negative-results.jsonl`.
+
+A negative result should record:
+
+```text
+what was attempted
+scope/revision/environment
+what failed or was disproven
+evidence
+consequence
+whether the result is local or general
+what new evidence would justify reopening it
+```
+
+Do not convert an abandoned path into universal doctrine unless the evidence supports that scope.
+
+Do not delete a negative result merely because a later implementation succeeded by a different method.
+
+## Named drafting failure classes
+
+Recorded once, checked on normative changes:
+
+```text
+authorization by the cheaper record
+  two record types attach to one consequential effect; the weaker is made sufficient
+descriptive-to-normative contamination
+  canonizing a worked example imports its accidents (sequencing, defaults)
+  along with its essence; norms choose these, never inherit them
+```
+
+## Enforcement
+
+Retention does not prevent rediscovery. A recorded result was re-run in an
+observed adoption, reproduced its documented failure, and was proposed as new
+work by the worker that had recorded it. `scripts/check-negative-results.py`
+refuses a change that reintroduces a gated row.
+
+A row is gated only when it carries `detect` patterns:
+
+```json
+{"id": "NR-007", "detect": ["<pattern>"], "allow": ["path/glob"], "gate": true}
+{"id": "NR-008", "gate": false, "gate_reason": "no signature distinct from the mechanism that legitimately ships"}
+```
+
+Three rules keep it usable:
+
+- **Gate the minority.** A marker must mean a retry and nothing else. A row
+  whose evidence is narrower than its pattern should not be gated at all.
+- **Read the diff, not the tree.** A retry is something a change adds. Scanning
+  a repository finds the intent document, the source comment and the ledger
+  entry that correctly name what is closed.
+- **Keep the override lawful.** A deviation naming the row waives it, so the
+  governing state changes explicitly.
+
+A gate that fires on documentation is switched off within a day, and takes the
+ledger's credibility with it.
+
+
+========================================================================
+FILE: docs/NEGATIVE_RESULTS.md
+========================================================================
+
+# Negative Results
+
+Repository-level rejected directions are retained so later changes do not rediscover them as novel improvements.
+
+## NR-001 — Generated context as optional convenience
+
+**Rejected.** The operating method depends on cheap, coherent, reproducible agent access to the formal environment. Generated context is therefore required after initialization, while remaining strictly non-normative and rebuildable.
+
+## NR-002 — Commercialization as the base project worldview
+
+**Rejected.** Commercialization is a valid profile, not a universal project primitive. CALP/PGP remain optional overlays.
+
+## NR-003 — Large permanent agent-role taxonomy
+
+**Rejected.** Stable roles are kept minimal; domain specialization belongs in work packets, profiles, and skills. Permanent role proliferation increases context and coordination burden without demonstrated need.
+
+## NR-004 — Exact root Git HEAD as context validity
+
+**Rejected.** A tracked generated context file cannot truthfully contain the hash of the commit that contains itself. Context validity is bound to selected canonical-source contents. Git commit/branch/nested-repository state remains provenance and a reconciliation signal.
+
+## NR-005 — Human instruction as invisible rule bypass
+
+**Rejected.** Manual overrides are represented as scoped deviations so the governing state changes explicitly rather than forcing the worker to choose between standing doctrine and an ad hoc command.
+
+## 2026-08-27 — Directed qualification is not behavioral-transfer evidence
+
+**Rejected inference:** a worker that performs B5/B7/B8 after the evaluator prompt explicitly describes the expected response proves that the environment caused the behavior spontaneously.
+
+**Why rejected:** the evaluator instruction is part of the causal input. Such a run is valid directed conformance evidence but cannot isolate behavioral transfer from prompt steering.
+
+**Reopen condition:** none; this is a claim-boundary rule. Future work may establish behavioral transfer by withholding target-response restatement from the experiment prompt and comparing conditions prospectively.
+
+
+========================================================================
+FILE: docs/RECOVERY.md
+========================================================================
+
+# Recovery
+
+Recovery reconstructs safe operating state from canonical project records rather than hidden conversational memory.
+
+## Recovery triggers
+
+Examples:
+
+```text
+stale context lock
+stale or orphaned claim
+worker termination
+branch behind material canonical change
+unexpected dirty state
+coordination collision
+provider state changed beneath a claim
+```
+
+## Procedure
+
+```text
+stop unsafe mutation
+→ preserve WIP/candidate/evidence
+→ identify repository + branch + revision + dirty state
+→ verify context/source identity
+→ reread live work/claims/provider state
+→ classify stale or conflicting ownership
+→ regenerate context when required
+→ release/reacquire/transfer claims lawfully
+→ rerun relevant checks
+→ resume from a known state
+```
+
+Never erase another worker's unknown state as a shortcut to recovery.
+
+Do not force-reset or delete work merely because it is inconvenient.
+
+## Recovery evidence
+
+Record:
+
+```text
+trigger
+stale/inconsistent state detected
+what was preserved
+canonical state reconstructed
+ownership changes
+context changes
+checks rerun
+supported resumption point
+```
+
+
+========================================================================
+FILE: docs/SKILLS_INDEX.md
+========================================================================
+
+# Skills Index
+
+This file is navigational only. Each skill's own `SKILL.md` is authoritative for its trigger and procedure.
+
+| Skill | Use |
+|---|---|
+| `reconcile-project` | Reconstruct project/repository/context/work/evidence state read-only. |
+| `operate-frontier` | Select and execute lawful Ready work, including blocker disposition and reselection. |
+| `verify-outcome` | Evaluate a frozen candidate and state the supported maturity/evidence. |
+| `coordinate-workers` | Coordinate disjoint concurrent workers with evidence-bearing messages and explicit handoffs. |
+| `compile-context` | Regenerate and verify deterministic non-normative project context. |
+
+Do not copy skill bodies into this index or into other doctrine merely to make them easier to find.
+
+
+========================================================================
+FILE: docs/STATUS.md
+========================================================================
+
+# Project Status
+
+Formal Project Bootstrap v0.5.0 is a **candidate reusable project substrate**.
+
+Repository mechanics are implemented and mechanically tested. Earlier v0.3.0 transfer work provides directed cross-project evidence and exposed a reproducible context-identity defect, but that work used evaluator prompts that restated substantial target behavior. It therefore must not be described as clean behavioral-transfer evidence for v0.5.0.
+
+Current supported maturity for v0.5.0:
+
+- doctrine: documented;
+- repository tooling: implemented;
+- structural/context/release checks: tested;
+- self-instantiation: mechanically tested;
+- directed cross-project lineage: evidence exists from v0.3.0, not automatically inherited as a v0.5.0 PASS;
+- behavioral transfer (C4b): not yet executed on v0.5.0;
+- comparative empirical advantage (C5): not established.
+
+
+========================================================================
+FILE: docs/WORK_GRAPH.md
+========================================================================
+
+# Work Graph
+
+## States
+
+```text
+Backlog
+Ready
+In progress
+In review
+Done
+Verified
+```
+
+Provider labels may differ; meanings must not.
+
+## Ready predicate
+
+```text
+scope complete
+∧ exclusions complete
+∧ dependencies satisfied
+∧ acceptance defined
+∧ evidence requirements defined
+∧ permissions/effect class valid
+∧ target workspace resolvable
+∧ budget valid
+∧ stop conditions present
+```
+
+Evaluator identity is required when independent evaluation is part of acceptance.
+
+## Work item
+
+```ts
+interface WorkItem {
+  id: string;
+  intentRef: string;
+  parentRef?: string;
+
+  objectiveOrHypothesis: string;
+  scope: string[];
+  exclusions: string[];
+  dependencies: string[];
+
+  acceptance: string[];
+  evidenceRequirements: string[];
+  evaluatorRef?: string;
+
+  permissions: string[];
+  effectClass: "E0" | "E1" | "E2" | "E3" | "E4";
+
+  target: {
+    repositoryOrArtifact: string;
+    authorizedPaths?: string[];
+  };
+
+  budget: {
+    retries?: number;
+    money?: number;
+    humanAttentionMinutes?: number;
+  };
+
+  stopConditions: string[];
+}
+```
+
+Domain profiles may attach candidate/asset/etc. references without modifying the base work-state meaning.
+
+## Claim semantics
+
+```text
+read live item
+→ acquire claim
+→ reread
+→ execute only if ownership still holds
+```
+
+One active mutation claim per worker. Controlled batching must be explicit.
+
+## Blocker semantics
+
+A blocker records:
+
+```text
+type
+scope
+evidence
+recovery condition
+affected dependencies
+whether unrelated work may proceed
+```
+
+Blocked state does not erase the item.
+
+## Frontier
+
+The coordinator selects from all currently Ready, unclaimed, dependency-satisfied items within authority and budget.
+
+A blocked item removes only itself and its dependents from the frontier unless the blocker is global.
+
+
+========================================================================
+FILE: profiles/commercialization/PROFILE.yaml
+========================================================================
+
+profile_id: "commercialization"
+version: "0.2.0"
+adds:
+  protocols:
+    - "calp"
+    - "pgp"
+  domain_authorities:
+    - asset_registration
+    - ownership_assertion
+    - commercial_evaluation
+    - pilot_commitment
+    - publication
+    - pricing
+    - contract
+    - portfolio_allocation
+    - scale
+    - retirement
+rule: "Bind only the authorities/effects actually used by the project."
+
+
+========================================================================
+FILE: profiles/commercialization/README.md
+========================================================================
+
+# Commercialization Profile
+
+Optional overlay for projects whose originating intent includes discovery, qualification, commercialization or portfolio governance of reusable intellectual assets.
+
+This profile adds:
+
+```text
+CALP — asset-level commercial standing
+PGP  — portfolio-level disposition
+```
+
+It may also bind EQP, IEPE, ICP, PDP and SES when their actual responsibilities are required.
+
+CALP/PGP do not alter the base meanings of work state, evidence, authority, context or agent execution.
+
+Do not load this profile into projects that do not have a commercialization objective.
+
+
+========================================================================
+FILE: profiles/commercialization/protocols/calp/PROTOCOL.md
+========================================================================
+
+# Commercial Asset Lifecycle Protocol (CALP)
+
+> Bootstrap v0.2.0 note: this draft is retained as a **commercialization profile overlay**. It is not part of the generic project kernel.
+
+
+**Status:** Draft  
+**Version:** 0.1.0  
+**Date:** 2026-08-27
+
+## 1. Purpose
+
+The Commercial Asset Lifecycle Protocol (CALP) defines how a reusable intellectual artifact becomes a qualified semantic asset, how that asset may be projected into a commercial surface, and what evidence and authority are required to change its commercial standing.
+
+CALP governs **one asset at a time**.
+
+It answers:
+
+> What is this asset, what can legitimately be claimed about it, what is its current commercial standing, and what lawful transitions may change that standing?
+
+CALP does not execute implementation work, qualify evidence independently, govern UI morphology, or decide strategic portfolio allocation.
+
+---
+
+## 2. Governing Principle
+
+> **Commercialization is a qualified, authorized projection of a semantic asset—not a property an artifact can acquire merely by being useful, implemented, popular, or profitable.**
+
+A second rule follows:
+
+> **Productization is a promotion state, not an act of enthusiasm.**
+
+---
+
+## 3. Protocol Boundaries
+
+CALP owns:
+
+- commercial asset identity;
+- asset claims;
+- asset lifecycle standing;
+- reusable-boundary qualification;
+- commercial eligibility predicates;
+- commercial surface semantics;
+- commercial promotion;
+- protected commercial effects;
+- commercial transition receipts.
+
+CALP imports or delegates:
+
+- **EQP** — evidence qualification;
+- **IEPE** — authorized execution;
+- **ICP** — pilots, contracts, consequential commercial interactions, receipts and recovery;
+- **SES** — customer-facing semantic projection;
+- **PDP** — consequential decisions under uncertainty;
+- **Authority Model** — protected-effect authority;
+- project-specific systems — implementation.
+
+CALP MUST NOT enlarge the authority of an imported protocol.
+
+---
+
+## 4. Core Distinctions
+
+CALP requires the following to remain separately representable:
+
+```text
+ARTIFACT
+    !=
+ASSET
+    !=
+QUALIFIED ASSET
+    !=
+DEFENDED ASSET
+    !=
+COMMERCIAL SURFACE
+    !=
+PRODUCT
+    !=
+COMMERCIALIZED PRODUCT
+    !=
+SUCCESSFUL BUSINESS
+```
+
+### Artifact
+
+A concrete work product such as a repository, runtime, protocol, document, library, dataset, benchmark, model, design system, application, or tool.
+
+### Asset
+
+A stable semantic identity representing reusable intellectual value that may have one or more implementations or projections.
+
+### Qualified Asset
+
+An asset whose identity, provenance, ownership posture, reusable boundary, and required evidence have been sufficiently established for its declared standing.
+
+### Defended Asset
+
+A qualified asset for which a material claim has reproducible evidence with explicit scope and limitations.
+
+### Commercial Surface
+
+A bounded market-facing projection of one or more assets.
+
+### Product
+
+A commercial surface with defined delivery semantics, versioning, support, limits, and economic terms.
+
+### Commercialized Product
+
+A product for which a binding commercial commitment exists and pricing, support, renewal or termination, and operating boundaries are defined.
+
+### Successful Business
+
+A portfolio-level economic conclusion. Commercialization alone does not establish it.
+
+---
+
+## 5. Canonical Asset Identity
+
+The semantic asset is independent of any one repository, package, deployment, website, or product.
+
+```ts
+interface AssetIdentity {
+  assetId: string;
+  canonicalName: string;
+  revision: string;
+
+  kind:
+    | "method"
+    | "protocol"
+    | "engine"
+    | "runtime"
+    | "library"
+    | "tool"
+    | "dataset"
+    | "design-system"
+    | "model"
+    | "workflow"
+    | "application"
+    | "research"
+    | "other";
+
+  originRefs: SourceRef[];
+}
+```
+
+Example:
+
+```text
+                  ASSET
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+     Git repo     package      hosted API
+        │
+        ▼
+     protocol
+        │
+        ▼
+ enterprise integration
+```
+
+The asset remains semantically stable while its realizations may change.
+
+---
+
+## 6. Asset Claims
+
+An asset record is a set of individually qualified claims, not a marketing narrative.
+
+```ts
+interface AssetClaim {
+  id: string;
+  assetRef: AssetRef;
+
+  claim: string;
+
+  class:
+    | "semantic"
+    | "implementation"
+    | "performance"
+    | "reuse"
+    | "ownership"
+    | "market"
+    | "commercial"
+    | "operational";
+
+  evidenceRefs: EvidenceRef[];
+
+  qualification:
+    | "observed"
+    | "documented"
+    | "tested"
+    | "defended"
+    | "bounded"
+    | "contradicted"
+    | "unknown";
+
+  permittedProjections: ProjectionRef[];
+  caveats: string[];
+}
+```
+
+### Claim Projection Invariant
+
+A downstream surface may omit, shorten, or restate a claim without altering meaning.
+
+It may not:
+
+- strengthen the qualification state;
+- erase limitations;
+- convert correlation to causation;
+- generalize beyond the tested domain;
+- convert revenue into technical validation;
+- convert internal reuse into external market validation.
+
+---
+
+## 7. Multi-Dimensional Asset State
+
+CALP MUST NOT compress lifecycle truth into one universal maturity field.
+
+```ts
+interface AssetState {
+  semantic: SemanticMaturity;
+  implementation: ImplementationMaturity;
+  evidence: EvidenceMaturity;
+  commercial: CommercialMaturity;
+  operational: OperationalMaturity;
+  protection: ProtectionPosture;
+}
+```
+
+### Semantic Maturity
+
+```text
+observed
+candidate
+canonical
+superseded
+```
+
+### Implementation Maturity
+
+```text
+documented
+implemented
+tested
+empirically_validated
+```
+
+### Evidence Maturity
+
+```text
+unqualified
+pending_proof
+defended
+bounded
+contradicted
+```
+
+### Commercial Maturity
+
+```text
+none
+candidate
+pilot
+contracted
+commercialized
+```
+
+### Operational Maturity
+
+```text
+inactive
+live
+maintained
+scaling
+dormant
+retiring
+retired
+```
+
+### Protection Posture
+
+```text
+unresolved
+retained_private
+trade_secret
+copyright
+open
+provisional_candidate
+filed
+licensed
+```
+
+These dimensions are orthogonal.
+
+Example:
+
+```text
+semantic:       canonical
+implementation: tested
+evidence:       defended
+commercial:     candidate
+operational:    inactive
+protection:     retained_private
+```
+
+A projection MUST NOT silently collapse this into an unsupported phrase such as "production ready."
+
+---
+
+## 8. Canonical Relations
+
+### Semantic and technical
+
+```text
+DERIVED_FROM
+GENERALIZES
+SPECIALIZES
+IMPLEMENTS
+REALIZES
+DEPENDS_ON
+REUSES
+SUPERSEDES
+```
+
+### Evidence
+
+```text
+EVIDENCED_BY
+QUALIFIED_BY
+CONTRADICTS
+```
+
+### Commercial
+
+```text
+PROJECTED_AS
+OFFERED_AS
+LICENSED_AS
+OPERATED_AS
+GENERATES_REVENUE
+INCURS_COST
+REQUIRES_SUPPORT
+```
+
+### Lifecycle
+
+```text
+RETIRES
+REPLACED_BY
+```
+
+A commercial relation does not mutate the underlying semantic identity.
+
+---
+
+## 9. Asset Discovery
+
+Agents may discover candidate assets.
+
+Agents may not self-promote them.
+
+```text
+repository activity
+PRs
+commits
+dependencies
+repeated implementation
+research
+customer requests
+protocol reuse
+support patterns
+        ↓
+AssetObservation
+        ↓
+candidate detector
+        ↓
+CandidateAsset
+```
+
+Example observation:
+
+> A materially similar context-compilation mechanism appears independently in three projects.
+
+This may establish recurrence.
+
+It does not establish commercial value.
+
+```ts
+interface AssetObservation {
+  observationId: string;
+  sourceRefs: SourceRef[];
+  observedAt: string;
+
+  subject?: AssetRef;
+  candidateName?: string;
+
+  assertion: string;
+  recurrenceEvidence?: RecurrenceEvidence;
+
+  observer: ActorRef;
+  provenance: ProvenanceRef;
+}
+```
+
+### Observation Invariant
+
+> **Observation does not grant semantic, ownership, qualification, publication, pricing, or commercialization authority.**
+
+---
+
+## 10. Qualification
+
+CALP delegates qualification to EQP.
+
+```text
+CandidateAsset
+      ↓
+CALP qualification request
+      ↓
+EQP
+      ↓
+EvidenceBundle
+Qualification
+Limitations
+Unknowns
+      ↓
+CALP eligibility predicate
+```
+
+Typical dimensions include:
+
+```text
+identity
+provenance
+reuse
+separability
+ownership
+implementation
+measured effect
+dependency boundary
+failure behavior
+```
+
+Strong asset evidence does not imply market evidence.
+
+---
+
+## 11. Commercial Eligibility
+
+### Commercial Evaluation
+
+```text
+EligibleForCommercialEvaluation(asset) :=
+    identity_resolved
+    ∧ ownership_resolved
+    ∧ reusable_boundary_exists
+    ∧ evidence_not_contradicted
+```
+
+### Pilot
+
+```text
+EligibleForPilot(asset) :=
+    EligibleForCommercialEvaluation(asset)
+    ∧ buyer_defined
+    ∧ problem_defined
+    ∧ measurable_baseline_defined
+    ∧ surface_contract_defined
+    ∧ risk_within_allowed_scope
+    ∧ pilot_authority_granted
+```
+
+### Commercialization
+
+```text
+Commercialized(surface) :=
+    executed_commercial_agreement
+    ∧ pricing_defined
+    ∧ support_boundary_defined
+    ∧ renewal_or_termination_defined
+    ∧ operational_responsibility_defined
+```
+
+Commercialization does not establish general market fit, technical superiority, or generalizability.
+
+---
+
+## 12. Commercial Surface Contract
+
+A commercial surface is a governed projection.
+
+```ts
+interface CommercialSurfaceContract {
+  id: string;
+  revision: string;
+
+  assetRefs: AssetRef[];
+
+  buyer: BuyerClass;
+  problem: ProblemDefinition;
+
+  delivery:
+    | "api"
+    | "library"
+    | "cli"
+    | "saas"
+    | "license"
+    | "oem"
+    | "data"
+    | "service"
+    | "application";
+
+  inputs: ContractValue[];
+  outputs: ContractValue[];
+
+  preservedClaims: ClaimRef[];
+  excludedClaims: ClaimRef[];
+
+  pricingUnit: PricingUnit;
+
+  supportBoundary: SupportContract;
+  securityBoundary: SecurityContract;
+  dataBoundary: DataContract;
+
+  versioning: VersionPolicy;
+  deprecation: DeprecationPolicy;
+
+  dependencies: DependencyRef[];
+  exclusions: string[];
+}
+```
+
+### Surface Heuristic
+
+```text
+Repeated COMPUTATION
+→ API
+
+Reusable IMPLEMENTATION
+→ library / SDK / CLI
+
+Persistent WORKFLOW
+→ SaaS
+
+Infrastructure CAPABILITY
+→ enterprise license / OEM
+
+Formal METHOD
+→ protocol + conformance/tooling
+
+Structured KNOWLEDGE
+→ data / benchmark subscription
+
+Expert PROCESS
+→ productized service
+
+Consumer EXPERIENCE
+→ standalone application
+```
+
+This is a heuristic, not authority.
+
+---
+
+## 13. Pilot Profile
+
+A commercial pilot is an ICP interaction profile.
+
+Its purpose is to resolve named commercial uncertainty.
+
+```yaml
+pilot:
+  asset: asset.example@0.3
+
+  hypothesis:
+    "The asset materially improves a specified baseline."
+
+  participant_roles:
+    - provider
+    - customer
+    - evaluator
+
+  baseline:
+    metrics:
+      - cycle_time
+      - human_interventions
+      - rework_rate
+      - cost_per_qualified_output
+
+  target:
+    intervention_reduction: ">= 40%"
+    qualification_rate: ">= baseline"
+
+  boundary:
+    environment: staging
+    data_scope: specified
+    duration: 30d
+
+  kill:
+    - material_security_failure
+    - support_hours_above_budget
+    - no_measurable_delta
+
+  evidence:
+    evaluator: independent
+    reproduction: required
+
+  authority:
+    commercial_commitment: human
+```
+
+ICP owns the attempt, participants, authority checks, transitions, outcomes, recovery, and receipt.
+
+CALP owns the resulting commercial standing.
+
+---
+
+## 14. Productization Execution
+
+Authorized productization work is delegated to IEPE.
+
+```text
+CALP Promotion Decision
+       ↓
+authorized productization intent
+       ↓
+IEPE
+       ↓
+epic
+issue graph
+bounded work
+artifact
+evidence
+qualification
+promotion
+```
+
+A productization issue SHOULD bind:
+
+```text
+asset identity
+commercial surface
+scope
+exclusions
+dependencies
+acceptance criteria
+evidence requirements
+budget
+permissions
+stop conditions
+authority references
+```
+
+An issue may authorize implementation work without authorizing protected commercial effects.
+
+---
+
+## 15. Authority Classes
+
+```text
+AssetRegistrationAuthority
+SemanticPromotionAuthority
+OwnershipAssertionAuthority
+EvidenceQualificationAuthority
+CommercialEvaluationAuthority
+PilotCommitmentAuthority
+PublicationAuthority
+PricingAuthority
+ContractAuthority
+OperationalAuthority
+RetirementAuthority
+```
+
+### Fundamental Distinction
+
+```text
+capability
+!=
+permission
+!=
+qualification authority
+!=
+commercial commitment authority
+```
+
+### No Authority by Coalition
+
+> **Two or more agents may pool evidence, information, proposals, and work capacity. Their combined authority shall never exceed the union of explicitly delegated scopes, and no protected effect becomes authorized merely because multiple agents agree.**
+
+Agreement may be evidence.
+
+It is not authority.
+
+---
+
+## 16. Protected Commercial Effects
+
+CALP SHOULD fail closed around:
+
+```text
+declare ownership
+publish previously private IP
+publish consequential commercial claims
+enter paid pilot
+materially change price
+execute customer contract
+accept unusual liability
+grant exclusive license
+expose customer data
+incur spend above threshold
+transfer IP
+retire customer-facing product
+delete canonical evidence
+```
+
+Routine reversible work may be delegated broadly.
+
+---
+
+## 17. Commercial Receipts
+
+Every consequential lifecycle transition produces an append-only receipt.
+
+```text
+ObservationReceipt
+QualificationReceipt
+PromotionReceipt
+PilotReceipt
+PublicationReceipt
+CommercialCommitmentReceipt
+OperationReceipt
+RetirementReceipt
+```
+
+Example:
+
+```json
+{
+  "type": "commercial-promotion",
+  "asset": "asset.context-compiler@0.3",
+  "from": {
+    "commercial": "candidate"
+  },
+  "to": {
+    "commercial": "pilot"
+  },
+  "basis": [
+    "EQP-331",
+    "SURFACE-context-compiler-01",
+    "PILOT-042"
+  ],
+  "authority": "commercial-evaluation-authority",
+  "limitations": [
+    "enterprise market not established",
+    "evidence limited to software repositories"
+  ]
+}
+```
+
+A later contradiction creates a new event. It does not rewrite historical receipts.
+
+---
+
+## 18. Reversibility
+
+### Reversible
+
+```text
+draft change
+unpublished price experiment
+internal package revision
+reversible deployment
+```
+
+### Compensable
+
+```text
+refund
+credit
+service rollback
+contract termination under declared terms
+```
+
+### Durable
+
+```text
+public IP disclosure
+executed assignment
+exclusive license
+regulatory filing
+irreversible data disclosure
+```
+
+Authority requirements SHOULD increase with durability.
+
+---
+
+## 19. Conformance Requirements
+
+### C-01 Candidate Cannot Self-Promote
+
+Agent discovery alone MUST NOT permit candidate → canonical promotion.
+
+### C-02 Unclear Ownership Blocks Exposure
+
+If ownership is unresolved:
+
+```text
+private investigation = potentially allowed
+public publication = blocked
+pilot = blocked
+commercialization = blocked
+```
+
+### C-03 Revenue Does Not Equal Validation
+
+Payment may establish willingness-to-pay evidence.
+
+It does not establish technical superiority, general market fit, or generalizability.
+
+### C-04 Projection Cannot Strengthen Claim
+
+Canonical:
+
+```text
+"Reduced intervention in tested software repositories."
+```
+
+Invalid projection:
+
+```text
+"Eliminates agent supervision in enterprise engineering."
+```
+
+### C-05 Contradiction Blocks Dependent Promotion
+
+If required evidence is contradicted, promotion depending upon that claim is blocked.
+
+---
+
+## 20. Protocol Manifest
+
+Illustrative only; exact imported versions must be pinned in implementation.
+
+```yaml
+protocol:
+  id: commercial-asset-lifecycle
+  short: CALP
+  version: 0.1.0
+
+authority:
+  normative:
+    - PROTOCOL.md
+    - TERMINOLOGY.md
+    - schemas/
+
+imports:
+  iepe:
+    bindings:
+      ExecutionAuthority: constrained
+      IssueContract: exact
+      Promotion: constrained
+
+  icp:
+    bindings:
+      InteractionContract: exact
+      Receipt: exact
+      Recovery: exact
+
+  eqp:
+    bindings:
+      Evidence: exact
+      Qualification: exact
+
+  ses:
+    bindings:
+      Projection: constrained
+      SemanticIdentity: exact
+
+  pdp:
+    bindings:
+      DecisionAuthority: constrained
+
+exports:
+  - AssetIdentity
+  - AssetClaim
+  - AssetState
+  - CommercialSurface
+  - CommercialEligibility
+  - CommercialPromotion
+```
+
+---
+
+## 21. Recommended Repository Shape
+
+```text
+commercial-asset-lifecycle/
+├── PROTOCOL.md
+├── TERMINOLOGY.md
+├── protocol-manifest.json
+│
+├── schemas/
+│   ├── asset-record.schema.json
+│   ├── asset-claim.schema.json
+│   ├── commercial-surface.schema.json
+│   ├── commercial-promotion.schema.json
+│   └── commercial-receipt.schema.json
+│
+├── profiles/
+│   ├── discovery.profile.json
+│   ├── qualification.profile.json
+│   ├── pilot.profile.json
+│   └── operating.profile.json
+│
+└── conformance/
+    ├── candidate-cannot-self-promote.json
+    ├── unclear-ownership-blocks-exposure.json
+    ├── money-does-not-equal-validation.json
+    ├── projection-cannot-strengthen-claim.json
+    └── contradicted-proof-blocks-promotion.json
+```
+
+---
+
+## 22. CALP Invariants
+
+1. Artifact existence does not establish asset standing.
+2. Observation does not grant promotion authority.
+3. Commercialization does not imply validation.
+4. Revenue is evidence of economic commitment, not technical correctness.
+5. Ownership uncertainty blocks protected exposure.
+6. Generated context is downstream from canonical authority.
+7. Commercial projections may not strengthen canonical claims.
+8. Negative and contradictory evidence is retained.
+9. An asset and a commercial surface are distinct identities.
+10. Agent agreement does not create authority.
+11. Protected durable effects fail closed.
+12. Commercial standing remains independently representable from implementation standing.
+
+---
+
+## 23. Worked Example — Context Compiler
+
+A recurring mechanism appears across multiple formal engineering environments:
+
+```text
+protocols
+architecture
+schemas
+PRDs
+issues
+evidence
+exceptions
+        ↓
+   CONTEXT COMPILER
+        ↓
+bounded agent context
+```
+
+Initial standing:
+
+```text
+semantic:       candidate
+implementation: documented
+evidence:       unqualified
+commercial:     none
+operational:    inactive
+```
+
+After boundary extraction, ownership resolution, implementation evidence, and EQP qualification:
+
+```text
+semantic:       canonical
+implementation: tested
+evidence:       defended
+commercial:     candidate
+operational:    inactive
+```
+
+A first commercial surface might be:
+
+```text
+the project Context Compilation Pilot
+```
+
+with:
+
+```text
+inputs:
+repository
+architecture docs
+development policies
+issue workflow
+
+outputs:
+formal source graph
+authority resolution
+project context lock
+compiled agent context
+benchmark report
+```
+
+A paid pilot can establish external use and willingness to pay.
+
+It does not establish broad market fit.
+
+After an executed agreement plus defined pricing, support, renewal/termination, versioning, and operating boundaries:
+
+```text
+commercial: commercialized
+```
+
+becomes legitimate.
+
+---
+
+## 24. Success Condition
+
+CALP succeeds when reusable intellectual work can move from observation to commercial operation without:
+
+- inventing unsupported maturity;
+- losing ownership provenance;
+- conflating implementation with validation;
+- allowing agents to manufacture their own authority;
+- strengthening claims during projection;
+- treating payment as proof of technical correctness.
+
+The result is a qualified commercial asset whose standing can be explained, reproduced, audited, and lawfully changed.
+
+
+
+========================================================================
+FILE: profiles/commercialization/protocols/pgp/PROTOCOL.md
+========================================================================
+
+# Portfolio Governance Protocol (PGP)
+
+> Bootstrap v0.2.0 note: this draft is retained as a **commercialization profile overlay**. It is not part of the generic project kernel.
+
+
+**Status:** Draft  
+**Version:** 0.1.0  
+**Date:** 2026-08-27
+
+## 1. Purpose
+
+The Portfolio Governance Protocol (PGP) defines how a portfolio of qualified and candidate commercial assets competes for finite capital, human attention, operational capacity, and execution priority.
+
+PGP governs **relationships among assets**.
+
+It answers:
+
+> Given the current portfolio, evidence, risk, resources, and opportunity, which assets should receive work, which should remain available, and which should be constrained, combined, licensed, opened, made dormant, or retired?
+
+PGP does not define asset identity or commercial qualification. Those belong to CALP.
+
+---
+
+## 2. Governing Principle
+
+> **Portfolio disposition is an evidenced, authorized state transition—not the output of a hidden universal score.**
+
+A second rule follows:
+
+> **The portfolio may generate review work automatically. It may not manufacture the authority required to make consequential strategic commitments.**
+
+---
+
+## 3. Protocol Boundaries
+
+PGP owns:
+
+- portfolio identity and state;
+- commercial asset relationships at portfolio scale;
+- portfolio profiles;
+- human-attention accounting;
+- portfolio dispositions;
+- review triggers;
+- portfolio work-frontier generation;
+- portfolio-level operating observations.
+
+PGP imports or delegates:
+
+- **CALP** — asset identity, asset claims, asset commercial standing;
+- **EQP** — evidence qualification;
+- **IEPE** — execution of authorized portfolio work;
+- **PDP** — consequential weighting under uncertainty;
+- **ICP** — external commercial interactions when required;
+- **SES** — portfolio/admin projections;
+- **Authority Model** — protected disposition authority.
+
+---
+
+## 4. Portfolio World
+
+The portfolio is a formal operational world.
+
+```text
+PORTFOLIO
+│
+├── assets
+├── commercial surfaces
+├── customers
+├── revenue
+├── costs
+├── support burden
+├── dependencies
+├── evidence
+├── risk
+├── human attention
+├── opportunity
+└── unresolved contradictions
+```
+
+Its state must be queryable without requiring a human to reconstruct it from memory.
+
+---
+
+## 5. Portfolio Identity
+
+```ts
+interface PortfolioIdentity {
+  portfolioId: string;
+  canonicalName: string;
+  revision: string;
+  assetRefs: AssetRef[];
+}
+```
+
+Assets retain their CALP identities.
+
+PGP does not rewrite or duplicate them.
+
+---
+
+## 6. No Universal Product Score
+
+PGP MUST NOT treat a single scalar score as portfolio authority.
+
+Invalid governing model:
+
+```text
+product_score = 83.7
+```
+
+Instead, PGP uses typed profiles.
+
+```ts
+interface PortfolioProfile {
+  assetStrength: Profile;
+  marketEvidence: Profile;
+  economics: Profile;
+  autonomy: Profile;
+  reuse: Profile;
+  strategicValue: Profile;
+  risk: Profile;
+}
+```
+
+Example:
+
+```text
+Context Compiler
+
+Asset strength       HIGH
+Market evidence      LOW
+Economics            UNKNOWN
+Autonomy potential   HIGH
+Reuse leverage       HIGH
+Strategic value      HIGH
+Risk                 LOW / MEDIUM
+```
+
+A ranking score MAY exist as a convenience projection.
+
+It MUST NOT silently become disposition authority.
+
+---
+
+## 7. Profile Dimensions
+
+### Asset Strength
+
+Typical evidence:
+
+```text
+semantic stability
+reuse
+separability
+implementation maturity
+evidence maturity
+ownership clarity
+dependency stability
+```
+
+### Market Evidence
+
+```text
+buyer clarity
+problem severity
+external demand
+willingness to pay
+conversion
+renewal
+competitive substitution
+```
+
+### Economics
+
+```text
+revenue
+gross margin
+marginal cost
+support cost
+sales cost
+renewal probability
+revenue concentration
+```
+
+### Autonomy
+
+```text
+agent-operable work
+human escalation frequency
+customization burden
+operational fragility
+provider dependence
+durable-effect frequency
+```
+
+### Reuse
+
+```text
+number of independent downstream products
+cross-project reuse
+generalization evidence
+shared infrastructure leverage
+```
+
+### Strategic Value
+
+```text
+protocol validation
+research value
+option value
+portfolio leverage
+defensibility
+dependency centrality
+```
+
+### Risk
+
+```text
+legal
+security
+privacy
+operational
+provider
+reputational
+financial
+concentration
+```
+
+No one profile dominates automatically.
+
+---
+
+## 8. Human Attention as a First-Class Resource
+
+PGP treats required human attention as a finite portfolio resource.
+
+```ts
+interface AttentionLedger {
+  humanHours: number;
+  interventions: number;
+  escalationCount: number;
+  supportEvents: number;
+  strategicDecisions: number;
+}
+```
+
+Possible derived metric:
+
+```text
+Attention Yield =
+Annual Gross Profit
+───────────────────
+Human Hours Required
+```
+
+This is evidence.
+
+It is not authority.
+
+A high-attention asset may still be strategically important.
+
+A low-attention asset may still be economically irrelevant.
+
+---
+
+## 9. Portfolio Dispositions
+
+Canonical dispositions:
+
+```text
+EXPLORE
+PROVE
+PILOT
+INVEST
+SCALE
+MAINTAIN
+REPRICE
+CONSTRAIN
+COMBINE
+LICENSE
+OPEN
+DORMANT
+RETIRE
+```
+
+### EXPLORE
+
+Resolve major semantic, technical, market, or ownership uncertainty.
+
+### PROVE
+
+Acquire stronger evidence for a material claim.
+
+### PILOT
+
+Test a bounded external commercial hypothesis.
+
+### INVEST
+
+Allocate additional capital, compute, or human attention.
+
+### SCALE
+
+Expand a demonstrated operating surface.
+
+### MAINTAIN
+
+Preserve the current commercial and operational boundary.
+
+### REPRICE
+
+Review economic terms without changing semantic standing.
+
+### CONSTRAIN
+
+Narrow scope, customer class, support boundary, or operating envelope.
+
+### COMBINE
+
+Evaluate whether two or more assets or surfaces should share a commercial boundary.
+
+### LICENSE
+
+Prefer bounded rights transfer over operating the asset directly.
+
+### OPEN
+
+Publish or open a previously restricted asset or implementation under authorized terms.
+
+### DORMANT
+
+Retain the asset with minimal operating work while preserving identity, evidence, and restart path.
+
+### RETIRE
+
+End active commercial operation while preserving historical evidence and successor relationships.
+
+---
+
+## 10. Disposition Record
+
+```ts
+interface PortfolioDisposition {
+  assetRef: AssetRef;
+  disposition: Disposition;
+
+  evidenceRefs: EvidenceRef[];
+  profile: PortfolioProfile;
+
+  rationale: string;
+
+  authorityRef: AuthorityRef;
+  reviewTrigger?: Trigger;
+}
+```
+
+A disposition MUST identify:
+
+```text
+subject
+evidence
+profile
+rationale
+authority
+effective state change
+review condition
+```
+
+---
+
+## 11. Disposition Authority
+
+PGP distinguishes evidence from strategic commitment.
+
+Typical authority classes:
+
+```text
+PortfolioObservationAuthority
+PortfolioReviewAuthority
+PortfolioAllocationAuthority
+PricingReviewAuthority
+InvestmentAuthority
+ScaleAuthority
+DormancyAuthority
+RetirementAuthority
+PublicationAuthority
+```
+
+An agent may prepare a recommendation without holding the authority required to enact it.
+
+### No Authority by Coalition
+
+Two or more agents cannot expand their aggregate authority merely by agreeing.
+
+---
+
+## 12. Review Triggers
+
+PGP uses triggers to create review work.
+
+Triggers do not directly establish conclusions.
+
+Examples:
+
+```text
+same mechanism used by >=3 independent products
+→ CREATE generalization-review candidate
+
+same request from >=3 independent customers
+→ CREATE expansion-review candidate
+
+zero meaningful use for 90 days
+→ CREATE dormancy-review candidate
+
+support burden exceeds declared envelope
+→ CREATE constrain/reprice review
+
+gross margin below threshold
+→ CREATE economic review
+
+critical security issue
+→ PREEMPT ordinary growth work
+
+external evidence contradicts marketed claim
+→ SUSPEND affected projection
+→ CREATE qualification review
+```
+
+Threshold values MUST be declared in the project or portfolio profile.
+
+They MUST NOT be treated as universal protocol law.
+
+---
+
+## 13. Work Frontier
+
+PGP and CALP together generate eligible portfolio work.
+
+IEPE executes the work.
+
+```text
+CALP + PGP state
+       ↓
+eligible work graph
+       ↓
+READY COMMERCIAL FRONTIER
+       │
+       ├── qualify candidate
+       ├── run benchmark
+       ├── prepare pilot
+       ├── improve product
+       ├── answer support issue
+       ├── investigate churn
+       ├── update documentation
+       ├── review pricing
+       └── prepare retirement analysis
+       ↓
+IEPE coordinator
+       ↓
+agents
+```
+
+A blocked asset does not block unrelated portfolio work.
+
+Example:
+
+```text
+Asset A
+blocked on ownership
+
+Asset B
+needs benchmark
+
+Asset C
+support fix ready
+
+Asset D
+pilot analysis ready
+```
+
+Eligible frontier:
+
+```text
+B
+C
+D
+```
+
+---
+
+## 14. Portfolio Scheduling
+
+PGP SHOULD expose scheduling facts rather than conversational failure.
+
+Possible scheduling state:
+
+```ts
+interface PortfolioWorkItem {
+  id: string;
+  assetRef: AssetRef;
+
+  state:
+    | "ready"
+    | "claimed"
+    | "blocked"
+    | "deferred"
+    | "superseded"
+    | "done";
+
+  blockerRefs?: BlockerRef[];
+  authorityRefs: AuthorityRef[];
+  evidenceRequirements: EvidenceRequirement[];
+  budget?: WorkBudget;
+}
+```
+
+Blocked is a scheduling fact.
+
+It is not a request for an agent to violate the blocker.
+
+---
+
+## 15. Economic Unit
+
+Every operating commercial surface SHOULD expose its economic unit.
+
+Examples:
+
+```text
+per API call
+per seat
+per repository
+per compiled context
+per customer
+per license
+per publication
+per month
+per qualified output
+```
+
+Economic evidence SHOULD be attributable to the relevant surface rather than merged into portfolio-wide averages when attribution is possible.
+
+---
+
+## 16. Attention Economics
+
+For a portfolio intended to generate low-touch compounding income, PGP SHOULD explicitly retain:
+
+```text
+revenue
+gross margin
+human hours
+human interventions
+support events
+custom work
+agent-resolved work
+escalation frequency
+```
+
+Example:
+
+```text
+Annual Gross Profit:      $152,880
+Human Attention:          62 hours/year
+
+Attention Yield:          ~$2,466/hour
+```
+
+This may support a MAINTAIN or SCALE disposition.
+
+It does not authorize one.
+
+---
+
+## 17. Portfolio Selection Heuristics
+
+A three-profile minimum is recommended:
+
+```text
+ASSET PROFILE
+Is this a real, reusable asset?
+
+MARKET PROFILE
+Is there evidence someone has reason to buy it?
+
+AUTONOMY PROFILE
+Can this operate without consuming disproportionate human attention?
+```
+
+Typical interpretations:
+
+```text
+High asset + low market
+→ retain / research / do not productize yet
+
+High market + low asset
+→ service opportunity, weak durable IP
+
+High asset + high market + low autonomy
+→ license / integration / constrained service
+
+High asset + high market + high autonomy
+→ strong productization candidate
+```
+
+These are heuristics, not mandatory outcomes.
+
+---
+
+## 18. Negative Results
+
+PGP MUST preserve negative commercial evidence.
+
+Examples:
+
+```text
+pilot produced no measurable delta
+customer would not pay
+support burden exceeded margin
+market existed but distribution failed
+asset was reusable but not commercially separable
+product generated revenue but required excessive human attention
+```
+
+Negative evidence should influence future review.
+
+It must not be erased merely because the asset is later revisited.
+
+---
+
+## 19. Dormancy
+
+Dormancy is a valid successful disposition.
+
+A dormant asset:
+
+```text
+retains identity
+retains evidence
+retains ownership/protection state
+retains successor/dependency relationships
+retains restart conditions
+```
+
+but receives no ordinary growth work.
+
+Example:
+
+```yaml
+disposition: DORMANT
+reason:
+  - no external demand
+  - high internal reuse not currently needed
+review_trigger:
+  - third-party demand
+  - dependency reactivation
+  - strategic portfolio change
+```
+
+---
+
+## 20. Retirement
+
+Retirement is distinct from deletion.
+
+A retired surface MUST preserve:
+
+```text
+asset identity
+commercial history
+receipts
+customer obligations
+evidence
+negative results
+replacement/successor links
+```
+
+Retirement MAY stop:
+
+```text
+new sales
+new deployments
+growth work
+routine feature development
+```
+
+Protected customer and contractual obligations remain governed until satisfied or lawfully terminated.
+
+---
+
+## 21. Cross-Asset Relations
+
+PGP may represent:
+
+```text
+DEPENDS_ON
+REUSES
+SUBSTITUTES_FOR
+COMPLEMENTS
+SHARES_BUYER_WITH
+SHARES_DISTRIBUTION_WITH
+SHARES_INFRASTRUCTURE_WITH
+GENERATES_DEMAND_FOR
+CANNIBALIZES
+REPLACED_BY
+```
+
+A relation must not be asserted merely because two assets are conceptually adjacent.
+
+---
+
+## 22. Portfolio Context Lock
+
+A commercial operating environment SHOULD compile a bounded portfolio context.
+
+```json
+{
+  "portfolio": "chroma",
+
+  "protocols": {
+    "calp": "<pinned>",
+    "pgp": "0.1.0",
+    "iepe": "<pinned>",
+    "icp": "<pinned>",
+    "eqp": "<pinned>",
+    "ses": "<pinned>",
+    "pdp": "<pinned>"
+  },
+
+  "authorityResolution": {},
+  "assets": [],
+  "commercialSurfaces": [],
+  "portfolioProfiles": [],
+  "evidenceSnapshot": [],
+  "openContradictions": [],
+  "negativeResults": [],
+  "activePilots": [],
+  "operatingProducts": [],
+  "dispositions": [],
+
+  "budgets": {
+    "capital": {},
+    "humanAttention": {}
+  }
+}
+```
+
+Generated portfolio context is not normative authority.
+
+Canonical sources must be corrected and recompiled.
+
+---
+
+## 23. Conformance Requirements
+
+### P-01 Scalar Score Cannot Authorize Disposition
+
+A score may rank candidates.
+
+It may not itself enact:
+
+```text
+INVEST
+SCALE
+RETIRE
+```
+
+### P-02 Trigger Creates Review, Not Truth
+
+Given:
+
+```text
+same request >= configured threshold
+```
+
+Valid:
+
+```text
+CREATE expansion review
+```
+
+Invalid:
+
+```text
+IMPLEMENT expansion
+```
+
+### P-03 Blocked Asset Does Not Freeze Portfolio
+
+One blocked asset MUST NOT prevent unrelated eligible work from entering the Ready frontier.
+
+### P-04 Attention Is Evidence
+
+Attention Yield may support a disposition.
+
+It does not authorize a disposition.
+
+### P-05 Dormancy Preserves State
+
+DORMANT MUST NOT erase semantic identity, evidence, ownership, or restart conditions.
+
+### P-06 Retirement Preserves History
+
+RETIRE MUST NOT destroy receipts or historical commercial evidence.
+
+---
+
+## 24. Protocol Manifest
+
+Illustrative only; exact imported versions must be pinned in implementation.
+
+```yaml
+protocol:
+  id: portfolio-governance
+  short: PGP
+  version: 0.1.0
+
+authority:
+  normative:
+    - PROTOCOL.md
+    - TERMINOLOGY.md
+    - schemas/
+
+imports:
+  calp:
+    bindings:
+      AssetIdentity: exact
+      AssetState: exact
+      CommercialSurface: exact
+
+  iepe:
+    bindings:
+      IssueContract: exact
+      WorkFrontier: constrained
+      Promotion: constrained
+
+  eqp:
+    bindings:
+      Evidence: exact
+      Qualification: exact
+
+  pdp:
+    bindings:
+      DecisionAuthority: constrained
+
+  icp:
+    bindings:
+      CommercialInteraction: constrained
+
+  ses:
+    bindings:
+      Projection: constrained
+
+exports:
+  - PortfolioIdentity
+  - PortfolioProfile
+  - AttentionLedger
+  - PortfolioDisposition
+  - PortfolioTrigger
+  - PortfolioWorkFrontier
+```
+
+---
+
+## 25. Recommended Repository Shape
+
+```text
+portfolio-governance/
+├── PROTOCOL.md
+├── TERMINOLOGY.md
+├── protocol-manifest.json
+│
+├── schemas/
+│   ├── portfolio.schema.json
+│   ├── portfolio-profile.schema.json
+│   ├── attention-ledger.schema.json
+│   ├── disposition.schema.json
+│   └── trigger.schema.json
+│
+├── profiles/
+│   ├── commercial-portfolio.profile.json
+│   └── attention-budget.profile.json
+│
+└── conformance/
+    ├── score-cannot-self-authorize.json
+    ├── trigger-creates-review-not-promotion.json
+    ├── blocked-asset-does-not-block-frontier.json
+    ├── attention-is-evidence-not-authority.json
+    ├── dormancy-preserves-state.json
+    └── retirement-preserves-history.json
+```
+
+---
+
+## 26. PGP Invariants
+
+1. No universal scalar score has portfolio authority.
+2. Human attention is a first-class resource.
+3. A trigger creates review work, not a conclusion.
+4. A blocked asset does not freeze unrelated work.
+5. Portfolio disposition requires evidence, rationale, and authority.
+6. Dormancy and retirement are valid outcomes.
+7. Low revenue alone does not establish low strategic value.
+8. High revenue alone does not establish high strategic value.
+9. Repeated reuse is evidence for generalization review, not proof of generality.
+10. The system may recommend; protected commitments require authorized disposition.
+11. Historical commercial evidence is append-only.
+12. Generated portfolio context remains downstream from canonical source authority.
+
+---
+
+## 27. Worked Example — Context Compiler
+
+CALP establishes:
+
+```text
+Context Compiler
+semantic:       canonical
+implementation: tested
+evidence:       defended
+commercial:     candidate
+operational:    inactive
+```
+
+PGP evaluates:
+
+```text
+Asset strength       HIGH
+Market evidence      LOW
+Economics            UNKNOWN
+Autonomy potential   HIGH
+Reuse leverage       HIGH
+Strategic value      HIGH
+Risk                 LOW / MEDIUM
+```
+
+PGP disposition:
+
+```text
+EXPLORE
+```
+
+Required work:
+
+```text
+define buyer
+test willingness to pay
+measure integration burden
+```
+
+After a paid pilot:
+
+```text
+external customer use: observed
+willingness to pay: observed
+economic delta: defended in one environment
+general market fit: not established
+```
+
+PGP may then move the asset to:
+
+```text
+PILOT
+MAINTAIN
+INVEST
+```
+
+depending on the new evidence and authorized decision.
+
+Suppose the product later reaches:
+
+```text
+customers:            7
+MRR:                  $14,000
+agent-resolved cases: 38
+human escalations:    3
+human hours/month:    5.2
+```
+
+PGP now has stronger economics and autonomy evidence.
+
+It still does not self-authorize SCALE.
+
+A ScaleAuthority holder must enact that disposition.
+
+If three independent customers later request automatic context recompilation:
+
+```text
+trigger:
+same request >= 3
+```
+
+PGP creates:
+
+```text
+EXPANSION REVIEW
+```
+
+The system then evaluates whether the capability is:
+
+```text
+a specialization
+a new asset
+a new commercial surface
+or merely a customer-specific request
+```
+
+before any implementation is authorized.
+
+---
+
+## 28. Success Condition
+
+PGP succeeds when the project can continuously allocate work across a changing portfolio without:
+
+- requiring the portfolio to live in one person's memory;
+- treating every promising asset as a product;
+- treating every blocked asset as a blocked company;
+- allowing metrics to become hidden authority;
+- erasing failed commercial hypotheses;
+- confusing low attention with high strategic value;
+- confusing revenue with durable value.
+
+The target state is:
+
+```text
+NORMAL WORK
+    ↓
+QUALIFIED ASSETS
+    ↓
+PORTFOLIO STATE
+    ↓
+AUTHORIZED DISPOSITIONS
+    ↓
+AUTONOMOUS WORK FRONTIER
+    ↓
+AGENT EXECUTION
+    ↓
+REVENUE + USAGE + FAILURE EVIDENCE
+    ↓
+UPDATED PORTFOLIO STATE
+```
+
+The objective is not maximum product count.
+
+It is a portfolio of owned, qualified intellectual infrastructure whose strongest members can generate recurring economic value with progressively less required human operating labor.
+
+
+
+========================================================================
+FILE: pyproject.toml
+========================================================================
+
+[project]
+name = "formal-project-bootstrap"
+version = "0.5.0"
+description = "A formal operating substrate for bounded autonomous agent projects."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+
+
+========================================================================
+FILE: requirements-dev.txt
+========================================================================
+
+jsonschema>=4.23,<5
+PyYAML>=6,<7
+
+
+========================================================================
+FILE: schemas/agent-message.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/agent-message.schema.json",
+  "title": "AgentMessage",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "sender",
+    "relatedWorkItem",
+    "impact",
+    "statementClass",
+    "summary",
+    "observedState",
+    "timestamp"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sender": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recipient": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relatedWorkItem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "impact": {
+      "type": "string",
+      "enum": [
+        "informational",
+        "blocks",
+        "unblocks",
+        "supersedes",
+        "requests_handoff",
+        "requests_review",
+        "invalidates_assumption"
+      ]
+    },
+    "statementClass": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "inference",
+        "proposal",
+        "request"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "affectedScope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "observedState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contextDigest"
+      ],
+      "properties": {
+        "contextDigest": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "requestedDisposition": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "continue",
+        "pause",
+        "handoff",
+        "supersede",
+        "revert",
+        "abandon",
+        null
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
+
+
+========================================================================
+FILE: schemas/context-lock.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.invalid/schemas/context-lock.schema.json",
+  "title": "ContextLock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "generatorVersion",
+    "root",
+    "validityBasis",
+    "repositoryState",
+    "aggregateSourceDigest",
+    "sources"
+  ],
+  "properties": {
+    "format": {
+      "const": "2"
+    },
+    "generatorVersion": {
+      "type": "string"
+    },
+    "root": {
+      "type": "string"
+    },
+    "validityBasis": {
+      "const": "aggregate-source-digest"
+    },
+    "repositoryState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available",
+        "validationRole",
+        "repositories"
+      ],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "validationRole": {
+          "const": "provenance"
+        },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "commit",
+              "branch",
+              "dirty",
+              "remote"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "commit": {
+                "type": "string"
+              },
+              "branch": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "dirty": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "remote": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "aggregateSourceDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+========================================================================
+FILE: schemas/formal-resource-manifest.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/formal-resource-manifest.schema.json",
+  "title": "Formal Resource Manifest",
+  "type": "object",
+  "required": ["format", "projectId", "resources", "integrityPolicy"],
+  "properties": {
+    "format": {"type": "string"},
+    "projectId": {"type": "string", "minLength": 1},
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "required", "canonicalSource", "authorityRole"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "required": {"type": "boolean"},
+          "version": {"type": ["string", "null"]},
+          "revisionOrDigest": {"type": ["string", "null"]},
+          "canonicalSource": {"type": "string", "minLength": 1},
+          "mountOrAddress": {"type": ["string", "null"]},
+          "authorityRole": {"type": "string", "minLength": 1},
+          "inventory": {"type": "array", "items": {"type": "string"}},
+          "compatibility": {
+            "type": "object",
+            "properties": {
+              "syntax": {"type": "string"},
+              "schema": {"type": "string"},
+              "behavior": {"type": "string"},
+              "semantics": {"type": "string"},
+              "authority": {"type": "string"},
+              "evidence": {"type": "string"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "integrityPolicy": {"type": "object"}
+  },
+  "additionalProperties": true
+}
+
+
+========================================================================
+FILE: schemas/work-disposition.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/work-disposition.schema.json",
+  "title": "WorkDisposition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "workItemId",
+    "worker",
+    "verdict",
+    "contextDigest",
+    "claimState",
+    "timestamp"
+  ],
+  "properties": {
+    "workItemId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "worker": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "done",
+        "blocked",
+        "failed",
+        "superseded",
+        "abandoned",
+        "waiting_external"
+      ]
+    },
+    "contextDigest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "candidateRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "repositoryOrArtifact": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revision": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "negativePaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "peerMessages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommendedTransition": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "claimState": {
+      "type": "string",
+      "enum": [
+        "held",
+        "released",
+        "transferred",
+        "parked"
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
+
+
+========================================================================
+FILE: scripts/check-all.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Repository verification gate."""
+
+from __future__ import annotations
+
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def run(*args: str) -> None:
+    print("+", " ".join(args))
+    subprocess.check_call(args, cwd=ROOT)
+
+
+def main() -> int:
+    run(sys.executable, "scripts/validate-bootstrap.py", "--check-context")
+    run(sys.executable, "scripts/validate-formal-files.py")
+    run(sys.executable, "scripts/check-negative-results.py")
+    run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
+    run(sys.executable, "scripts/package-release.py", "--output", "dist", "--verify-reproducible")
+    print("OK all gates")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/check-negative-results.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Refuse a change that re-runs an approach the project already disproved.
+
+`records/negative-results.jsonl` records what was attempted, what was disproven,
+and what would justify reopening it. Retention alone does not prevent
+rediscovery: in an observed adoption, an approach recorded as closed was re-run,
+reproduced the documented failure exactly, and was then proposed as a way
+forward by the same worker that had recorded it hours earlier. A corpus informs;
+a gate refuses.
+
+A row participates only if it carries `detect` patterns, and most rows should
+not. A marker must mean a retry and nothing else. Rows whose evidence is real
+but whose retry has no reliable textual signature stay as knowledge and set
+`"gate": false` with a reason, so the absence is a recorded decision rather than
+an oversight. Gating a row whose evidence is narrower than the rule would
+entrench a conclusion the evidence does not support.
+
+It reads the diff, not the tree. A retry is something a change *adds*; a
+repository that documents a closed approach mentions it everywhere, correctly.
+The first implementation scanned the tree and produced findings exclusively
+against files doing their job: the intent document naming the constraint, a
+source comment warning against it, the ledger itself. Prose files and comment
+lines are therefore excluded.
+
+Overriding is lawful rather than forbidden: record a deviation naming the row in
+`records/deviations.jsonl` (AGENTS.md 10). The governing state then changes
+explicitly instead of forcing a choice between standing doctrine and an ad hoc
+instruction.
+
+    python3 scripts/check-negative-results.py               # working tree vs HEAD
+    python3 scripts/check-negative-results.py origin/main   # a branch, for CI
+"""
+from __future__ import annotations
+
+import datetime as dt
+import fnmatch
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LEDGER = ROOT / "records/negative-results.jsonl"
+DEVIATIONS = ROOT / "records/deviations.jsonl"
+
+# Where a closed approach is *described* rather than performed. A ledger entry,
+# a design doc and a project-intent constraint all name what is closed; that is
+# their job.
+ALWAYS_SKIP = ("records/", "docs/", "datasets/", ".agents/", ".formal-bootstrap/",
+               "scripts/check-negative-results.py")
+
+# Prose files state what is excluded; they do not execute it.
+PROSE_SUFFIXES = (".md", ".txt", ".json", ".jsonl", ".yaml", ".yml")
+
+COMMENT = re.compile(r"^\s*(//|#|\*|/\*|--|<!--)")
+
+
+def rows(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    out = []
+    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError as e:
+            print(f"{path.name}:{n}: unparseable, refusing to pass: {e}", file=sys.stderr)
+            raise SystemExit(3)
+    return out
+
+
+def waived() -> dict[str, str]:
+    """Row ids with a live deviation, mapped to the stated reason."""
+    now = dt.datetime.now(dt.timezone.utc)
+    live: dict[str, str] = {}
+    for d in rows(DEVIATIONS):
+        ref = d.get("ruleRef")
+        if not ref:
+            continue
+        expires = d.get("expiresAt")
+        if expires:
+            try:
+                if dt.datetime.fromisoformat(expires.replace("Z", "+00:00")) <= now:
+                    continue
+            except ValueError:
+                continue        # an unparseable expiry is not a waiver
+        live[ref] = d.get("reason", "(no reason recorded)")
+    return live
+
+
+def added_lines(base: str | None) -> list[tuple[str, int, str]]:
+    """Lines this change introduces, as (path, line, text).
+
+    A retry is something a change *adds*. Scanning the whole tree asks whether a
+    closed approach is mentioned anywhere, and the answer is always yes — the
+    ledger, the design docs and the intent constraints all name what is closed.
+    The first version of this check did exactly that and produced seven findings,
+    every one of them a file correctly documenting a closed row.
+    """
+    args = ["git", "-C", str(ROOT), "diff", "--unified=0", "--no-color"]
+    args.append(base) if base else args.extend(["HEAD"])
+    diff = subprocess.run(args, capture_output=True, text=True, check=True).stdout
+
+    # Untracked files are wholly new, so every line in them is added.
+    untracked = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "--others", "--exclude-standard"],
+        capture_output=True, text=True, check=True).stdout.split()
+
+    out: list[tuple[str, int, str]] = []
+    path, line_no = None, 0
+    for raw in diff.splitlines():
+        if raw.startswith("+++ b/"):
+            path, line_no = raw[6:], 0
+        elif raw.startswith("@@"):
+            m = re.search(r"\+(\d+)", raw)
+            line_no = int(m.group(1)) if m else 0
+        elif raw.startswith("+") and path:
+            out.append((path, line_no, raw[1:]))
+            line_no += 1
+
+    for rel in untracked:
+        try:
+            text = (ROOT / rel).read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        out.extend((rel, i, l) for i, l in enumerate(text.splitlines(), 1))
+
+    return [(p, n, t) for p, n, t in out
+            if not p.startswith(ALWAYS_SKIP)
+            and not p.endswith(PROSE_SUFFIXES)
+            and not COMMENT.match(t)]
+
+
+def main() -> int:
+    ledger = rows(LEDGER)
+    gated = [r for r in ledger if r.get("detect")]
+    if not ledger:
+        print("no negative results recorded; nothing to check")
+        return 0
+
+    base = sys.argv[1] if len(sys.argv) > 1 else None
+    changes = added_lines(base)
+    findings: list[tuple[dict, str, str, int]] = []
+
+    for row in gated:
+        allow = row.get("allow", [])
+        patterns = [re.compile(p, re.IGNORECASE) for p in row["detect"]]
+        for rel, line, text in changes:
+            if any(fnmatch.fnmatch(rel, a) for a in allow):
+                continue
+            for pat in patterns:
+                m = pat.search(text)
+                if m:
+                    findings.append((row, rel, m.group(0), line))
+                    break
+
+    live = waived()
+    blocking = [f for f in findings if f[0]["id"] not in live]
+
+    for row, rel, hit, line in findings:
+        note = f"  WAIVED by deviation: {live[row['id']]}" if row["id"] in live else ""
+        print(f"\n{'-' if note else '!'} {row['id']}  {rel}:{line}  matched {hit!r}{note}")
+        if note:
+            continue
+        print(f"    attempted: {row['attempted']}")
+        print(f"    disproven: {row['disproven']}")
+        print(f"    evidence:  {row['evidence']}")
+        print(f"    reopen if: {row['reopen']}")
+
+    considered = len(gated)
+    print(f"\nchecked {len(changes)} added code lines against {considered} gated rows "
+          f"({len(ledger) - considered} recorded but not gated)")
+    if blocking:
+        print(f"REFUSED: {len(blocking)} closed approach(es) reintroduced.\n"
+              f"Reopen the row with new evidence, or record a deviation naming it "
+              f"in records/deviations.jsonl.", file=sys.stderr)
+        return 1
+    print("OK no closed approach reintroduced")
     return 0
 
 

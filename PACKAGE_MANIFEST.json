@@ -1,19 +1,19 @@
 {
   "files": [
     {
-      "bytes": 11594,
+      "bytes": 11912,
       "path": ".agents/context-lock.json",
-      "sha256": "26f296111661f1033c351abfb76efba8be4ad9a74d750c6bc97cf24ea7318f1f"
+      "sha256": "70d67e9404019c635789a058cb3963197553bd04459dfae9e5684b786f27d90b"
     },
     {
-      "bytes": 168500,
+      "bytes": 349094,
       "path": ".agents/llms-full.txt",
-      "sha256": "787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610"
+      "sha256": "c5d0e2d58f825f41d69db2990eb7e1586f8ec3914149ee41c2ea95a5d509f0a8"
     },
     {
-      "bytes": 8090,
+      "bytes": 8312,
       "path": ".agents/llms.txt",
-      "sha256": "a0c4fbd572cead906403a5ecf1738fcf31662b3331a90f8e72de32d05044e054"
+      "sha256": "35f169fb797a6f9c3e9a57d3e743c6e66a71c24bd7a77ec5b873ec08e4bbc31e"
     },
     {
       "bytes": 561,
@@ -106,9 +106,9 @@
       "sha256": "9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb"
     },
     {
-      "bytes": 3056,
+      "bytes": 4066,
       "path": "CHANGELOG.md",
-      "sha256": "c599d33cfa649bace0bf0d8e8f7170168c3f5dca2c3bd17e517b4b4ec4ae365e"
+      "sha256": "06640b82f7721b01aa0017a2ab012e8efcf21c9b5fdf42966a4c6fc3c4b12c76"
     },
     {
       "bytes": 404,
@@ -158,12 +158,12 @@
     {
       "bytes": 1714,
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "sha256": "5022b4369fcdc69ca1016b4b70becb8da40794c7449929156495fdbcb02b3494"
+      "sha256": "dc85c7470f335570e83103d544031e36cba6725bfb634b043fe9eb2f162f0d10"
     },
     {
       "bytes": 8413,
       "path": "README.md",
-      "sha256": "b83665cddb246b89c7ade93979c62dd0a68b4e1e7aaf7f5b26fd3f3727f432e6"
+      "sha256": "a053425280beb50c2e2c45e8cd732aa746a9451fe7b0a34629d9dff3fc9d5fe2"
     },
     {
       "bytes": 729,
@@ -178,7 +178,7 @@
     {
       "bytes": 6,
       "path": "VERSION",
-      "sha256": "a0ad50640139a524f86591157145bf1d4674ea9c065bfea21558f0f7b04430c8"
+      "sha256": "aba951626c8690ce493cbc8f018205bb468003f61fbf00fd3d3c71cebabc0177"
     },
     {
       "bytes": 1215,
@@ -206,9 +206,9 @@
       "sha256": "9e241f47e102b9feeb3b8e6bff3c95a146d69384f196eefc2327b363a96bf7a0"
     },
     {
-      "bytes": 1806,
+      "bytes": 2592,
       "path": "docs/AUTHORITY_MODEL.md",
-      "sha256": "88b1e04c7a04f1ab69b621ab7f469307485a251859f32f55649ddc5d7a5f0135"
+      "sha256": "abc1aac1d90b78a5e084549ef4f15e3a299f0894e521040f85261ea55acf5fc0"
     },
     {
       "bytes": 6140,
@@ -246,9 +246,9 @@
       "sha256": "6cfaf7daa1669ed717571ecd43e3b5950151d39641d1adaff6a16843a954c6c7"
     },
     {
-      "bytes": 1388,
+      "bytes": 2845,
       "path": "docs/FORMAL_RESOURCES.md",
-      "sha256": "97ed475de695455df13b2af1e64adb55d5f3819d0246d84f14ff4d4a747a55ae"
+      "sha256": "bf93374182ba0212c7e64328a751c9dc3cfacd816779f983eca50f9157851289"
     },
     {
       "bytes": 1234,
@@ -266,9 +266,9 @@
       "sha256": "c27fc5594ef31ff4574582b4c6f2e69dc684bb897b9f9455fce1b50ca44f968a"
     },
     {
-      "bytes": 611,
+      "bytes": 1005,
       "path": "docs/NEGATIVE_KNOWLEDGE.md",
-      "sha256": "509a811ac1b5e649fa17495f5671b38c92e58f83b4f015c0f170b9e9f5261ac2"
+      "sha256": "cb1e5e5b1f3748fc9f879ca9e5e3914a043c44c707ee082dc3fee1878a79889f"
     },
     {
       "bytes": 2132,
@@ -388,5 +388,5 @@
   ],
   "format": "1",
   "package": "formal-project-bootstrap",
-  "version": "0.5.0"
+  "version": "0.5.1"
 }

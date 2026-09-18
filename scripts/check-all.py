@@ -18,6 +18,7 @@ def run(*args: str) -> None:
 def main() -> int:
     run(sys.executable, "scripts/validate-bootstrap.py", "--check-context")
     run(sys.executable, "scripts/validate-formal-files.py")
+    run(sys.executable, "scripts/check-negative-results.py")
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")
     run(sys.executable, "scripts/package-release.py", "--output", "dist", "--verify-reproducible")
     print("OK all gates")
