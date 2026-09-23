@@ -1,7 +1,7 @@
 # Formal Project Bootstrap
 
 **Status:** Candidate reusable project substrate  
-**Version:** 0.5.1
+**Version:** 0.5.2
 
 Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
 
@@ -108,7 +108,23 @@ python3 scripts/init-project.py \
   --output ../commercial-project
 ```
 
+Bind the ACP authorization gateway at initialization (the bearer token is never written; put it in `.env.local` afterwards and run `python3 scripts/acp-check.py`):
+
+```bash
+python3 scripts/init-project.py \
+  --name "My Project" \
+  --id my-project \
+  --mode new \
+  --acp-gateway-url https://acp-gateway-production.up.railway.app \
+  --acp-owner my-org --acp-project 3 \
+  --output ../my-project
+```
+
 The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and compiled context; then it runs the project validator. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
+
+## Authorization provider
+
+Every project binds `acp-gateway` as its protection/authorization provider (`docs/ACP_INTEGRATION.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
 
 ## Core invariants
 
@@ -147,9 +163,9 @@ FORMAL_RESOURCE_MANIFEST.json    pinned formal dependencies
 CONTEXT_SOURCES_TEMPLATE.json      deterministic context-source policy
 NEW_AGENT_PROMPT.md                thin worker entry prompt
 bindings/                          semantic and authority bindings
-contracts/                         extension point for project contracts
+contracts/                         project contracts; acp-protected-effects.yaml projects effects onto ACP actions
 docs/                              operating definitions, conformance, and retained negative results
-schemas/                           machine-readable coordination/context schemas
+schemas/                           machine-readable coordination/context/decision schemas
 scripts/                           init, context, validation, and release tooling
 tests/                             repository conformance tests
 .agents/skills/                    narrow reusable operating procedures
@@ -197,7 +213,7 @@ A tag `vX.Y.Z` is releasable only when it equals `VERSION`; the release workflow
 
 ## Status honesty
 
-Formal Project Bootstrap v0.5.1 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
+Formal Project Bootstrap v0.5.2 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
 
 ## License
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -96,9 +97,90 @@ class RepositoryTests(unittest.TestCase):
             actual = hashlib.sha256(archive.read_bytes()).hexdigest()
             self.assertEqual(declared, actual)
 
+    def test_acp_binding_is_declared_in_templates(self):
+        profile = json.loads((ROOT / "PROJECT_PROFILE_TEMPLATE.json").read_text(encoding="utf-8"))
+        acp = profile["authorizationProvider"]
+        self.assertEqual(acp["name"], "acp-gateway")
+        self.assertTrue(acp["failClosed"])
+        self.assertEqual(profile["executionProvider"]["protection"], "acp-gateway")
+        for ref in (acp["integrationRef"], acp["decisionSchema"], acp["actionMap"], acp["checkScript"]):
+            self.assertTrue((ROOT / ref).exists(), ref)
+        bindings = (ROOT / "bindings/PROJECT_BINDINGS_TEMPLATE.yaml").read_text(encoding="utf-8")
+        self.assertIn('protection: "acp-gateway"', bindings)
+        self.assertIn("acp-gateway:decision", bindings)
+        agents = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("## 17. External authorization authority (ACP)", agents)
+        self.assertIn("fail closed", agents)
+        schema = json.loads((ROOT / "schemas/acp-decision.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            set(schema["properties"]["decision"]["enum"]),
+            {"ALLOW", "DENY", "AUTH_REQUIRED", "REVERIFY_REQUIRED", "QUARANTINE",
+             "LOCKED", "RECOVERY_AUTHORIZED", "VERIFY_RECOVERY"},
+        )
+        self.assertTrue((ROOT / ".agents/skills/authorize-protected-effect/SKILL.md").exists())
+        self.assertIn("authorize-protected-effect", (ROOT / "docs/SKILLS_INDEX.md").read_text(encoding="utf-8"))
+
+    def test_initializer_binds_acp_without_writing_the_token(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "bound"
+            self.run_ok(
+                sys.executable,
+                "scripts/init-project.py",
+                "--name", "Bound Project",
+                "--id", "bound-project",
+                "--mode", "new",
+                "--acp-gateway-url", "https://acp.example.invalid/",
+                "--acp-owner", "example-org",
+                "--acp-project", "3",
+                "--output", str(out),
+            )
+            profile = json.loads((out / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))
+            self.assertEqual(profile["authorizationProvider"]["status"], "bound")
+            self.assertEqual(profile["authorizationProvider"]["board"], {"owner": "example-org", "number": 3})
+            board_env = (out / ".agents/board.env").read_text(encoding="utf-8")
+            self.assertIn("ACP_GATEWAY_URL=https://acp.example.invalid\n", board_env)
+            self.assertIn("ACP_BOARD_NUMBER=3", board_env)
+            self.assertNotIn("ACP_GATEWAY_TOKEN", board_env)
+            gitignore = (out / ".gitignore").read_text(encoding="utf-8")
+            self.assertIn(".env.local", gitignore)
+            self.assertIn("!.agents/", gitignore)
+            self.assertTrue((out / "docs/ACP_INTEGRATION.md").exists())
+            self.assertTrue((out / "scripts/acp-check.py").exists())
+            self.assertTrue((out / "contracts/acp-protected-effects.yaml").exists())
+            self.assertTrue((out / "schemas/acp-decision.schema.json").exists())
+            self.run_ok(sys.executable, "scripts/validate-bootstrap.py", "--check-context", cwd=out)
+            # The compiled context must never carry the token even if a local env file exists.
+            (out / ".env.local").write_text("ACP_GATEWAY_TOKEN=supersecretvalue\n", encoding="utf-8")
+            self.run_ok(sys.executable, "scripts/gen-context.py", cwd=out)
+            self.assertNotIn("supersecretvalue", (out / ".agents/llms-full.txt").read_text(encoding="utf-8"))
+            # acp-check refuses to run without the token, and never prints one that exists.
+            cp = subprocess.run(
+                [sys.executable, "scripts/acp-check.py", "--json"],
+                cwd=out, text=True, capture_output=True,
+                env={k: v for k, v in os.environ.items() if not k.startswith("ACP_")},
+            )
+            self.assertIn(cp.returncode, (2, 4))
+            self.assertNotIn("supersecretvalue", cp.stdout + cp.stderr)
+
+    def test_validator_rejects_token_in_committed_board_env(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "leaky"
+            self.run_ok(
+                sys.executable, "scripts/init-project.py",
+                "--name", "Leaky", "--id", "leaky", "--mode", "new",
+                "--acp-gateway-url", "https://acp.example.invalid",
+                "--output", str(out),
+            )
+            board_env = out / ".agents/board.env"
+            board_env.write_text(board_env.read_text(encoding="utf-8") + "ACP_GATEWAY_TOKEN=oops\n", encoding="utf-8")
+            cp = subprocess.run([sys.executable, "scripts/validate-bootstrap.py"], cwd=out, text=True, capture_output=True)
+            self.assertEqual(cp.returncode, 2)
+            self.assertIn("never be written", cp.stderr)
+
     def test_json_artifacts_parse(self):
         for path in [
             "PROJECT_PROFILE_TEMPLATE.json",
+            "schemas/acp-decision.schema.json",
             "CONTEXT_SOURCES_TEMPLATE.json",
             "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json",
             "schemas/agent-message.schema.json",

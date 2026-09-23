@@ -10,7 +10,8 @@ description: Use to autonomously execute Ready work across a project. Handles se
 3. Claim and isolate.
 4. Compile issue context from current context lock.
 5. Execute the smallest correct change.
-6. On a local blocker: record, release/park, notify affected peers, reselect.
-7. On a global stop: prepare the smallest decision packet and stop.
-8. On candidate completion: submit for evaluation/qualification required by the issue.
-9. Record disposition, release claim and continue.
+6. Before any governed effect (leaving the isolated workspace, protected ref, deploy), run `authorize-protected-effect`; proceed only on `ALLOW`, exactly as authorized.
+7. On a local blocker (including a refused or unavailable authorization): record, release/park, notify affected peers, reselect.
+8. On a global stop (including `QUARANTINE`/`LOCKED` for the resource in scope): prepare the smallest decision packet and stop.
+9. On candidate completion: submit for evaluation/qualification required by the issue.
+10. Record disposition, release claim and continue.

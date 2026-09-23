@@ -27,6 +27,7 @@ COPY_DOCS = [
     "EXECUTION_PIPELINE.md",
     "EXECUTION_PROVIDER_CONTRACT.md",
     "EXISTING_PROJECT_ADOPTION.md",
+    "ACP_INTEGRATION.md",
     "FORMAL_RESOURCES.md",
     "INITIAL_EPICS_TEMPLATE.md",
     "LANDING_AND_PROMOTION.md",
@@ -36,7 +37,9 @@ COPY_DOCS = [
     "SKILLS_INDEX.md",
     "WORK_GRAPH.md",
 ]
-SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py"]
+SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py"]
+GITIGNORE_LINES = [".env", ".env.local", ".agents/llms.txt", ".agents/llms-full.txt", "__pycache__/"]
+GITIGNORE_KEEP = ["!.agents/", "!**/.agents/"]
 RECORD_FILES = [
     "evidence.jsonl",
     "negative-results.jsonl",
@@ -71,6 +74,39 @@ def copy_tree_non_destructive(src: Path, out: Path, rel: str, collisions: list[s
         write_candidate(out, child_rel, path.read_bytes(), collisions)
 
 
+def write_acp_wiring(out: Path, args, collisions: list[str]) -> None:
+    """Commit-safe ACP wiring only. The bearer token is never written by the initializer."""
+    board_lines = ["# ACP board binding for this repository. Committed; not a secret."]
+    if args.acp_gateway_url:
+        board_lines.append(f"ACP_GATEWAY_URL={args.acp_gateway_url.rstrip('/')}")
+    if args.acp_owner:
+        board_lines.append(f"ACP_BOARD_OWNER={args.acp_owner}")
+        board_lines.append(f"ACP_BOARD_NUMBER={args.acp_project}")
+        board_lines.append(f"GH_PROJECT_OWNER={args.acp_owner}")
+        board_lines.append(f"GH_PROJECT_NUMBER={args.acp_project}")
+    if args.acp_gateway_url or args.acp_owner:
+        write_candidate(out, ".agents/board.env", ("\n".join(board_lines) + "\n").encode(), collisions)
+
+    example = (
+        "# Copy to .env.local (git-ignored). Never commit the token.\n"
+        f"ACP_GATEWAY_URL={args.acp_gateway_url.rstrip('/') if args.acp_gateway_url else '<ACP_GATEWAY_URL>'}\n"
+        "ACP_GATEWAY_TOKEN=<from the acp-gateway deployment secret store>\n"
+    )
+    write_candidate(out, ".env.example", example.encode(), collisions)
+
+    gitignore = out / ".gitignore"
+    existing = gitignore.read_text(encoding="utf-8").splitlines() if gitignore.exists() else []
+    additions = [line for line in GITIGNORE_LINES + GITIGNORE_KEEP if line not in existing]
+    if additions:
+        block = ["", "# formal-project-bootstrap: secrets stay out; the vendored .agents/ tree stays in"] + additions
+        merged = ("\n".join(existing + block) + "\n").encode()
+        if gitignore.exists() and args.mode == "existing":
+            # Existing authority is never rewritten in place; stage the merged candidate.
+            write_candidate(out, ".gitignore", merged, collisions)
+        else:
+            gitignore.write_text(merged.decode(), encoding="utf-8")
+
+
 def append_alignment(out: Path, collisions: list[str]) -> None:
     if not collisions:
         return
@@ -92,7 +128,14 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     parser.add_argument("--mode", choices=["new", "existing"], default="new")
     parser.add_argument("--profile", action="append", default=[])
+    parser.add_argument("--acp-gateway-url", default=None,
+                        help="bind acp-gateway as the authorization provider at this URL (token is never written)")
+    parser.add_argument("--acp-owner", default=None, help="GitHub owner of the ProjectsV2 board")
+    parser.add_argument("--acp-project", type=int, default=None, help="ProjectsV2 board number")
     args = parser.parse_args()
+    if (args.acp_owner is None) != (args.acp_project is None):
+        print("REFUSED: --acp-owner and --acp-project must be given together", file=sys.stderr)
+        return 2
 
     out = Path(args.output).resolve()
     if args.mode == "new" and out.exists() and any(out.iterdir()):
@@ -134,6 +177,9 @@ def main() -> int:
     profile["profileVersion"] = VERSION
     profile["operatingMode"] = args.mode
     profile["profiles"] = args.profile
+    acp = profile.setdefault("authorizationProvider", {})
+    acp["status"] = "bound" if args.acp_gateway_url else "declared"
+    acp["board"] = {"owner": args.acp_owner, "number": args.acp_project}
     write_candidate(out, "PROJECT_PROFILE.json", (json.dumps(profile, indent=2) + "\n").encode(), collisions)
 
     context = json.loads((ROOT / "CONTEXT_SOURCES_TEMPLATE.json").read_text(encoding="utf-8"))
@@ -161,6 +207,8 @@ def main() -> int:
             return 2
         copy_tree_non_destructive(src, out, f"profiles/{name}", collisions)
         selected_profiles.append(name)
+
+    write_acp_wiring(out, args, collisions)
 
     if not (out / "README.md").exists():
         (out / "README.md").write_text(

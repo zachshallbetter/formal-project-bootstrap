@@ -81,6 +81,10 @@ interface Deviation {
 
 A deviation does not rewrite the original rule. It is bounded, owned, visible and closable.
 
+## Bound authorizing instrument
+
+When `PROJECT_PROFILE.json` binds `authorizationProvider`, that provider's decision is the authorizing instrument for governed effects (E2 and above by default). Deviations, evidence, receipts and reports attach to the same effect but never authorize it. See `docs/ACP_INTEGRATION.md`.
+
 ## Failure
 
 If an effect is possible but unauthorized:

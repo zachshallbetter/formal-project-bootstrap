@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.5.2 — ACP authorization provider binding
+
+- Bound `acp-gateway` (Agent Control Plane) as the reference `protection`,
+  `authorization` and `telemetry` provider: `docs/ACP_INTEGRATION.md`,
+  `contracts/acp-protected-effects.yaml` (effect class → ACP action projection
+  and the A0–A7 decision dispositions), `schemas/acp-decision.schema.json`.
+- Profile template declares `authorizationProvider` (fail-closed, governed
+  from E2, report-on-start / report-before-protected-effect); bindings
+  template binds protected effects to `acp-gateway:decision` and elevated
+  effects to `acp-gateway:recovery-authorization`.
+- `AGENTS.md` §17 external authorization authority; §5 and §9 reference it;
+  `NEW_AGENT_PROMPT.md` requires a decision before any governed effect.
+- New skill `authorize-protected-effect`; `operate-frontier` and
+  `reconcile-project` call it and read the work graph through ACP.
+- `scripts/init-project.py --acp-gateway-url/--acp-owner/--acp-project`
+  writes `.agents/board.env`, `.env.example` and secret-safe `.gitignore`
+  lines; the token is never written. `scripts/acp-check.py` verifies wiring
+  (health, auth, owner, board, notice) without printing secrets and can record
+  gate `B0-acp`. `validate-bootstrap.py` checks the binding's integrity.
+- Doctrine: the ACP decision is the authorizing instrument for governed
+  effects; deviations, evidence, reports and claims never substitute for it.
+  Agent-side instruction gates only clients that ask; external enforcement
+  remains a separate, explicitly recorded binding.
+- Additive for projects on 0.5.1: re-pin, add `authorizationProvider` to the
+  profile, copy the new doc/contract/schema/skill/script, then validate.
+
 ## 0.5.1 — Instrument stratification and upstream-first repair
 
 - Authority model: added instrument stratification — wherever two record types
