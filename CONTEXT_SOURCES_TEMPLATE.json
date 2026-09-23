@@ -40,7 +40,9 @@
     ".agents/llms.txt",
     ".agents/llms-full.txt",
     ".agents/context-lock.json",
-    "PACKAGE_MANIFEST.json"
+    "PACKAGE_MANIFEST.json",
+    ".env",
+    ".env.local"
   ],
   "maxFileBytes": 1048576,
   "includeVendor": true,

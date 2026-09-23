@@ -8,7 +8,8 @@ description: Use at project/session start, after material source changes, after 
 1. Verify project/profile/formal-source identity.
 2. Verify repository, branch, commit, submodules and dirty state.
 3. Verify context lock and regenerate if stale.
-4. Refresh live work graph, claims, provider state, evidence and blockers.
-5. Record contradictions and null-result limitations.
-6. Do not repair in the reconciliation pass.
-7. Return the current lawful Ready frontier and global stop state.
+4. When the profile binds `acp-gateway`: run `scripts/acp-check.py` (health, authenticated owner read, board allowed, notice) and, if `reportOnSessionStart`, report observed protected-artifact state. A refusal is a typed blocker on the work-graph read, not a reason to fall back to native credentials.
+5. Refresh live work graph (through ACP `/internal/project-context` when bound), claims, provider state, evidence and blockers.
+6. Record contradictions and null-result limitations.
+7. Do not repair in the reconciliation pass.
+8. Return the current lawful Ready frontier and global stop state.

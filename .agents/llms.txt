@@ -1,15 +1,16 @@
 # Project Context Index
-> Generator: 0.5.1
-> Source digest: `b3a01693842d5d5d7f39a4b598d2cbe49118ec5378015b81c3a757dc7284e946`
+> Generator: 0.5.2
+> Source digest: `f7fe784d6e3ecd0359f7523880c96bc86f18648f442f273c7e833916b85969ec`
 
 > Generated projection. Canonical sources remain authoritative.
 
 - `.agents/llms-fpb.txt` | 8090 bytes | `a0c4fbd572cead906403a5ecf1738fcf31662b3331a90f8e72de32d05044e054`
 - `.agents/llms-full-fpb.txt` | 168500 bytes | `787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610`
+- `.agents/skills/authorize-protected-effect/SKILL.md` | 2268 bytes | `a776ad17f7e40df07723c40cfafad1f923994bfeb537fe1b8f9103f96716cbb9`
 - `.agents/skills/compile-context/SKILL.md` | 561 bytes | `10c8156d05da083eddb606769183d8cabf4f924c241a3e3b462ef76f7aecf28d`
 - `.agents/skills/coordinate-workers/SKILL.md` | 593 bytes | `6be105841accc1f67dc11e12541b3b343fa2029a0ff6e5085c907b36381ba57b`
-- `.agents/skills/operate-frontier/SKILL.md` | 725 bytes | `d3a6730cc1e450feb4840060025899d4a4d17d6c935a8b3ea57ee4302d651172`
-- `.agents/skills/reconcile-project/SKILL.md` | 648 bytes | `ed45e3b970480a0bed390757fef2d9abe2471bf37835d764f939022600995333`
+- `.agents/skills/operate-frontier/SKILL.md` | 1006 bytes | `96cb68e6961b5b043603ff3c08f3984f504d5075a6b7db64dfbaee6b0fd96c71`
+- `.agents/skills/reconcile-project/SKILL.md` | 1003 bytes | `2c2d862e86ede1dfd3910670ef61bbfbb4715d44927ac571783adcd08f441369`
 - `.agents/skills/verify-outcome/SKILL.md` | 599 bytes | `331bcc9c5179eef021d9edf48e76bedcaaef6fed17f97e91c6d20a20f1199117`
 - `.github/ISSUE_TEMPLATE/config.yml` | 45 bytes | `e71bea835ed1158881306294d96968f125b0b0c5eff66cd94df559336bd0b210`
 - `.github/ISSUE_TEMPLATE/contradiction.yml` | 869 bytes | `0121c80807bf626da11d55572b054c37a5ee9b81df21f68d4fa9cb3b05688b9e`
@@ -19,34 +20,36 @@
 - `.github/pull_request_template.md` | 520 bytes | `387755381fa073d8ccce6dbd45c54ad634d05c24153f0714724ebcae66ba6b3f`
 - `.github/workflows/ci.yml` | 917 bytes | `ef9e1f2e278246cf09031f45b48a70c3ba3b56dd6389378350acc2fc9efeb3f1`
 - `.github/workflows/release.yml` | 869 bytes | `c089b55dcbf975b443fe1fc85c6d81b45f1fa50c3c89e7ecb8122aa0eb6bfd28`
-- `AGENTS.md` | 6896 bytes | `cd8cbb05cc70b8d03f69bf45026ff70fdee09a264bb29d0ac4bcb4b753685caf`
+- `AGENTS.md` | 9853 bytes | `1d1b3e555dfd3b34245cfbbd709eed459fcb6456bf15852524a42578fd4fba7a`
 - `AUTHORITY.md` | 1436 bytes | `9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb`
-- `CHANGELOG.md` | 4066 bytes | `06640b82f7721b01aa0017a2ab012e8efcf21c9b5fdf42966a4c6fc3c4b12c76`
+- `CHANGELOG.md` | 5774 bytes | `c721fb8b074f287808288680b36d796b7b32dc8b5f629456c6076ba6c5a13da0`
 - `CODE_OF_CONDUCT.md` | 404 bytes | `7592f346c7f6aaa166bc865c2ff6e1c7b06bdac73440947471f19bd140755649`
-- `CONTEXT_SOURCES_TEMPLATE.json` | 914 bytes | `1a0e0db180b061204f20b4a550f8b634fb2a220569592bd63fed13eb875dda0e`
+- `CONTEXT_SOURCES_TEMPLATE.json` | 944 bytes | `93b2b41f6f657b1635f2980b41e4fa50a6a7e39fdd3355bfe68eb4c505a4f51e`
 - `CONTRIBUTING.md` | 804 bytes | `48dbdd4f2ce101462939d3d825e2885cb0cfb3d047e03134be1bff9848d3e9c7`
 - `FORMAL_RESOURCE_MANIFEST_TEMPLATE.json` | 277 bytes | `9327b7c5db0d6442e2bb829d8cf0447db2192a7d88eed9914d4e6ab60bfe52f4`
 - `GOVERNANCE.md` | 1154 bytes | `ff29e964319543fc484a051487d1a5abd4a5f73d3419c38d1acd02a670927898`
 - `LICENSE.md` | 329 bytes | `9f76f776e9c50f3a29cca1a1a20c00f4a937c3e48c3ed089eef96544d4fc9645`
-- `NEW_AGENT_PROMPT.md` | 854 bytes | `eced591fb8fb893bba4426e254f44776cae1bf3f148a6e81a01402d427ad60a2`
+- `NEW_AGENT_PROMPT.md` | 1010 bytes | `7fd2a102cb560b4e792ccf05a61aaf4fbf0d5139a708f03010d5d1577503bd2f`
 - `PROJECT_INTENT_TEMPLATE.md` | 1259 bytes | `b63c26018d4f9614ed8c7de14e002767a3e0d2d02b058ed26ab889e81d46440f`
-- `PROJECT_PROFILE_TEMPLATE.json` | 1714 bytes | `dc85c7470f335570e83103d544031e36cba6725bfb634b043fe9eb2f162f0d10`
-- `README.md` | 8413 bytes | `a053425280beb50c2e2c45e8cd732aa746a9451fe7b0a34629d9dff3fc9d5fe2`
+- `PROJECT_PROFILE_TEMPLATE.json` | 3187 bytes | `5782a3865ef8483819494976e14046de9b2abbea3c2d08efb93f7030664f47a9`
+- `README.md` | 9388 bytes | `30a8ea5924d3d23a0803c793999647c96d6f3ee97e766d3b0e470aed2669abf7`
 - `SECURITY.md` | 729 bytes | `a2db8db78760d8b8b31a64b2bf573a40d03db8ea170f57201050cba37d6c4950`
 - `SUPPORT.md` | 455 bytes | `3c4f79ac4998cd7901854b0e896ea1a4853b454b485bb6315c90ab5b36f36a51`
-- `VERSION` | 6 bytes | `aba951626c8690ce493cbc8f018205bb468003f61fbf00fd3d3c71cebabc0177`
+- `VERSION` | 6 bytes | `26e0ab83aa1ff6bd0ae3882787a92663aa19db128e1241ffc99375fb9ca0c121`
 - `VERSIONING.md` | 1215 bytes | `23cbefd0c825d42c470916944c0945b82dbeeac85f609a8adc8a769a42bc8528`
-- `bindings/PROJECT_BINDINGS_TEMPLATE.yaml` | 670 bytes | `e091bb0730ec0e5e26eeeb6d7cb3312c88a23be508e1d4af8c5e0614551dcb2b`
+- `bindings/PROJECT_BINDINGS_TEMPLATE.yaml` | 2818 bytes | `82d57bf1e42ad7e05ef9f8b3a2c749511203e1414ba9647164f3dada0c259414`
 - `contracts/README.md` | 387 bytes | `574c6218c0c957efb2eb3bfa4bf51fbf3ab0165cc81a033a249d4ba4cc2af78e`
+- `contracts/acp-protected-effects.yaml` | 3058 bytes | `f239c39aa9b95f6bc16fd95df1afa128dceb9608986f35e204fd451bb2067a99`
+- `docs/ACP_INTEGRATION.md` | 9128 bytes | `3034baf1d2c5ed50694cd2bf90c81d30ab61a458467238c54ba8e5ca2c1fbb0e`
 - `docs/AGENT_CAPABILITIES.md` | 1095 bytes | `9dd7e5efd745a85880c8b428ab41d25c994c033e7f5d1376a6defd343cbfdb68`
 - `docs/ALIGNMENT.md` | 1588 bytes | `9e241f47e102b9feeb3b8e6bff3c95a146d69384f196eefc2327b363a96bf7a0`
-- `docs/AUTHORITY_MODEL.md` | 2592 bytes | `abc1aac1d90b78a5e084549ef4f15e3a299f0894e521040f85261ea55acf5fc0`
+- `docs/AUTHORITY_MODEL.md` | 2912 bytes | `1d371d913fee51b89da6b2b39a587c9e143ff4146a484edd79eb3210bd938e62`
 - `docs/BOOTSTRAP_SEQUENCE.md` | 6140 bytes | `82d04fa96aa477837c64b61a7c5f9e7617d0e325ef3e205dbd037f6ff1e91d51`
 - `docs/CONFORMANCE.md` | 3027 bytes | `91a89475f94537685db35af38306d5455ee9bb30488fb5247527293a2e0320ba`
 - `docs/CONTEXT_COMPILATION.md` | 1601 bytes | `214a8af8fa1e25b6488f293d43842efce0225cf40aba460a8ae99d5c850d3599`
 - `docs/EVIDENCE_METHOD.md` | 1039 bytes | `a7422b9cc99adfc462a8c6d44ee883f9483c1127fbcaf0f44b1328d1d30fd4c9`
 - `docs/EXECUTION_PIPELINE.md` | 1861 bytes | `529c01ec25ac7d0552a19d591514244ec7bbe3f1966f1dd38d2c2f69494ba2db`
-- `docs/EXECUTION_PROVIDER_CONTRACT.md` | 1669 bytes | `e9587fea1bd67229f6588600512e6b9539d510ba000c0190b2c05f67eda0cf19`
+- `docs/EXECUTION_PROVIDER_CONTRACT.md` | 2134 bytes | `f8884fe13ab6503ddc5fdb53264001b24a6bf846b00473e3f8deca5d018d5ee5`
 - `docs/EXISTING_PROJECT_ADOPTION.md` | 4530 bytes | `6cfaf7daa1669ed717571ecd43e3b5950151d39641d1adaff6a16843a954c6c7`
 - `docs/FORMAL_RESOURCES.md` | 2845 bytes | `bf93374182ba0212c7e64328a751c9dc3cfacd816779f983eca50f9157851289`
 - `docs/INITIAL_EPICS_TEMPLATE.md` | 1234 bytes | `c3e6414393bbfb7905b4113f10571a695204538c19bbab90b5a486e7ae6a3039`
@@ -55,25 +58,31 @@
 - `docs/NEGATIVE_KNOWLEDGE.md` | 2169 bytes | `01ef93bc7c5b75ce991d6ed0cd78faba1d8e6cdc8f1b43b10231025a0975a91e`
 - `docs/NEGATIVE_RESULTS.md` | 2132 bytes | `8bc6f6625735e60d062e08c32f834252a3ae4e05307f855d6810a3f1372c8a4c`
 - `docs/RECOVERY.md` | 1115 bytes | `b084f0a4bbad4012bd9d2525a07239e38ff4f563bbdefbd8491518fec14882e9`
-- `docs/SKILLS_INDEX.md` | 763 bytes | `05da80f8e5564e351603f467963cf5820c5ddaf78187566c2da7d1abae2754a5`
+- `docs/SKILLS_INDEX.md` | 914 bytes | `2c763122a98e23607adf52f4029b3559b779bf2d3bb3a575b7a11f1ebf1f7874`
 - `docs/STATUS.md` | 858 bytes | `d60b249cbfad130320e43e98a697f1a4a3ca0be6214ed8ee514ec7fde1d8eaac`
 - `docs/WORK_GRAPH.md` | 1790 bytes | `427012a108e0b551cf656690da51c74675d0aa99cb138b8d4cf61bfa32691a22`
+- `docs/pin-digest-procedure/PROPOSAL.md` | 5363 bytes | `db4e6c00092fb4dff9cadb49a54552f14ecc1d7e34ccb27fc62f4fb67d043cf8`
+- `docs/pin-digest-procedure/docs/FORMAL_RESOURCES.pinning.md` | 1704 bytes | `be652fbc83cbdb9a353ded05dab54dcf3c9ab7f47e29faf23e5281205ad698c0`
+- `docs/pin-digest-procedure/schemas/resource-fields.md` | 904 bytes | `3145f6c957500405128558fa42ca53de3c8c1cd22382a54246e0138d3d269e50`
+- `docs/pin-digest-procedure/scripts/verify-pins.py` | 10840 bytes | `86e28f2f9ae323e1feb4221439874efd7b5d27c46967c7a624d0303351e765c9`
 - `profiles/commercialization/PROFILE.yaml` | 392 bytes | `6006599d1b19c7e05eb1e91c11f167b6b208eb9a6df701b049e0acf527310bb1`
 - `profiles/commercialization/README.md` | 593 bytes | `dcf3a7722a3ddd37b3da716c7b6aafe0b4eb1fa3747ea22c38bcb8a4722a454b`
 - `profiles/commercialization/protocols/calp/PROTOCOL.md` | 19501 bytes | `c0392c0308e1ced596d290a3d11b4c6a09cfbfb3a02847a5b7845e86c7e20c01`
 - `profiles/commercialization/protocols/pgp/PROTOCOL.md` | 19237 bytes | `78999b3ec2dfbe340753f27aa9a6f74c979d8ca99b6494663016ae5623c5c497`
 - `pyproject.toml` | 222 bytes | `067f13910d35a368ae2b1c0e3b38ee481646bfa625743d1f2f75e99caed5cfa7`
 - `requirements-dev.txt` | 33 bytes | `42e59b5e5dc9e97d062b24e0296b7362736ea5ffa07d58cc48744969d370da01`
+- `schemas/acp-decision.schema.json` | 2996 bytes | `fd5856ed293460c0e9a3c624f14f985bb7f5416a3a53ebda6d91a158747837d9`
 - `schemas/agent-message.schema.json` | 2269 bytes | `88c346d6ce2cf34d3bba9f35e2ef54e77776707b125b22bbc4ecc910ac33bedc`
 - `schemas/context-lock.schema.json` | 2526 bytes | `395e44e6dcc74b3169463d96e5db4836befdd1cae8ffc19857645c4e8ea5993b`
 - `schemas/formal-resource-manifest.schema.json` | 1676 bytes | `465c3eae445d530087e1149d7f14e267400b32df00fa5b506e0b3af278a9b928`
 - `schemas/work-disposition.schema.json` | 2062 bytes | `a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987`
+- `scripts/acp-check.py` | 9218 bytes | `7c1a79d58b376f4dceea600432f1fc4be037a3fc465cea60c39e67c13c8a01b1`
 - `scripts/check-all.py` | 787 bytes | `87f1790333077e95d0800cc6b9ace0aa66d4a0f36bf7a18918a608b2aa66dffb`
 - `scripts/check-negative-results.py` | 7397 bytes | `ca0766679ddbaec8045f3da28a40d2a4837d0b6789dba5e44b499980d883946b`
 - `scripts/gen-context.py` | 7015 bytes | `4cab5cf07c5a69e7afd728844393958223495e3c01d339c0c8d6dbde8bb51322`
-- `scripts/init-project.py` | 7380 bytes | `cf6621a3009cf11b2ace7b6e98e18ae26617fb4057b2592397943811f536bd2d`
+- `scripts/init-project.py` | 10240 bytes | `1960f4d04e1511ac8b47cc8ab87a42c7707efc7359c7b56e0974d8bf7d808243`
 - `scripts/package-release.py` | 3221 bytes | `5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa`
-- `scripts/validate-bootstrap.py` | 4120 bytes | `b3881974ac4d1259a0fa084c1aa80bfcdc1af4b3873f05c9057697e61bb1fb95`
+- `scripts/validate-bootstrap.py` | 7176 bytes | `be8ab1a51db8a05495ad2aeb21fc46dfe21a9d4ccbd91f1b75901ee0ee971224`
 - `scripts/validate-formal-files.py` | 1411 bytes | `bbb1f14e50d543401e82641551eaf505821df47370a2c9697272414524a1ab65`
-- `tests/test_repository.py` | 5818 bytes | `42ae14d8b4abadd820b83e093eb05ce375d9482fb4143c8ae1800d711d0f36b8`
+- `tests/test_repository.py` | 10794 bytes | `a249c6c7875e5fa80f85c5100e903c75a815423eeddc705a74ad75d767776796`
 - `vendor/README.md` | 280 bytes | `d7ab6f7ffd70d64f61a8b36b8d12b691b1d3cc38c3d48b815bacd8d88bb4aeb0`

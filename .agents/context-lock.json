@@ -1,6 +1,6 @@
 {
   "format": "2",
-  "generatorVersion": "0.5.1",
+  "generatorVersion": "0.5.2",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "repositoryState": {
@@ -8,7 +8,7 @@
     "validationRole": "provenance",
     "repositories": []
   },
-  "aggregateSourceDigest": "b3a01693842d5d5d7f39a4b598d2cbe49118ec5378015b81c3a757dc7284e946",
+  "aggregateSourceDigest": "f7fe784d6e3ecd0359f7523880c96bc86f18648f442f273c7e833916b85969ec",
   "sources": [
     {
       "path": ".agents/llms-fpb.txt",
@@ -19,6 +19,11 @@
       "path": ".agents/llms-full-fpb.txt",
       "bytes": 168500,
       "sha256": "787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610"
+    },
+    {
+      "path": ".agents/skills/authorize-protected-effect/SKILL.md",
+      "bytes": 2268,
+      "sha256": "a776ad17f7e40df07723c40cfafad1f923994bfeb537fe1b8f9103f96716cbb9"
     },
     {
       "path": ".agents/skills/compile-context/SKILL.md",
@@ -32,13 +37,13 @@
     },
     {
       "path": ".agents/skills/operate-frontier/SKILL.md",
-      "bytes": 725,
-      "sha256": "d3a6730cc1e450feb4840060025899d4a4d17d6c935a8b3ea57ee4302d651172"
+      "bytes": 1006,
+      "sha256": "96cb68e6961b5b043603ff3c08f3984f504d5075a6b7db64dfbaee6b0fd96c71"
     },
     {
       "path": ".agents/skills/reconcile-project/SKILL.md",
-      "bytes": 648,
-      "sha256": "ed45e3b970480a0bed390757fef2d9abe2471bf37835d764f939022600995333"
+      "bytes": 1003,
+      "sha256": "2c2d862e86ede1dfd3910670ef61bbfbb4715d44927ac571783adcd08f441369"
     },
     {
       "path": ".agents/skills/verify-outcome/SKILL.md",
@@ -87,8 +92,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 6896,
-      "sha256": "cd8cbb05cc70b8d03f69bf45026ff70fdee09a264bb29d0ac4bcb4b753685caf"
+      "bytes": 9853,
+      "sha256": "1d1b3e555dfd3b34245cfbbd709eed459fcb6456bf15852524a42578fd4fba7a"
     },
     {
       "path": "AUTHORITY.md",
@@ -97,8 +102,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 4066,
-      "sha256": "06640b82f7721b01aa0017a2ab012e8efcf21c9b5fdf42966a4c6fc3c4b12c76"
+      "bytes": 5774,
+      "sha256": "c721fb8b074f287808288680b36d796b7b32dc8b5f629456c6076ba6c5a13da0"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -107,8 +112,8 @@
     },
     {
       "path": "CONTEXT_SOURCES_TEMPLATE.json",
-      "bytes": 914,
-      "sha256": "1a0e0db180b061204f20b4a550f8b634fb2a220569592bd63fed13eb875dda0e"
+      "bytes": 944,
+      "sha256": "93b2b41f6f657b1635f2980b41e4fa50a6a7e39fdd3355bfe68eb4c505a4f51e"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -132,8 +137,8 @@
     },
     {
       "path": "NEW_AGENT_PROMPT.md",
-      "bytes": 854,
-      "sha256": "eced591fb8fb893bba4426e254f44776cae1bf3f148a6e81a01402d427ad60a2"
+      "bytes": 1010,
+      "sha256": "7fd2a102cb560b4e792ccf05a61aaf4fbf0d5139a708f03010d5d1577503bd2f"
     },
     {
       "path": "PROJECT_INTENT_TEMPLATE.md",
@@ -142,13 +147,13 @@
     },
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "bytes": 1714,
-      "sha256": "dc85c7470f335570e83103d544031e36cba6725bfb634b043fe9eb2f162f0d10"
+      "bytes": 3187,
+      "sha256": "5782a3865ef8483819494976e14046de9b2abbea3c2d08efb93f7030664f47a9"
     },
     {
       "path": "README.md",
-      "bytes": 8413,
-      "sha256": "a053425280beb50c2e2c45e8cd732aa746a9451fe7b0a34629d9dff3fc9d5fe2"
+      "bytes": 9388,
+      "sha256": "30a8ea5924d3d23a0803c793999647c96d6f3ee97e766d3b0e470aed2669abf7"
     },
     {
       "path": "SECURITY.md",
@@ -163,7 +168,7 @@
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "aba951626c8690ce493cbc8f018205bb468003f61fbf00fd3d3c71cebabc0177"
+      "sha256": "26e0ab83aa1ff6bd0ae3882787a92663aa19db128e1241ffc99375fb9ca0c121"
     },
     {
       "path": "VERSIONING.md",
@@ -172,13 +177,23 @@
     },
     {
       "path": "bindings/PROJECT_BINDINGS_TEMPLATE.yaml",
-      "bytes": 670,
-      "sha256": "e091bb0730ec0e5e26eeeb6d7cb3312c88a23be508e1d4af8c5e0614551dcb2b"
+      "bytes": 2818,
+      "sha256": "82d57bf1e42ad7e05ef9f8b3a2c749511203e1414ba9647164f3dada0c259414"
     },
     {
       "path": "contracts/README.md",
       "bytes": 387,
       "sha256": "574c6218c0c957efb2eb3bfa4bf51fbf3ab0165cc81a033a249d4ba4cc2af78e"
+    },
+    {
+      "path": "contracts/acp-protected-effects.yaml",
+      "bytes": 3058,
+      "sha256": "f239c39aa9b95f6bc16fd95df1afa128dceb9608986f35e204fd451bb2067a99"
+    },
+    {
+      "path": "docs/ACP_INTEGRATION.md",
+      "bytes": 9128,
+      "sha256": "3034baf1d2c5ed50694cd2bf90c81d30ab61a458467238c54ba8e5ca2c1fbb0e"
     },
     {
       "path": "docs/AGENT_CAPABILITIES.md",
@@ -192,8 +207,8 @@
     },
     {
       "path": "docs/AUTHORITY_MODEL.md",
-      "bytes": 2592,
-      "sha256": "abc1aac1d90b78a5e084549ef4f15e3a299f0894e521040f85261ea55acf5fc0"
+      "bytes": 2912,
+      "sha256": "1d371d913fee51b89da6b2b39a587c9e143ff4146a484edd79eb3210bd938e62"
     },
     {
       "path": "docs/BOOTSTRAP_SEQUENCE.md",
@@ -222,8 +237,8 @@
     },
     {
       "path": "docs/EXECUTION_PROVIDER_CONTRACT.md",
-      "bytes": 1669,
-      "sha256": "e9587fea1bd67229f6588600512e6b9539d510ba000c0190b2c05f67eda0cf19"
+      "bytes": 2134,
+      "sha256": "f8884fe13ab6503ddc5fdb53264001b24a6bf846b00473e3f8deca5d018d5ee5"
     },
     {
       "path": "docs/EXISTING_PROJECT_ADOPTION.md",
@@ -267,8 +282,8 @@
     },
     {
       "path": "docs/SKILLS_INDEX.md",
-      "bytes": 763,
-      "sha256": "05da80f8e5564e351603f467963cf5820c5ddaf78187566c2da7d1abae2754a5"
+      "bytes": 914,
+      "sha256": "2c763122a98e23607adf52f4029b3559b779bf2d3bb3a575b7a11f1ebf1f7874"
     },
     {
       "path": "docs/STATUS.md",
@@ -279,6 +294,26 @@
       "path": "docs/WORK_GRAPH.md",
       "bytes": 1790,
       "sha256": "427012a108e0b551cf656690da51c74675d0aa99cb138b8d4cf61bfa32691a22"
+    },
+    {
+      "path": "docs/pin-digest-procedure/PROPOSAL.md",
+      "bytes": 5363,
+      "sha256": "db4e6c00092fb4dff9cadb49a54552f14ecc1d7e34ccb27fc62f4fb67d043cf8"
+    },
+    {
+      "path": "docs/pin-digest-procedure/docs/FORMAL_RESOURCES.pinning.md",
+      "bytes": 1704,
+      "sha256": "be652fbc83cbdb9a353ded05dab54dcf3c9ab7f47e29faf23e5281205ad698c0"
+    },
+    {
+      "path": "docs/pin-digest-procedure/schemas/resource-fields.md",
+      "bytes": 904,
+      "sha256": "3145f6c957500405128558fa42ca53de3c8c1cd22382a54246e0138d3d269e50"
+    },
+    {
+      "path": "docs/pin-digest-procedure/scripts/verify-pins.py",
+      "bytes": 10840,
+      "sha256": "86e28f2f9ae323e1feb4221439874efd7b5d27c46967c7a624d0303351e765c9"
     },
     {
       "path": "profiles/commercialization/PROFILE.yaml",
@@ -311,6 +346,11 @@
       "sha256": "42e59b5e5dc9e97d062b24e0296b7362736ea5ffa07d58cc48744969d370da01"
     },
     {
+      "path": "schemas/acp-decision.schema.json",
+      "bytes": 2996,
+      "sha256": "fd5856ed293460c0e9a3c624f14f985bb7f5416a3a53ebda6d91a158747837d9"
+    },
+    {
       "path": "schemas/agent-message.schema.json",
       "bytes": 2269,
       "sha256": "88c346d6ce2cf34d3bba9f35e2ef54e77776707b125b22bbc4ecc910ac33bedc"
@@ -331,6 +371,11 @@
       "sha256": "a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987"
     },
     {
+      "path": "scripts/acp-check.py",
+      "bytes": 9218,
+      "sha256": "7c1a79d58b376f4dceea600432f1fc4be037a3fc465cea60c39e67c13c8a01b1"
+    },
+    {
       "path": "scripts/check-all.py",
       "bytes": 787,
       "sha256": "87f1790333077e95d0800cc6b9ace0aa66d4a0f36bf7a18918a608b2aa66dffb"
@@ -347,8 +392,8 @@
     },
     {
       "path": "scripts/init-project.py",
-      "bytes": 7380,
-      "sha256": "cf6621a3009cf11b2ace7b6e98e18ae26617fb4057b2592397943811f536bd2d"
+      "bytes": 10240,
+      "sha256": "1960f4d04e1511ac8b47cc8ab87a42c7707efc7359c7b56e0974d8bf7d808243"
     },
     {
       "path": "scripts/package-release.py",
@@ -357,8 +402,8 @@
     },
     {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 4120,
-      "sha256": "b3881974ac4d1259a0fa084c1aa80bfcdc1af4b3873f05c9057697e61bb1fb95"
+      "bytes": 7176,
+      "sha256": "be8ab1a51db8a05495ad2aeb21fc46dfe21a9d4ccbd91f1b75901ee0ee971224"
     },
     {
       "path": "scripts/validate-formal-files.py",
@@ -367,8 +412,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 5818,
-      "sha256": "42ae14d8b4abadd820b83e093eb05ce375d9482fb4143c8ae1800d711d0f36b8"
+      "bytes": 10794,
+      "sha256": "a249c6c7875e5fa80f85c5100e903c75a815423eeddc705a74ad75d767776796"
     },
     {
       "path": "vendor/README.md",
