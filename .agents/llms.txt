@@ -1,6 +1,6 @@
 # Project Context Index
 > Generator: 0.5.3
-> Source digest: `c6105d1c06f5e15c85c6b48129ae86cfd3ec7cb768a10407bf1988b21ac81766`
+> Source digest: `e289d48c64e79d6cb835ba3e8d68cd08b7f827637e18e3b7f39fd195a8016227`
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -18,7 +18,7 @@
 - `.github/ISSUE_TEMPLATE/protocol-change.yml` | 1082 bytes | `8326f3fd31de252e6dd2ddcbc66d7069de275c16855efc03edf8cf54622d372d`
 - `.github/dependabot.yml` | 115 bytes | `214d940291cfd9b997df6bc72802aac3ddcbb4895843195a94453f97215075ca`
 - `.github/pull_request_template.md` | 520 bytes | `387755381fa073d8ccce6dbd45c54ad634d05c24153f0714724ebcae66ba6b3f`
-- `.github/workflows/ci.yml` | 1665 bytes | `d09c8a11166fff09c3bbd776dbcaab391fee5d1bbe5337f4fdcd127f2d8c5860`
+- `.github/workflows/ci.yml` | 1665 bytes | `c70ab92ff1c33f7aec64f57a8dea85ce4219bd423ef196d22d0c96c9941846bf`
 - `.github/workflows/release.yml` | 869 bytes | `57fec73d4e03a37e9f7f2c892a246dd3b2781e190b4a705864c8c80127eb2b51`
 - `AGENTS.md` | 10130 bytes | `f901b6748bf339834b99274feec5936fae6abbbf7a552a10cc36bbedd066f366`
 - `AUTHORITY.md` | 1436 bytes | `9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb`
