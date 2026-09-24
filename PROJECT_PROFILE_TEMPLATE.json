@@ -1,7 +1,7 @@
 {
   "projectId": "<PROJECT_ID>",
   "projectName": "<PROJECT_NAME>",
-  "profileVersion": "0.5.2",
+  "profileVersion": "0.5.3",
   "profileStatus": "provisional",
   "intentRef": "PROJECT_INTENT.md",
   "authorityRef": "docs/AUTHORITY_MODEL.md",
@@ -34,7 +34,8 @@
     "failClosed": true,
     "reportOnSessionStart": true,
     "reportBeforeProtectedEffect": true,
-    "checkScript": "scripts/acp-check.py"
+    "checkScript": "scripts/acp-check.py",
+    "clientScript": "scripts/acp.py"
   },
   "serviceOperations": [
     {

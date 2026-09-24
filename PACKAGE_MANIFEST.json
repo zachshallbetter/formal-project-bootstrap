@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "bytes": 13657,
+      "bytes": 13970,
       "path": ".agents/context-lock.json",
-      "sha256": "2eddd77a438f23fd906515a156f5eb61c71a0b460321da68444f59ae26da312f"
+      "sha256": "9bcf60977e5edf88b58b9feb9bee6bf9faa87ec0394af87de607d3875e85cd53"
     },
     {
       "bytes": 8090,
@@ -16,19 +16,19 @@
       "sha256": "787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610"
     },
     {
-      "bytes": 427055,
+      "bytes": 487484,
       "path": ".agents/llms-full.txt",
-      "sha256": "e28940d287ec0d46e3edfc9e48a3fbae61269f72d9af34360b5955a0032133ab"
+      "sha256": "3568d360a81a8d2510a85b87f5c6638a2acda38af6ad0817cdda29c4d38dba5b"
     },
     {
-      "bytes": 9577,
+      "bytes": 9794,
       "path": ".agents/llms.txt",
-      "sha256": "7c9c990269f9be325c77aa480f0971e6791ea9dc131f37c948873dbbbaca1f23"
+      "sha256": "1c200732bf50f4a1c268d68878789751e5f44faa14dfc59e4946f82b12f02727"
     },
     {
-      "bytes": 2268,
+      "bytes": 2758,
       "path": ".agents/skills/authorize-protected-effect/SKILL.md",
-      "sha256": "a776ad17f7e40df07723c40cfafad1f923994bfeb537fe1b8f9103f96716cbb9"
+      "sha256": "480ffefc42bc4d9d744484149f26a86ddb9b19a8d6adb63053720f5fc0c7865f"
     },
     {
       "bytes": 561,
@@ -46,9 +46,9 @@
       "sha256": "96cb68e6961b5b043603ff3c08f3984f504d5075a6b7db64dfbaee6b0fd96c71"
     },
     {
-      "bytes": 1003,
+      "bytes": 1161,
       "path": ".agents/skills/reconcile-project/SKILL.md",
-      "sha256": "2c2d862e86ede1dfd3910670ef61bbfbb4715d44927ac571783adcd08f441369"
+      "sha256": "59f47ea393b477949a5e046a021e95032c3e3bf395842f82388c05ddde6d5c66"
     },
     {
       "bytes": 599,
@@ -106,14 +106,14 @@
       "sha256": "c089b55dcbf975b443fe1fc85c6d81b45f1fa50c3c89e7ecb8122aa0eb6bfd28"
     },
     {
-      "bytes": 105,
+      "bytes": 287,
       "path": ".gitignore",
-      "sha256": "d5fed770854d6f8152752d66604c6a660d294d65cbccbac8bc43ea8ed01d21f8"
+      "sha256": "f6f2627c6f9e6906d0e42beba5a44f2b240072aff32a76e8bde173f9ae3b83e8"
     },
     {
-      "bytes": 9853,
+      "bytes": 10130,
       "path": "AGENTS.md",
-      "sha256": "1d1b3e555dfd3b34245cfbbd709eed459fcb6456bf15852524a42578fd4fba7a"
+      "sha256": "f901b6748bf339834b99274feec5936fae6abbbf7a552a10cc36bbedd066f366"
     },
     {
       "bytes": 1436,
@@ -121,9 +121,9 @@
       "sha256": "9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb"
     },
     {
-      "bytes": 5774,
+      "bytes": 8893,
       "path": "CHANGELOG.md",
-      "sha256": "c721fb8b074f287808288680b36d796b7b32dc8b5f629456c6076ba6c5a13da0"
+      "sha256": "e584be48eb5824c0727afadbb6f4a926c3c77447304425f8aabdae3dc0c146be"
     },
     {
       "bytes": 404,
@@ -171,14 +171,14 @@
       "sha256": "b63c26018d4f9614ed8c7de14e002767a3e0d2d02b058ed26ab889e81d46440f"
     },
     {
-      "bytes": 3187,
+      "bytes": 3225,
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "sha256": "5782a3865ef8483819494976e14046de9b2abbea3c2d08efb93f7030664f47a9"
+      "sha256": "bf579f5b42a5577582fc48eceb31d9e2376b97589f3128260078a96ff6ffe2a6"
     },
     {
-      "bytes": 9388,
+      "bytes": 9789,
       "path": "README.md",
-      "sha256": "30a8ea5924d3d23a0803c793999647c96d6f3ee97e766d3b0e470aed2669abf7"
+      "sha256": "7d5b7bc49748ece2eb1fbcf9b052bfc9df0c797734df73717204727619e37509"
     },
     {
       "bytes": 729,
@@ -193,7 +193,7 @@
     {
       "bytes": 6,
       "path": "VERSION",
-      "sha256": "26e0ab83aa1ff6bd0ae3882787a92663aa19db128e1241ffc99375fb9ca0c121"
+      "sha256": "27ecff1fcdaf65ab46c1bb99c1072d6d134a0e8dd97dd95cfa88696b9ed453b2"
     },
     {
       "bytes": 1215,
@@ -211,14 +211,14 @@
       "sha256": "574c6218c0c957efb2eb3bfa4bf51fbf3ab0165cc81a033a249d4ba4cc2af78e"
     },
     {
-      "bytes": 3058,
+      "bytes": 4146,
       "path": "contracts/acp-protected-effects.yaml",
-      "sha256": "f239c39aa9b95f6bc16fd95df1afa128dceb9608986f35e204fd451bb2067a99"
+      "sha256": "6fd132dc67c4213fecb65461f0ee70987cfe41b765a55ab89c11d3f1a8a1a7dd"
     },
     {
-      "bytes": 9128,
+      "bytes": 15964,
       "path": "docs/ACP_INTEGRATION.md",
-      "sha256": "3034baf1d2c5ed50694cd2bf90c81d30ab61a458467238c54ba8e5ca2c1fbb0e"
+      "sha256": "8b5bf32e3040581e842718942f52cfd0f00ce1c37f6cc76498b127e4f5f449d9"
     },
     {
       "bytes": 1095,
@@ -371,9 +371,9 @@
       "sha256": "42e59b5e5dc9e97d062b24e0296b7362736ea5ffa07d58cc48744969d370da01"
     },
     {
-      "bytes": 2996,
+      "bytes": 5605,
       "path": "schemas/acp-decision.schema.json",
-      "sha256": "fd5856ed293460c0e9a3c624f14f985bb7f5416a3a53ebda6d91a158747837d9"
+      "sha256": "2a870190e4a3d208b765054b04de35819570770639e93e16ebb52d4365e8c76c"
     },
     {
       "bytes": 2269,
@@ -396,9 +396,14 @@
       "sha256": "a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987"
     },
     {
-      "bytes": 9218,
+      "bytes": 11196,
       "path": "scripts/acp-check.py",
-      "sha256": "7c1a79d58b376f4dceea600432f1fc4be037a3fc465cea60c39e67c13c8a01b1"
+      "sha256": "ef1863692a470634adae144c0b6f3aadfc375543915c7b9c428b6b99f4c9225a"
+    },
+    {
+      "bytes": 25341,
+      "path": "scripts/acp.py",
+      "sha256": "296df59154eeb8c0b9fc60dfe61f5b31639f090974d494f7c058dbd93749d321"
     },
     {
       "bytes": 787,
@@ -416,9 +421,9 @@
       "sha256": "4cab5cf07c5a69e7afd728844393958223495e3c01d339c0c8d6dbde8bb51322"
     },
     {
-      "bytes": 10240,
+      "bytes": 10404,
       "path": "scripts/init-project.py",
-      "sha256": "1960f4d04e1511ac8b47cc8ab87a42c7707efc7359c7b56e0974d8bf7d808243"
+      "sha256": "48616f5b3257663e23f14118cc13a7b932b90cc49492a34693905ad41b3e4d03"
     },
     {
       "bytes": 3221,
@@ -426,14 +431,19 @@
       "sha256": "5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa"
     },
     {
-      "bytes": 7176,
+      "bytes": 9360,
       "path": "scripts/validate-bootstrap.py",
-      "sha256": "be8ab1a51db8a05495ad2aeb21fc46dfe21a9d4ccbd91f1b75901ee0ee971224"
+      "sha256": "c0be496cc05f360f64891fc69466835b5aa04cbeec6f89f32fc8b079dfc9845d"
     },
     {
       "bytes": 1411,
       "path": "scripts/validate-formal-files.py",
       "sha256": "bbb1f14e50d543401e82641551eaf505821df47370a2c9697272414524a1ab65"
+    },
+    {
+      "bytes": 15396,
+      "path": "tests/test_acp_client.py",
+      "sha256": "34d942572b7dc65f588bd01790d6e8b886ae521979d5629da20db07ea503e3d8"
     },
     {
       "bytes": 10794,
@@ -448,5 +458,5 @@
   ],
   "format": "1",
   "package": "formal-project-bootstrap",
-  "version": "0.5.2"
+  "version": "0.5.3"
 }

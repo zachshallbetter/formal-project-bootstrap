@@ -37,6 +37,7 @@ COMMON = [
     ".agents/skills/authorize-protected-effect/SKILL.md",
     "scripts/gen-context.py",
     "scripts/acp-check.py",
+    "scripts/acp.py",
 ]
 ACP_DECISIONS = {"ALLOW", "DENY", "AUTH_REQUIRED", "REVERIFY_REQUIRED", "QUARANTINE",
                  "LOCKED", "RECOVERY_AUTHORIZED", "VERIFY_RECOVERY"}
@@ -90,12 +91,31 @@ def validate_acp(profile: dict) -> int:
         if not ref or not (ROOT / ref).exists():
             print(f"INVALID: authorizationProvider.{key} must reference an existing file ({ref})", file=sys.stderr)
             return 2
+    # Optional until every adopting project has re-pinned to 0.5.3.
+    client = acp.get("clientScript")
+    if client is not None and not (ROOT / client).exists():
+        print(f"INVALID: authorizationProvider.clientScript must reference an existing file ({client})", file=sys.stderr)
+        return 2
     schema = json.loads((ROOT / acp["decisionSchema"]).read_text(encoding="utf-8"))
     decisions = set(schema["properties"]["decision"]["enum"])
     if decisions != ACP_DECISIONS:
         print("INVALID: acp-decision schema decision vocabulary drifted from A0-A7", file=sys.stderr)
         return 2
     action_map = (ROOT / acp["actionMap"]).read_text(encoding="utf-8")
+    try:
+        import yaml  # optional at runtime; the substring check below still runs without it
+    except ImportError:
+        yaml = None
+    if yaml is not None:
+        try:
+            parsed = yaml.safe_load(action_map)
+        except yaml.YAMLError as exc:
+            print(f"INVALID: {acp['actionMap']} is not valid YAML: {exc}".splitlines()[0], file=sys.stderr)
+            return 2
+        missing = ACP_DECISIONS - set((parsed or {}).get("decisions") or {})
+        if missing:
+            print(f"INVALID: {acp['actionMap']} lacks a disposition for {', '.join(sorted(missing))}", file=sys.stderr)
+            return 2
     for decision in ACP_DECISIONS:
         if decision + ":" not in action_map:
             print(f"INVALID: {acp['actionMap']} lacks a disposition for {decision}", file=sys.stderr)
@@ -114,6 +134,25 @@ def validate_acp(profile: dict) -> int:
     return 0
 
 
+def ignored_required(paths: list[str]) -> list[str]:
+    """Required files git would silently leave out of every commit.
+
+    A global core.excludesFile that ignores AGENTS.md or .agents/ is a common
+    scaffolding default; `git add` then reports success while staging nothing,
+    and the project's authority exists on exactly one machine.
+    """
+    try:
+        inside = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--is-inside-work-tree"],
+                                capture_output=True, text=True).stdout.strip() == "true"
+    except OSError:
+        return []
+    if not inside:
+        return []
+    out = subprocess.run(["git", "-C", str(ROOT), "check-ignore", *paths],
+                         capture_output=True, text=True)
+    return [line for line in out.stdout.splitlines() if line.strip()]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-context", action="store_true")
@@ -124,6 +163,13 @@ def main() -> int:
     missing = [path for path in required if not (ROOT / path).exists()]
     if missing:
         print("MISSING:", *missing, sep="\n  ", file=sys.stderr)
+        return 2
+
+    ignored = ignored_required(required + ([".agents/board.env"] if (ROOT / ".agents/board.env").exists() else []))
+    if ignored:
+        print("INVALID: git ignores required file(s); they would never be committed:",
+              *ignored, sep="\n  ", file=sys.stderr)
+        print("remedy: add a negation (e.g. '!AGENTS.md') to this repository's .gitignore", file=sys.stderr)
         return 2
 
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()

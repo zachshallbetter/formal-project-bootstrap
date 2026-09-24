@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.5.3 — ACP client, governed-repository check, reporting contract
+
+- `scripts/acp.py`: stdlib client for every ACP call a project makes —
+  `authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`,
+  `board`, `policy`. Fails closed (unreachable/refused/malformed → synthetic
+  `DENY`/`GATEWAY_UNAVAILABLE`), refuses `ALLOW` with
+  `policy_effect: NOT_GOVERNED` under `failClosed` (`ACP_NOT_GOVERNING`),
+  refuses an `ALLOW` whose `authorized_action` differs from the request
+  (`AUTHORIZED_ACTION_MISMATCH`), exits non-zero for every non-`ALLOW`, and
+  records decisions without the capability token. Copied by the initializer;
+  declared as `authorizationProvider.clientScript`.
+- Reporting contract made concrete: the typed events acp-gateway accepts on
+  `/internal/report` (`SESSION_STARTED`, `SESSION_RESUMED`,
+  `PROTECTED_EFFECT_PENDING`, control-plane-change events) and the
+  `/internal/integrity/snapshot` checkpoints, in `docs/ACP_INTEGRATION.md`
+  and the action map's new `reports:` section. Requires acp-gateway with
+  checkpoint events (0.5.2's "report at session start" had no accepted wire
+  shape).
+- "Governed" defined: a project is governed only when a policy registered in
+  the gateway names the repository. `acp-check.py` now fails its `notice`
+  check otherwise (`--allow-ungoverned` to downgrade during onboarding), and
+  reads the repository owner from `origin` rather than the board owner.
+  `acp.py policy` emits the candidate policy (repository, board, control-
+  artifact manifest) for `acp-gateway/scripts/register-policy.py`.
+- `capability_token` documented and added to the decision schema (the
+  boundary checks the token, not the `capability` object); `synthetic`,
+  `gateway_decision` and the synthetic reason codes added.
+- Fixed: `contracts/acp-protected-effects.yaml` was not valid YAML in 0.5.2
+  (`RECOVERY_AUTHORIZED:{` and siblings). The validator now parses it when
+  PyYAML is available.
+- Fixed: a global `core.excludesFile` that ignores `AGENTS.md` left it out of
+  every commit. The initializer adds `!AGENTS.md`; the validator rejects any
+  required file git would ignore.
+- Reconciled with a parallel 0.5.3 build (kept for reference as
+  `formal-project-bootstrap-v0.5.3-alt`): adopted its `acp.py notice`
+  command, exit `5` for "not governed" in `notice` and `acp-check.py`,
+  `report --path` (attaches the file's digest), and its broader control
+  manifest — ten files including the client scripts, with per-file
+  `required`, plus `.agents/skills/**` and `records/deviations.jsonl`
+  patterns. Its `changes_require_authorization` default was not adopted:
+  nothing yet obtains that authorization, so `authorize_and_report` stays the
+  default and `--strict` remains the hard mode.
+- Fixed: an inline comment after a `board.env` value (`GH_PROJECT_NUMBER=38 #
+  Azimuth`) was read as part of the value.
+- Additive for projects on 0.5.2: re-pin, copy `scripts/acp.py`, the updated
+  `acp-check.py`, `validate-bootstrap.py`, action map, schema, doc and skills;
+  add `"clientScript": "scripts/acp.py"`; register the repository's policy.
+
 ## 0.5.2 — ACP authorization provider binding
 
 - Bound `acp-gateway` (Agent Control Plane) as the reference `protection`,
