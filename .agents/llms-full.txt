@@ -1,6 +1,6 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.5.3
-Source digest: e289d48c64e79d6cb835ba3e8d68cd08b7f827637e18e3b7f39fd195a8016227
+Source digest: 88c1c21f54a0d44b5525533f881ba797825a31a7deebb0bd18839692894cfc71
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -6789,7 +6789,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
       - name: Install verification dependencies
@@ -6841,7 +6841,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
       - name: Install verification dependencies
