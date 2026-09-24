@@ -1,6 +1,6 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.5.3
-Source digest: c6105d1c06f5e15c85c6b48129ae86cfd3ec7cb768a10407bf1988b21ac81766
+Source digest: e289d48c64e79d6cb835ba3e8d68cd08b7f827637e18e3b7f39fd195a8016227
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -6814,7 +6814,7 @@ jobs:
           PY
       - name: Upload release candidate
         if: matrix.python == '3.13'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: formal-project-bootstrap-${{ github.sha }}
           path: dist/
