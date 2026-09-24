@@ -4,11 +4,19 @@
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "repositoryState": {
-    "available": false,
+    "available": true,
     "validationRole": "provenance",
-    "repositories": []
+    "repositories": [
+      {
+        "path": ".",
+        "commit": "7236c86ce5fc9c7040069da62be0db680b37be74",
+        "branch": "ci-context-provenance",
+        "dirty": true,
+        "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
+      }
+    ]
   },
-  "aggregateSourceDigest": "80cecfc9d2c9d194c6227c5c3a33c69feab07e8fd53217d2f8b5e10113b10cdd",
+  "aggregateSourceDigest": "6f09db73ed719d0921bd042e1f40d1ad1d0cabc9eba18fffccd7718ef337084b",
   "sources": [
     {
       "path": ".agents/llms-fpb.txt",
@@ -82,8 +90,8 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "bytes": 917,
-      "sha256": "ef9e1f2e278246cf09031f45b48a70c3ba3b56dd6389378350acc2fc9efeb3f1"
+      "bytes": 1665,
+      "sha256": "618d051118b4a78f5e70a74f61aa4c586a73c26cb40085459087cb3c43d0db85"
     },
     {
       "path": ".github/workflows/release.yml",
