@@ -25,7 +25,19 @@ jobs:
       - name: Verify repository
         run: python scripts/check-all.py
       - name: Ensure generation is clean
-        run: git diff --exit-code -- .agents VERSION PROJECT_PROFILE_TEMPLATE.json
+        # The lock's validity basis is the aggregate source digest; its
+        # repositoryState is provenance (the commit it was generated at), which a
+        # committed lock can never match. Compare the corpora and the digest.
+        run: |
+          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt VERSION PROJECT_PROFILE_TEMPLATE.json
+          python - <<'PY'
+          import json, subprocess
+          committed = json.loads(subprocess.check_output(["git", "show", "HEAD:.agents/context-lock.json"]))
+          current = json.load(open(".agents/context-lock.json"))
+          key = "aggregateSourceDigest"
+          assert committed[key] == current[key], f"context-lock {key} changed: {committed[key]} -> {current[key]}"
+          print("context-lock source digest unchanged:", current[key])
+          PY
       - name: Upload release candidate
         if: matrix.python == '3.13'
         uses: actions/upload-artifact@v4
