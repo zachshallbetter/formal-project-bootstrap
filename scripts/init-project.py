@@ -37,9 +37,11 @@ COPY_DOCS = [
     "SKILLS_INDEX.md",
     "WORK_GRAPH.md",
 ]
-SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py"]
+SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py"]
 GITIGNORE_LINES = [".env", ".env.local", ".agents/llms.txt", ".agents/llms-full.txt", "__pycache__/"]
-GITIGNORE_KEEP = ["!.agents/", "!**/.agents/"]
+# Negations for paths a global core.excludesFile commonly ignores. Only the
+# repository's own .gitignore can override a global ignore.
+GITIGNORE_KEEP = ["!.agents/", "!**/.agents/", "!AGENTS.md"]
 RECORD_FILES = [
     "evidence.jsonl",
     "negative-results.jsonl",
@@ -98,7 +100,7 @@ def write_acp_wiring(out: Path, args, collisions: list[str]) -> None:
     existing = gitignore.read_text(encoding="utf-8").splitlines() if gitignore.exists() else []
     additions = [line for line in GITIGNORE_LINES + GITIGNORE_KEEP if line not in existing]
     if additions:
-        block = ["", "# formal-project-bootstrap: secrets stay out; the vendored .agents/ tree stays in"] + additions
+        block = ["", "# formal-project-bootstrap: secrets stay out; AGENTS.md and the .agents/ tree stay in"] + additions
         merged = ("\n".join(existing + block) + "\n").encode()
         if gitignore.exists() and args.mode == "existing":
             # Existing authority is never rewritten in place; stage the merged candidate.

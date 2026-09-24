@@ -1,7 +1,7 @@
 # Formal Project Bootstrap
 
 **Status:** Candidate reusable project substrate  
-**Version:** 0.5.2
+**Version:** 0.5.3
 
 Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
 
@@ -108,7 +108,7 @@ python3 scripts/init-project.py \
   --output ../commercial-project
 ```
 
-Bind the ACP authorization gateway at initialization (the bearer token is never written; put it in `.env.local` afterwards and run `python3 scripts/acp-check.py`):
+Bind the ACP authorization gateway at initialization (the bearer token is never written; `acp-gateway/scripts/onboard-project.sh` puts it in `.env.local`, and `register-policy.py` registers the repository's policy — see `docs/ACP_INTEGRATION.md` § Onboarding):
 
 ```bash
 python3 scripts/init-project.py \
@@ -125,6 +125,8 @@ The initializer creates the project intent/profile, formal-resource state, bindi
 ## Authorization provider
 
 Every project binds `acp-gateway` as its protection/authorization provider (`docs/ACP_INTEGRATION.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
+
+`scripts/acp.py` is the client (`authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`, `board`, `policy`); `scripts/acp-check.py` verifies the wiring, including that an ACP policy actually governs the repository — binding the provider in the profile is not enough on its own.
 
 ## Core invariants
 
@@ -213,7 +215,7 @@ A tag `vX.Y.Z` is releasable only when it equals `VERSION`; the release workflow
 
 ## Status honesty
 
-Formal Project Bootstrap v0.5.2 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
+Formal Project Bootstrap v0.5.3 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
 
 ## License
 

@@ -17,12 +17,27 @@ governance notice   GET  /notice?owner=&name=                          unauthent
 authorization       POST /internal/authorize                          decision for one action against one repository
 capability check    POST /internal/verify-capability                  check an ALLOW capability at the protected boundary
 recovery report     POST /internal/recovery/complete                  outcome of one authorized recovery transition
-telemetry           POST /internal/report                             observed state and control-plane changes; never authorizes
-integrity snapshot  POST /internal/integrity/snapshot                 observed workspace state against the protected manifest
+telemetry           POST /internal/report                             checkpoints, control-plane changes, anomalies; never authorizes
+integrity snapshot  POST /internal/integrity/snapshot                 control-artifact hashes against the policy's protected manifest
 liveness            GET  /health                                      unauthenticated
 ```
 
 ACP is pull-only and never writes the work graph. Claims, field updates and item creation use the worker's own scoped credentials through the project's `workGraph` adapter.
+
+`scripts/acp.py` is the project's client for every call above (standard library only). Agents use it rather than hand-built requests, because it applies the rules in this document that a script can apply without judgement: fail-closed synthesis, `NOT_GOVERNED` refusal, exact-action checking, and evidence recording without secrets.
+
+```bash
+python3 scripts/acp.py authorize --action git.protected_ref.update \
+    --ref refs/heads/main --old-sha "$OLD" --new-sha "$NEW" --work-item 42 --record > decision.json
+python3 scripts/acp.py verify-capability --decision decision.json     # at the protected boundary
+python3 scripts/acp.py report --event SESSION_STARTED --checkpoint SESSION_START
+python3 scripts/acp.py snapshot --checkpoint PRE_PUSH
+python3 scripts/acp.py notice                                         # governed? (exit 5 if not)
+python3 scripts/acp.py board                                          # the bound board, through ACP
+python3 scripts/acp.py policy                                         # candidate policy for registration
+```
+
+`authorize` exits `0` only for `ALLOW`; every other decision has its own non-zero code (`11` DENY … `17` VERIFY_RECOVERY, `2` for missing local configuration), so a shell step cannot proceed on a refusal by accident. The other commands exit `0` accepted, `2` configuration, `3` refused, `4` unreachable, `5` not governed.
 
 ## Binding in the project
 
@@ -38,7 +53,9 @@ ACP is pull-only and never writes the work graph. Claims, field updates and item
   "failClosed": true,
   "reportOnSessionStart": true,
   "reportBeforeProtectedEffect": true,
-  "actionMap": "contracts/acp-protected-effects.yaml"
+  "actionMap": "contracts/acp-protected-effects.yaml",
+  "checkScript": "scripts/acp-check.py",
+  "clientScript": "scripts/acp.py"
 }
 ```
 
@@ -55,6 +72,20 @@ ACP_GATEWAY_TOKEN    secret; .env.local (git-ignored) or the environment; never 
 ```
 
 `CONTEXT_SOURCES.json` excludes `.env.local`. `scripts/acp-check.py` verifies the wiring without printing the token.
+
+Optional identity for audit (never authority): `ACP_AGENT_ID`, `ACP_ACTOR_ID`, `ACP_SESSION_ID`. `ACP_REPOSITORY_OWNER`/`ACP_REPOSITORY_NAME`/`ACP_REMOTE_URL` override what is read from `origin`.
+
+## Governed means a policy names the repository
+
+Binding the provider in the profile does not make ACP govern the repository. ACP governs a repository only when a policy registered **in the gateway** names it. Until then:
+
+| Where the repository is | What ACP answers for a protected action | What `scripts/acp.py` returns |
+|---|---|---|
+| inside the gateway's `ACP_POLICY_SCOPE`, no policy | `DENY` / `POLICY_NOT_FOUND` | the same |
+| outside that scope, no policy | `ALLOW` / `OUT_OF_POLICY_SCOPE`, `policy_effect: NOT_GOVERNED` | `DENY` / `ACP_NOT_GOVERNING` (synthetic) while `failClosed` |
+| a policy names it | a real decision | the same |
+
+An `ALLOW` with `policy_effect: NOT_GOVERNED` is ACP declining jurisdiction, not granting authority; it carries no `authorized_action` and no capability. A fail-closed project treats it as a setup blocker. `scripts/acp-check.py` and `acp.py notice` exit `5` for the same reason, distinct from a refusal (`--allow-ungoverned` downgrades it to a warning during onboarding).
 
 ## Effect classes and ACP actions
 
@@ -83,6 +114,16 @@ The project may raise the minimum governed class (for example to `E1` for a proj
 
 `repository_trust` (`VERIFIED` / `SELF_REPORTED` / `UNVERIFIED` / `QUARANTINED`) is evidence about the repository, not a decision. `SELF_REPORTED` is never sufficient for a protected action.
 
+An `ALLOW` or `RECOVERY_AUTHORIZED` carries `authorized_action` (action, ref, `old_sha`, `new_sha`) and, when the gateway holds a signing key, a short-lived `capability_token`. The token — not the `capability` object, which only describes it — is what `/internal/verify-capability` and `/internal/recovery/complete` accept. It is passed to the next step and never written to `records/`. A gateway without a signing key issues no token; nothing at the boundary can then verify the decision, and that gap is recorded rather than papered over.
+
+Decisions the client synthesizes locally are marked `synthetic: true` and are always `DENY`:
+
+| Synthetic reason | Cause |
+|---|---|
+| `GATEWAY_UNAVAILABLE` | unreachable, non-200, not JSON, missing required fields, or a decision outside A0–A7 |
+| `ACP_NOT_GOVERNING` | `ALLOW` with `policy_effect: NOT_GOVERNED` for a governed action under `failClosed` |
+| `AUTHORIZED_ACTION_MISMATCH` | `ALLOW` whose `authorized_action` differs from the requested action, ref or SHA pair |
+
 Every decision carries a stable `reason`. Record `decision`, `reason`, `request_id`, `policy_id`, `policy_version` and `repository_trust` in the work disposition and in `records/evidence.jsonl`.
 
 ## Fail-closed rule
@@ -93,7 +134,21 @@ Board-read refusals (`BOARD_READ_CONTAINED`, `PROJECT_NOT_ALLOWED`, `OWNER_NOT_I
 
 ## Reporting is not authorization
 
-Report to `POST /internal/report` at session start and resume, before commit/push/merge/deploy, and when a control-plane change is observed (remote changed, branch protection changed, policy or notice digest changed, credentials rotated). A report is telemetry; it grants nothing and it must not be used as a substitute for a decision. Do not withhold reports because a decision was refused.
+A report is telemetry; it grants nothing and it must not be used as a substitute for a decision. Do not withhold reports because a decision was refused. The gateway accepts only these typed events on `POST /internal/report`; anything else is a `400`:
+
+| When | Event (`acp.py report --event`) | Evidence |
+|---|---|---|
+| session start / resume | `SESSION_STARTED` / `SESSION_RESUMED` | `--checkpoint SESSION_START` / `SESSION_RESUME` |
+| before commit, push, merge, deploy | `PROTECTED_EFFECT_PENDING` | `--checkpoint PRE_PUSH` (etc.) `--action <acp action>` |
+| remote changed | `REMOTE_CHANGED` | `--detail` |
+| branch protection changed | `BRANCH_PROTECTION_CHANGED` | `--detail` |
+| policy or notice digest changed | `POLICY_DIGEST_CHANGED` / `NOTICE_DIGEST_CHANGED` | `--detail` |
+| credentials rotated | `CREDENTIALS_ROTATED` | `--detail` (never the credential) |
+| an anomaly was observed | `LOCAL_POLICY_MODIFIED`, `REMOTE_MISMATCH`, `ALTERNATE_AGENT_OBSERVED`, … | as observed |
+
+Checkpoint and control-plane-change events are `INFO`/`NOTICE`: they never open an incident and never move authorization state. Anomaly events are graded by ACP, not by the reporter, and tampering reported while the resource is quarantined escalates it to `LOCKED`.
+
+At the same checkpoints, `acp.py snapshot --checkpoint <C>` sends the hashes of the project's control artifacts (`AGENTS.md`, `PROJECT_PROFILE.json`, the bindings, this document, the action map, the authorize skill, `.agents/board.env`) to `POST /internal/integrity/snapshot`, where ACP compares them to the manifest in the signed policy. The snapshot is also observation only: restoring a file does not clear containment.
 
 ## What agents never do
 
@@ -115,13 +170,30 @@ ACP gates what asks it. A client that never calls `/internal/authorize` still pu
 
 ## Onboarding a repository
 
-`scripts/init-project.py --acp-gateway-url <url> [--acp-owner <login> --acp-project <n>]` writes `.agents/board.env`, `.env.example`, the `.gitignore` entries for `.env.local`, and marks the profile `authorizationProvider.status: bound`. It never writes the token. Then:
+Four steps; the first is the project's, the rest are the gateway operator's.
 
 ```bash
-export ACP_GATEWAY_TOKEN=...     # or place it in .env.local
-python3 scripts/acp-check.py     # health, authenticated owner read, board allowed, notice
+# 1. in the bootstrap: bind (never writes the token)
+python3 scripts/init-project.py --name "My Project" --id my-project --output ../my-project \
+    --acp-gateway-url https://acp-gateway-production.up.railway.app --acp-owner my-org --acp-project 3
+
+# 2. from an acp-gateway checkout: token into .env.local (from Railway, never printed),
+#    github-projects skill vendored, wiring verified
+scripts/onboard-project.sh ../my-project --owner my-org --project 3
+
+# 3. register the repository's policy with the gateway (dry run first; --apply redeploys)
+python3 ../my-project/scripts/acp.py policy > /tmp/my-project-policy.json
+scripts/register-policy.py --from /tmp/my-project-policy.json
+scripts/register-policy.py --from /tmp/my-project-policy.json --apply
+
+# 4. after the redeploy, in the project
+python3 scripts/acp-check.py --record
 ```
 
-`acp-check.py` returns non-zero on any refusal and prints the gateway's own remedy. Its result is recorded in `records/evidence.jsonl` as gate `B0-acp`.
+`init-project.py` writes `.agents/board.env`, `.env.example`, the `.gitignore` entries that keep `.env.local` out and `AGENTS.md`/`.agents/` in (a global `core.excludesFile` commonly ignores both, and only the repository's own `.gitignore` can override it), and marks the profile `authorizationProvider.status: bound`.
 
-The gateway's `github-projects` skill may additionally be vendored into `.agents/skills/` by `acp-gateway/scripts/onboard-project.sh`; when both are present the vendored copy carries the wire protocol and this document carries the authority rules.
+`acp-check.py` checks health, the bearer, the owner's boards, the bound board's allowlist, and that a policy governs this repository. It returns non-zero on any refusal and prints the gateway's own remedy. Its result is recorded in `records/evidence.jsonl` as gate `B0-acp`.
+
+`acp.py policy` proposes a policy: the repository and canonical remote, the bound board (which gates the board read), and an artifact manifest: the project's control files — `AGENTS.md`, `NEW_AGENT_PROMPT.md`, `PROJECT_PROFILE.json`, `PROJECT_INTENT.md`, the bindings, the action map, this document, `.agents/board.env`, and the client scripts `acp.py`/`acp-check.py` themselves — at their current hashes with `change_policy: authorize_and_report` (`--strict` makes them `admin_exact_transition`, where an unexpected change quarantines the resource), plus two patterns: `.agents/skills/**` (`authorize_and_report`) and `records/deviations.jsonl` (`report_only`). The candidate grants nothing until an operator registers it; `register-policy.py` signs it when the gateway holds `ACP_POLICY_SIGNING_KEY`, keeps any board, notice, manifest or recovery grant a re-registration does not restate, and validates the whole registry with the gateway's own loader before writing.
+
+When the vendored `github-projects` skill and this document are both present, the skill carries the wire protocol for board work and this document carries the authority rules.
