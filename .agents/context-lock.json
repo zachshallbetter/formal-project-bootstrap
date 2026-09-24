@@ -9,14 +9,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "7236c86ce5fc9c7040069da62be0db680b37be74",
-        "branch": "ci-context-provenance",
+        "commit": "ab505b4571f320ced6681e2eec3006e3c203492a",
+        "branch": "pr-1",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "6f09db73ed719d0921bd042e1f40d1ad1d0cabc9eba18fffccd7718ef337084b",
+  "aggregateSourceDigest": "c6105d1c06f5e15c85c6b48129ae86cfd3ec7cb768a10407bf1988b21ac81766",
   "sources": [
     {
       "path": ".agents/llms-fpb.txt",
@@ -91,12 +91,12 @@
     {
       "path": ".github/workflows/ci.yml",
       "bytes": 1665,
-      "sha256": "618d051118b4a78f5e70a74f61aa4c586a73c26cb40085459087cb3c43d0db85"
+      "sha256": "d09c8a11166fff09c3bbd776dbcaab391fee5d1bbe5337f4fdcd127f2d8c5860"
     },
     {
       "path": ".github/workflows/release.yml",
       "bytes": 869,
-      "sha256": "c089b55dcbf975b443fe1fc85c6d81b45f1fa50c3c89e7ecb8122aa0eb6bfd28"
+      "sha256": "57fec73d4e03a37e9f7f2c892a246dd3b2781e190b4a705864c8c80127eb2b51"
     },
     {
       "path": "AGENTS.md",
