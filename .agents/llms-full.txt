@@ -1,6 +1,6 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.5.3
-Source digest: 6f09db73ed719d0921bd042e1f40d1ad1d0cabc9eba18fffccd7718ef337084b
+Source digest: c6105d1c06f5e15c85c6b48129ae86cfd3ec7cb768a10407bf1988b21ac81766
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -6788,7 +6788,7 @@ jobs:
         python: ["3.11", "3.12", "3.13"]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
@@ -6838,7 +6838,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v5
