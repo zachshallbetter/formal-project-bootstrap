@@ -1,6 +1,6 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.5.3
-Source digest: 80cecfc9d2c9d194c6227c5c3a33c69feab07e8fd53217d2f8b5e10113b10cdd
+Source digest: 6f09db73ed719d0921bd042e1f40d1ad1d0cabc9eba18fffccd7718ef337084b
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -6799,7 +6799,19 @@ jobs:
       - name: Verify repository
         run: python scripts/check-all.py
       - name: Ensure generation is clean
-        run: git diff --exit-code -- .agents VERSION PROJECT_PROFILE_TEMPLATE.json
+        # The lock's validity basis is the aggregate source digest; its
+        # repositoryState is provenance (the commit it was generated at), which a
+        # committed lock can never match. Compare the corpora and the digest.
+        run: |
+          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt VERSION PROJECT_PROFILE_TEMPLATE.json
+          python - <<'PY'
+          import json, subprocess
+          committed = json.loads(subprocess.check_output(["git", "show", "HEAD:.agents/context-lock.json"]))
+          current = json.load(open(".agents/context-lock.json"))
+          key = "aggregateSourceDigest"
+          assert committed[key] == current[key], f"context-lock {key} changed: {committed[key]} -> {current[key]}"
+          print("context-lock source digest unchanged:", current[key])
+          PY
       - name: Upload release candidate
         if: matrix.python == '3.13'
         uses: actions/upload-artifact@v4
