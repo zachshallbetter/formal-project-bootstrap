@@ -19,7 +19,7 @@ observe
 → bind
 → fill only missing operating gaps
 → compile
-→ reconcile
+→ run `python3 scripts/reconcile-project.py --project /path/to/project --pretty`, then reconcile
 → qualify
 → operate
 ```

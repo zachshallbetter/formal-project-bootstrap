@@ -9,6 +9,8 @@
     "generatorVersion",
     "root",
     "validityBasis",
+    "selectedPaths",
+    "sourceSelection",
     "repositoryState",
     "aggregateSourceDigest",
     "sources"
@@ -25,6 +27,39 @@
     },
     "validityBasis": {
       "const": "aggregate-source-digest"
+    },
+    "selectedPaths": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "sourceSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "includedCount",
+        "includedBytes",
+        "excludedCounts"
+      ],
+      "properties": {
+        "includedCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "includedBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excludedCounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
     },
     "repositoryState": {
       "type": "object",

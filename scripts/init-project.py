@@ -8,6 +8,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -27,6 +28,7 @@ COPY_DOCS = [
     "EXECUTION_PIPELINE.md",
     "EXECUTION_PROVIDER_CONTRACT.md",
     "EXISTING_PROJECT_ADOPTION.md",
+    "UPGRADING.md",
     "ACP_INTEGRATION.md",
     "FORMAL_RESOURCES.md",
     "INITIAL_EPICS_TEMPLATE.md",
@@ -37,7 +39,7 @@ COPY_DOCS = [
     "SKILLS_INDEX.md",
     "WORK_GRAPH.md",
 ]
-SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py"]
+SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py", "upgrade-project.py", "reconcile-project.py"]
 GITIGNORE_LINES = [".env", ".env.local", ".agents/llms.txt", ".agents/llms-full.txt", "__pycache__/"]
 # Negations for paths a global core.excludesFile commonly ignores. Only the
 # repository's own .gitignore can override a global ignore.
@@ -139,11 +141,18 @@ def main() -> int:
         print("REFUSED: --acp-owner and --acp-project must be given together", file=sys.stderr)
         return 2
 
-    out = Path(args.output).resolve()
-    if args.mode == "new" and out.exists() and any(out.iterdir()):
-        print(f"REFUSED: new-mode output is not empty: {out}", file=sys.stderr)
+    final_out = Path(args.output).resolve()
+    if args.mode == "new" and final_out.exists() and any(final_out.iterdir()):
+        print(f"REFUSED: new-mode output is not empty: {final_out}", file=sys.stderr)
         return 2
-    out.mkdir(parents=True, exist_ok=True)
+    staging = None
+    if args.mode == "new":
+        final_out.parent.mkdir(parents=True, exist_ok=True)
+        staging = Path(tempfile.mkdtemp(prefix=f".{final_out.name}.bootstrap-", dir=final_out.parent))
+        out = staging
+    else:
+        out = final_out
+        out.mkdir(parents=True, exist_ok=True)
 
     if (out / ".formal-bootstrap.json").exists():
         print("REFUSED: project is already marked as initialized", file=sys.stderr)
@@ -245,6 +254,9 @@ def main() -> int:
     subprocess.check_call(
         [sys.executable, str(out / "scripts/validate-bootstrap.py"), "--check-context"], cwd=out
     )
+    if staging is not None:
+        staging.rename(final_out)
+        out = final_out
     print(f"initialized {args.id} ({args.mode}) at {out}")
     return 0
 

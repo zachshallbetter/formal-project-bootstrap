@@ -1,33 +1,33 @@
 {
   "format": "2",
-  "generatorVersion": "0.5.3",
+  "generatorVersion": "0.6.0",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
+  "selectedPaths": [],
+  "sourceSelection": {
+    "includedCount": 86,
+    "includedBytes": 333707,
+    "excludedCounts": {
+      "excluded-directory": 1166,
+      "extension": 5,
+      "symlink": 4
+    }
+  },
   "repositoryState": {
     "available": true,
     "validationRole": "provenance",
     "repositories": [
       {
         "path": ".",
-        "commit": "2487bbc747077ccb5285d2b1e7abbf7b71539e46",
-        "branch": "pr-3",
+        "commit": "522fb31f92b73fe0539798c006b078f98c0abb0e",
+        "branch": "feat/harden-context-generator",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "88c1c21f54a0d44b5525533f881ba797825a31a7deebb0bd18839692894cfc71",
+  "aggregateSourceDigest": "dc618ac2a6ae0ece25046d1b6187959c12b2067702c621778dba7ce16edbde77",
   "sources": [
-    {
-      "path": ".agents/llms-fpb.txt",
-      "bytes": 8090,
-      "sha256": "a0c4fbd572cead906403a5ecf1738fcf31662b3331a90f8e72de32d05044e054"
-    },
-    {
-      "path": ".agents/llms-full-fpb.txt",
-      "bytes": 168500,
-      "sha256": "787a58268dee780137cda084a826ef55351f25189e7f951bf8d9f906f7ef6610"
-    },
     {
       "path": ".agents/skills/authorize-protected-effect/SKILL.md",
       "bytes": 2758,
@@ -90,8 +90,8 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "bytes": 1665,
-      "sha256": "ac5c0c9117079ecb92ed1b761f0cd1a4d3b69f8cd73f67b1e6f5147783f70d49"
+      "bytes": 1912,
+      "sha256": "4e45042cc5d6c8880b92fc2f6588729ac6d9021d780daef3abf899dbd403fbcf"
     },
     {
       "path": ".github/workflows/release.yml",
@@ -110,8 +110,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 8893,
-      "sha256": "e584be48eb5824c0727afadbb6f4a926c3c77447304425f8aabdae3dc0c146be"
+      "bytes": 9269,
+      "sha256": "0b87eeb9ab512c7780840bf002bacb03fd7a68d22ce45491c960863cc21a0f1d"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -120,8 +120,8 @@
     },
     {
       "path": "CONTEXT_SOURCES_TEMPLATE.json",
-      "bytes": 944,
-      "sha256": "93b2b41f6f657b1635f2980b41e4fa50a6a7e39fdd3355bfe68eb4c505a4f51e"
+      "bytes": 1213,
+      "sha256": "f400464f8f10972800419c79341ba5a9fdf0c67a812e04c99a7a8317ec104e70"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -155,13 +155,13 @@
     },
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "bytes": 3225,
-      "sha256": "bf579f5b42a5577582fc48eceb31d9e2376b97589f3128260078a96ff6ffe2a6"
+      "bytes": 3365,
+      "sha256": "69f855ee84cbc7fdc96214a16c9b3767e864c7bc44924032528ae526b218d158"
     },
     {
       "path": "README.md",
-      "bytes": 9789,
-      "sha256": "7d5b7bc49748ece2eb1fbcf9b052bfc9df0c797734df73717204727619e37509"
+      "bytes": 10299,
+      "sha256": "a93641e306bca13657b6fb48b29d4f65373af52f8172d1c11f0e55f1d3eaa5ae"
     },
     {
       "path": "SECURITY.md",
@@ -176,7 +176,7 @@
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "27ecff1fcdaf65ab46c1bb99c1072d6d134a0e8dd97dd95cfa88696b9ed453b2"
+      "sha256": "97a5d6e540a6120d09c39ddb667e0e8e2bac7fcc2ffef813b82e08fd60365bce"
     },
     {
       "path": "VERSIONING.md",
@@ -230,8 +230,8 @@
     },
     {
       "path": "docs/CONTEXT_COMPILATION.md",
-      "bytes": 1601,
-      "sha256": "214a8af8fa1e25b6488f293d43842efce0225cf40aba460a8ae99d5c850d3599"
+      "bytes": 2568,
+      "sha256": "cedad34d38ef2363ab29c40d29f38a5a93168e95ed647b6f729757648d748117"
     },
     {
       "path": "docs/EVIDENCE_METHOD.md",
@@ -250,8 +250,8 @@
     },
     {
       "path": "docs/EXISTING_PROJECT_ADOPTION.md",
-      "bytes": 4530,
-      "sha256": "6cfaf7daa1669ed717571ecd43e3b5950151d39641d1adaff6a16843a954c6c7"
+      "bytes": 4615,
+      "sha256": "549abfc3926076d522d677ba6dcaec5e6a4e1d9e3043aba70880632ffcdcbbe5"
     },
     {
       "path": "docs/FORMAL_RESOURCES.md",
@@ -296,7 +296,12 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "d60b249cbfad130320e43e98a697f1a4a3ca0be6214ed8ee514ec7fde1d8eaac"
+      "sha256": "3ac8c85292d0725b95bb10ce58e007e5dff47c70d1850aa6c48e2a6532832e4c"
+    },
+    {
+      "path": "docs/UPGRADING.md",
+      "bytes": 1998,
+      "sha256": "123cf17c5ac29a5530da30388d1342a200b1c09b7543523862c5eeef03627a06"
     },
     {
       "path": "docs/WORK_GRAPH.md",
@@ -346,7 +351,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "067f13910d35a368ae2b1c0e3b38ee481646bfa625743d1f2f75e99caed5cfa7"
+      "sha256": "a352b6cc5000e1b3ebb217abe6d9f454a5f79ed01c9b1f6b62c5e289d1289647"
     },
     {
       "path": "requirements-dev.txt",
@@ -365,8 +370,13 @@
     },
     {
       "path": "schemas/context-lock.schema.json",
-      "bytes": 2526,
-      "sha256": "395e44e6dcc74b3169463d96e5db4836befdd1cae8ffc19857645c4e8ea5993b"
+      "bytes": 3274,
+      "sha256": "977a8963c6e58c1f3c68b96878e8082c09ad0fd48f43558a712beb671544d728"
+    },
+    {
+      "path": "schemas/context-sources.schema.json",
+      "bytes": 1330,
+      "sha256": "a12460da1fda3c38c5810b4adb6c17225bb92ce14c67cf98b641883cbb77c224"
     },
     {
       "path": "schemas/formal-resource-manifest.schema.json",
@@ -385,8 +395,8 @@
     },
     {
       "path": "scripts/acp.py",
-      "bytes": 25341,
-      "sha256": "296df59154eeb8c0b9fc60dfe61f5b31639f090974d494f7c058dbd93749d321"
+      "bytes": 25463,
+      "sha256": "6fca8c5738deb7864a77838d95214cf388a6b80dcfac97fe9446eb0aa83176dd"
     },
     {
       "path": "scripts/check-all.py",
@@ -400,13 +410,13 @@
     },
     {
       "path": "scripts/gen-context.py",
-      "bytes": 7015,
-      "sha256": "4cab5cf07c5a69e7afd728844393958223495e3c01d339c0c8d6dbde8bb51322"
+      "bytes": 12973,
+      "sha256": "e1a41938dfc37dab80e56248b3030922feaa93f3a52a6798fd69126d5862f43c"
     },
     {
       "path": "scripts/init-project.py",
-      "bytes": 10404,
-      "sha256": "48616f5b3257663e23f14118cc13a7b932b90cc49492a34693905ad41b3e4d03"
+      "bytes": 10865,
+      "sha256": "a4a4ab282940a84292f568c3b9df144f6e6ee94aee0c64de2c127e8f777d6571"
     },
     {
       "path": "scripts/package-release.py",
@@ -414,14 +424,24 @@
       "sha256": "5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa"
     },
     {
+      "path": "scripts/reconcile-project.py",
+      "bytes": 3398,
+      "sha256": "943fc058e0bc7b2d9e64643c6e3a0ce4fc63fcc4aa0839a4c2aaa03ee5269106"
+    },
+    {
+      "path": "scripts/upgrade-project.py",
+      "bytes": 14138,
+      "sha256": "e0ac6478ec44fee27f8ead869ebaae80952a817203d253e1556701b6d522e346"
+    },
+    {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 9360,
-      "sha256": "c0be496cc05f360f64891fc69466835b5aa04cbeec6f89f32fc8b079dfc9845d"
+      "bytes": 9559,
+      "sha256": "819416b450c631b48fc7a780f606ddc15d3226d5b560c2c4000ff23e0e06b2a5"
     },
     {
       "path": "scripts/validate-formal-files.py",
-      "bytes": 1411,
-      "sha256": "bbb1f14e50d543401e82641551eaf505821df47370a2c9697272414524a1ab65"
+      "bytes": 1603,
+      "sha256": "fb340a2f8361dd55e5ef0668f3e978d35fdbba19e5905024c034feee70c9b1d7"
     },
     {
       "path": "tests/test_acp_client.py",
@@ -430,8 +450,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 10794,
-      "sha256": "a249c6c7875e5fa80f85c5100e903c75a815423eeddc705a74ad75d767776796"
+      "bytes": 17327,
+      "sha256": "8ca0a68a7145e85f9342b20d91c23ea7f82e48375e7c73acc04a7e1df0c4e514"
     },
     {
       "path": "vendor/README.md",
