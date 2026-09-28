@@ -1,6 +1,6 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.6.0
-Source digest: dc618ac2a6ae0ece25046d1b6187959c12b2067702c621778dba7ce16edbde77
+Source digest: 224aa538e97155f3faacc46b356ed9b784b47aadde8b05ffcbb3fefe63cdcb5a
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -1314,6 +1314,7 @@ FILE: PROJECT_PROFILE_TEMPLATE.json
     "requireContextLock": true,
     "refreshOnMaterialSourceChange": true
   },
+  "protocolAdapters": [],
   "profiles": [],
   "formalResourceManifest": "FORMAL_RESOURCE_MANIFEST.json"
 }
@@ -3397,6 +3398,35 @@ Repository-level rejected directions are retained so later changes do not redisc
 **Why rejected:** the evaluator instruction is part of the causal input. Such a run is valid directed conformance evidence but cannot isolate behavioral transfer from prompt steering.
 
 **Reopen condition:** none; this is a claim-boundary rule. Future work may establish behavioral transfer by withholding target-response restatement from the experiment prompt and comparing conditions prospectively.
+
+
+========================================================================
+FILE: docs/PROTOCOL_ADAPTERS.md
+========================================================================
+
+# Protocol adapters
+
+Formal Project Bootstrap is a composition and operating substrate. It does not copy the doctrine of an external protocol into its own authority model. An adapter declares how a pinned protocol is imported, projected, checked, and reconciled.
+
+Each adapter is `profiles/<adapter-id>/adapter.json` and validates against `schemas/protocol-adapter.schema.json`.
+
+The contract requires immutable protocol identity, supported FPB versions, authority role, imported and projected concepts, lifecycle and evidence mappings, explicit unsupported behavior, six-dimensional compatibility, conformance checks, and adoption/re-pin/deviation behavior.
+
+IEPE is the primary operating adapter. EQP qualifies evidence, ICP governs consequential interaction contracts, ESP/RCP govern external-state obligations, and SES/SSS/SPS govern semantic publication. ACP remains the authorization boundary for protected effects.
+
+Generated context may summarize adapter records but never becomes their authority. A protocol re-pin is a compatibility event and may require re-qualification.
+
+Runtime checks are deliberately separate from the adapter declarations:
+
+- `scripts/validate-qualification.py` validates EQP qualification records and refuses unsupported `QUALIFIED` outcomes.
+- `scripts/validate-interaction-contract.py` requires ACP authorization, idempotency, recovery, and receipts for protected ICP effects.
+- `scripts/recipient-status.py` derives RCP status from an explicit as-of date.
+- `scripts/validate-semantic-surface.py` refuses SES/SSS projections that lack source provenance, collapse access states, or leak renderer/domain authority.
+- `scripts/check-protocol-integrity.py` checks project manifests and JSONL records without mutating them.
+
+For existing projects, `scripts/reconcile-project.py` reports canonical documents, missing records, adapter pin drift, declared unsupported features, context freshness, authority conflicts, and recommended migration steps. Its first pass is read-only; it does not install an adapter or rewrite a source document.
+
+These checks do not promote work. They establish that a record is structurally and procedurally eligible for the authority that must still make the decision.
 
 
 ========================================================================
@@ -6228,6 +6258,128 @@ It is a portfolio of owned, qualified intellectual infrastructure whose stronges
 
 
 ========================================================================
+FILE: profiles/eqp/adapter.json
+========================================================================
+
+{
+  "format": "1",
+  "adapterId": "eqp",
+  "protocol": {"id":"eqp","version":"0.1.0","revisionOrDigest":"git:f1892e4","canonicalSource":"evidence-qualification-protocol"},
+  "supportedBootstrap": "0.6.x",
+  "authority": {"role":"evidence-qualification","sourceOfTruth":"EQP qualification record and evidence obligations","promotionBoundary":"EQP qualifies claims; FPB or ACP separately authorizes promotion"},
+  "mappings": {"imports":["candidate","claim","context","profile","obligation","evidence","evaluator","authority","disposition"],"projects":["candidate->artifact", "claim->claim record", "evidence->evidence record", "disposition->qualification record"],"lifecycle":["unassessed","qualified","not-qualified","blocked","superseded"],"evidence":["identity binding","relevance","provenance","freshness","reproducibility","integrity","supersession"]},
+  "unsupported": ["qualification does not authorize deployment, publication, spending, or promotion"],
+  "compatibility": {"syntax":"adapter-defined","schema":"qualification record preserves EQP fields","behavior":"fail closed on missing required evidence","semantics":"qualification is contextual, never unary","authority":"evaluator and qualification authority remain explicit","evidence":"contradictory and out-of-scope evidence remain visible"},
+  "checks": ["all obligations are typed", "every evidence item is consumed, rejected, contradictory, or out-of-scope", "QUALIFIED requires complete valid evidence", "promotion is a separate decision"],
+  "migration": {"adopt":"import existing evidence without changing its qualification status", "repin":"re-qualify when dependency, context, evaluator, or assumptions change", "deviation":"record any local qualification rule as a deviation"}
+}
+
+
+========================================================================
+FILE: profiles/esp-rcp/README.md
+========================================================================
+
+# ESP/RCP profile
+
+This profile initializes a project as an unbound External State Protocol instance with an optional Recipient Contract Protocol record.
+
+Use `scripts/esp-record.py <kind> --record '<json>'` to append a typed record. Existing identities are idempotent only when the content is identical; conflicting reuse is refused.
+
+Initialization creates identity and empty append-only ledgers only. It does not invent an owner, recipient, counterparty, campaign, commitment, evidence, receipt, measurement, or learning result.
+
+The external-state instance remains `unbound` and at lifecycle `bootstrap` until project authority supplies those records. RCP status is derived by `scripts/recipient-status.py` from `records/recipient.json` and an explicit as-of date.
+
+Record ownership:
+
+- `records/external-state.json`: ESP instance identity, lifecycle, authority bindings, and ledger paths.
+- `records/campaigns.jsonl`: campaigns and external-state objectives.
+- `records/commitments.jsonl`: counterparties, obligations, and closure.
+- `records/evidence.jsonl`: evidence references and qualification lineage.
+- `records/qualifications.jsonl`: EQP qualification dispositions.
+- `records/receipts.jsonl`: observed external receipts.
+- `records/measurements.jsonl`: reach, authority, adoption, propagation, and position measurements.
+- `records/learning.jsonl`: retained learning and negative results.
+- `records/recipient.json`: nullable RCP recipient obligation.
+
+
+========================================================================
+FILE: profiles/esp-rcp/adapter.json
+========================================================================
+
+{
+  "format": "1",
+  "adapterId": "esp-rcp",
+  "protocol": {"id":"esp","version":"0.3.0","revisionOrDigest":"git:f1892e4","canonicalSource":"external-state-protocol "},
+  "supportedBootstrap": "0.6.x",
+  "authority": {"role":"external-state-governance","sourceOfTruth":"ESP instance and campaign records, with RCP obligations where enabled","promotionBoundary":"commitment and promotion require explicit authority and qualified evidence"},
+  "mappings": {"imports":["external-state-instance","campaign","outcome","claim","evidence","relationship","opportunity","pursuit","interaction","commitment","receipt"],"projects":["instance->project identity","campaign->epic/work graph","commitment->contract/authority record","receipt->evidence record","recipient->RCP record"],"lifecycle":["bootstrap","discover","define","contract","baseline","prepare","execute","observe","qualify","decide","commit","promote","measure","learn"],"evidence":["receipt","qualified evidence","state update","measurement","negative result"]},
+  "unsupported": ["relationship is not pursuit","interaction is not commitment","receipt is not the underlying event","stale context is not external-state truth"],
+  "compatibility": {"syntax":"adapter-defined","schema":"ESP entities remain domain records","behavior":"external dependencies produce typed waiting states","semantics":"external state remains distinct from project intent","authority":"commitment and promotion authorities remain explicit","evidence":"state transitions require receipts and qualification"},
+  "checks": ["external-state instance has owner and authority","commitments have counterparties and closure","external blockers are typed","receipts are preserved","RCP status is derived when enabled"],
+  "migration": {"adopt":"initialize a read-only instance map before creating work","repin":"reassess lifecycle and entity mappings on ESP revision change","deviation":"record local domain extensions as bounded deviations"}
+}
+
+
+========================================================================
+FILE: profiles/icp/adapter.json
+========================================================================
+
+{
+  "format": "1",
+  "adapterId": "icp",
+  "protocol": {"id":"icp","version":"0.1.0","revisionOrDigest":"git:f1892e4","canonicalSource":"interaction-contract-protocol"},
+  "supportedBootstrap": "0.6.x",
+  "authority": {"role":"interaction-contract","sourceOfTruth":"ICP contract for the consequential interaction","promotionBoundary":"ACP decision is required before protected effect execution"},
+  "mappings": {"imports":["intent","participants","boundary","state","actions","checks","verification","transition","effects","invariants","outcome","recovery","receipt","closure"],"projects":["effect->ACP protected effect", "recovery->FPB recovery record", "receipt->audit/evidence record"],"lifecycle":["declared","validated","authorized","executing","observed","verified","closed","recovered"],"evidence":["input validation","consequence-derived verification","receipt","trace","closure"]},
+  "unsupported": ["an exposed operation is not permission or execution", "ICP does not replace provider-specific API schemas"],
+  "compatibility": {"syntax":"adapter-defined","schema":"ICP contract fields remain inspectable","behavior":"transitions are concurrency-safe and typed","semantics":"available, authorized, enabled, and exposed remain distinct","authority":"ACP supplies protected-effect authorization","evidence":"receipt and closure are mandatory for consequential effects"},
+  "checks": ["contract declares boundary and participants", "protected effect has ACP decision", "idempotency key is present", "typed receipt and recovery path exist", "closure is explicit"],
+  "migration": {"adopt":"wrap existing protected effects with a declared contract before execution", "repin":"revalidate contracts against new ICP revision", "deviation":"record provider-specific deviations without weakening ACP"}
+}
+
+
+========================================================================
+FILE: profiles/iepe/adapter.json
+========================================================================
+
+{
+  "format": "1",
+  "adapterId": "iepe",
+  "protocol": {"id":"iepe","version":"0.2.0","revisionOrDigest":"git:f1892e4","canonicalSource":"intent-evidence-project-engine"},
+  "supportedBootstrap": "0.6.x",
+  "authority": {"role":"operating-governance","sourceOfTruth":"IEPE canonical intent, authority, and work-graph records","promotionBoundary":"IEPE promotion authority plus FPB/ACP protected-effect authorization"},
+  "mappings": {
+    "imports": ["intent", "authority", "epic", "issue", "artifact", "evaluation", "evidence", "qualification", "promotion"],
+    "projects": ["intent->PROJECT_INTENT.md", "authority->PROJECT_PROFILE.json", "issue->work record", "artifact->artifact record", "evidence->records/evidence.jsonl"],
+    "lifecycle": ["intent", "ready", "claimed", "executing", "evaluating", "qualifying", "promoting", "released"],
+    "evidence": ["evaluation", "evidence", "qualification", "negative result", "promotion decision"]
+  },
+  "unsupported": ["FPB does not replace IEPE canonical documents", "FPB does not self-promote a worker result"],
+  "compatibility": {"syntax":"adapter-defined","schema":"FPB records preserve IEPE identifiers","behavior":"bounded worker and promotion separation preserved","semantics":"IEPE remains authoritative for operating governance","authority":"promotion requires declared IEPE authority and ACP where protected","evidence":"qualification remains separate from promotion"},
+  "checks": ["intent and authority references exist", "work items have owner, acceptance, evidence, and stop conditions", "worker cannot self-promote", "promotion has qualification lineage"],
+  "migration": {"adopt":"inspect existing IEPE records read-only and bind them by reference", "repin":"record protocol revision and re-evaluate affected mappings", "deviation":"record a bounded deviation before local semantic changes"}
+}
+
+
+========================================================================
+FILE: profiles/ses-sps/adapter.json
+========================================================================
+
+{
+  "format": "1",
+  "adapterId": "ses-sps",
+  "protocol": {"id":"ses","version":"1.0.0","revisionOrDigest":"git:f1892e4","canonicalSource":"semantic-expression-system"},
+  "supportedBootstrap": "0.6.x",
+  "authority": {"role":"semantic-publication","sourceOfTruth":"SES/SSS/SPS canonical semantic and publication records","promotionBoundary":"publication remains an explicit protected effect"},
+  "mappings": {"imports":["meaning","expression","surface","situation","access projection","publication truth","presentation"],"projects":["intent->semantic purpose","surface->context projection","publication->protected effect contract"],"lifecycle":["canonical","resolved","rendered","reviewed","published","superseded"],"evidence":["resolution trace","dependency fingerprint","schema conformance","publication receipt"]},
+  "unsupported": ["SSS does not decide domain truth","generated context is not canonical semantic state","publication adapters remain domain-owned"],
+  "compatibility": {"syntax":"adapter-defined","schema":"semantic records remain renderer-neutral","behavior":"surface resolution is read-only over canonical state","semantics":"meaning, surface, expression, and publication remain separated","authority":"domain truth stays with its owning system","evidence":"resolution traces and publication receipts remain recoverable"},
+  "checks": ["access projection cannot widen visibility","unknown and withheld states remain distinct","surface resolution has trace and dependencies","publication requires explicit contract and receipt"],
+  "migration": {"adopt":"bind existing semantic sources without copying their authority","repin":"recompute affected surfaces after protocol changes","deviation":"record renderer or domain deviations explicitly"}
+}
+
+
+========================================================================
 FILE: pyproject.toml
 ========================================================================
 
@@ -6854,6 +7006,31 @@ FILE: schemas/context-sources.schema.json
 
 
 ========================================================================
+FILE: schemas/external-state-instance.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/external-state-instance.schema.json",
+  "title": "External State Instance",
+  "type": "object",
+  "required": ["format", "instanceId", "protocol", "lifecycle", "state", "authority", "owner", "records"],
+  "properties": {
+    "format": {"const": "1"},
+    "instanceId": {"type": "string", "minLength": 1},
+    "protocol": {"type": "object", "required": ["id", "version", "revisionOrDigest"], "properties": {"id":{"const":"esp"},"version":{"type":"string"},"revisionOrDigest":{"type":"string"}}, "additionalProperties": false},
+    "lifecycle": {"enum": ["bootstrap", "discover", "define", "contract", "baseline", "map", "prepare", "execute", "observe", "qualify", "decide", "commit", "promote", "measure", "learn", "continue"]},
+    "state": {"enum": ["unbound", "active", "paused", "closed"]},
+    "authority": {"type": "object", "required": ["owner", "qualification", "promotion"], "properties": {"owner":{"type":["string","null"]},"qualification":{"type":["string","null"]},"promotion":{"type":["string","null"]}}, "additionalProperties": false},
+    "owner": {"type": ["string", "null"]},
+    "records": {"type": "object", "required": ["campaigns", "commitments", "evidence", "qualifications", "receipts", "measurements", "learning", "events"], "properties": {"campaigns":{"type":"string"},"commitments":{"type":"string"},"evidence":{"type":"string"},"qualifications":{"type":"string"},"receipts":{"type":"string"},"measurements":{"type":"string"},"learning":{"type":"string"},"events":{"type":"string"}}, "additionalProperties": false},
+    "lastReceiptId": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}
+
+
+========================================================================
 FILE: schemas/formal-resource-manifest.schema.json
 ========================================================================
 
@@ -6900,6 +7077,213 @@ FILE: schemas/formal-resource-manifest.schema.json
     "integrityPolicy": {"type": "object"}
   },
   "additionalProperties": true
+}
+
+
+========================================================================
+FILE: schemas/interaction-contract.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/interaction-contract.schema.json",
+  "title": "Interaction Contract",
+  "type": "object",
+  "required": ["format", "contractId", "intent", "participants", "boundary", "state", "actions", "checks", "transition", "effect", "invariants", "recovery", "receipt", "closure"],
+  "properties": {
+    "format": {"const": "1"},
+    "contractId": {"type": "string", "minLength": 1},
+    "intent": {"type": "string", "minLength": 1},
+    "participants": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "boundary": {"type": "string", "minLength": 1},
+    "state": {"enum": ["declared", "validated", "authorized", "executing", "observed", "verified", "closed", "recovered"]},
+    "actions": {"type": "object", "required": ["available", "authorized", "enabled", "exposed"], "properties": {"available":{"type":"array","items":{"type":"string"}},"authorized":{"type":"array","items":{"type":"string"}},"enabled":{"type":"array","items":{"type":"string"}},"exposed":{"type":"array","items":{"type":"string"}}}, "additionalProperties": false},
+    "checks": {"type": "array", "items": {"type": "string"}},
+    "transition": {"type": "string", "minLength": 1},
+    "effect": {"type": "object", "required": ["class", "target"], "properties": {"class":{"type":"string","minLength":1},"target":{"type":"string","minLength":1}}, "additionalProperties": false},
+    "invariants": {"type": "array", "items": {"type": "string"}},
+    "authorization": {"type": ["object", "null"], "properties": {"decision":{"type":"string"},"decisionId":{"type":"string"},"idempotencyKey":{"type":"string","minLength":1},"auditRecordId":{"type":"string","minLength":1}}, "additionalProperties": false},
+    "recovery": {"type": "object", "required": ["plan", "reversibleBeforeCommit"], "properties": {"plan":{"type":"string","minLength":1},"reversibleBeforeCommit":{"type":"boolean"}}, "additionalProperties": false},
+    "receipt": {"type": ["object", "null"], "required": ["receiptId", "outcome", "observedAt"], "properties": {"receiptId":{"type":"string","minLength":1},"outcome":{"type":"string","minLength":1},"observedAt":{"type":"string","minLength":1}}, "additionalProperties": false},
+    "closure": {"type": "object", "required": ["status"], "properties": {"status":{"enum":["open","closed","recovered"]},"reason":{"type":"string"}}, "additionalProperties": false}
+  },
+  "additionalProperties": false
+}
+
+
+========================================================================
+FILE: schemas/protocol-adapter.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/protocol-adapter.schema.json",
+  "title": "Formal Project Bootstrap Protocol Adapter",
+  "type": "object",
+  "required": ["format", "adapterId", "protocol", "supportedBootstrap", "authority", "mappings", "unsupported", "compatibility", "checks", "migration"],
+  "properties": {
+    "format": {"const": "1"},
+    "adapterId": {"type": "string", "minLength": 1},
+    "protocol": {
+      "type": "object",
+      "required": ["id", "version", "revisionOrDigest", "canonicalSource"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "revisionOrDigest": {"type": "string", "minLength": 1},
+        "canonicalSource": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "supportedBootstrap": {"type": "string", "minLength": 1},
+    "authority": {
+      "type": "object",
+      "required": ["role", "sourceOfTruth", "promotionBoundary"],
+      "properties": {
+        "role": {"type": "string"},
+        "sourceOfTruth": {"type": "string"},
+        "promotionBoundary": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "mappings": {
+      "type": "object",
+      "required": ["imports", "projects", "lifecycle", "evidence"],
+      "properties": {
+        "imports": {"type": "array", "items": {"type": "string"}},
+        "projects": {"type": "array", "items": {"type": "string"}},
+        "lifecycle": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "unsupported": {"type": "array", "items": {"type": "string"}},
+    "compatibility": {
+      "type": "object",
+      "required": ["syntax", "schema", "behavior", "semantics", "authority", "evidence"],
+      "properties": {
+        "syntax": {"type": "string"}, "schema": {"type": "string"},
+        "behavior": {"type": "string"}, "semantics": {"type": "string"},
+        "authority": {"type": "string"}, "evidence": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "checks": {"type": "array", "items": {"type": "string"}},
+    "migration": {
+      "type": "object",
+      "required": ["adopt", "repin", "deviation"],
+      "properties": {
+        "adopt": {"type": "string"}, "repin": {"type": "string"}, "deviation": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+
+
+========================================================================
+FILE: schemas/qualification-record.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/qualification-record.schema.json",
+  "title": "Evidence Qualification Record",
+  "type": "object",
+  "required": ["format", "qualificationId", "candidate", "claim", "context", "profile", "obligations", "evidence", "evaluator", "authority", "disposition"],
+  "properties": {
+    "format": {"const": "1"},
+    "qualificationId": {"type": "string", "minLength": 1},
+    "candidate": {"type": "string", "minLength": 1},
+    "claim": {"type": "string", "minLength": 1},
+    "context": {"type": "string", "minLength": 1},
+    "profile": {"type": "string", "minLength": 1},
+    "obligations": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["consumed", "rejected", "contradictory", "out-of-scope", "superseded"]},
+          "reason": {"type": "string"}
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "evaluator": {"type": "string", "minLength": 1},
+    "authority": {"type": "string", "minLength": 1},
+    "disposition": {"enum": ["QUALIFIED", "NOT_QUALIFIED", "BLOCKED", "SUPERSEDED"]},
+    "scope": {"type": "string"},
+    "freshness": {"type": "string"},
+    "contradictions": {"type": "array", "items": {"type": "string"}},
+    "supersedes": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}
+
+
+========================================================================
+FILE: schemas/recipient-contract.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/recipient-contract.schema.json",
+  "title": "Recipient Contract Record",
+  "type": "object",
+  "required": ["recipient"],
+  "properties": {
+    "recipient": {
+      "type": ["object", "null"],
+      "required": ["name", "relation", "need", "obligation", "stated_on"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1},
+        "need": {"type": "string", "minLength": 1},
+        "obligation": {
+          "type": "object",
+          "required": ["deliverable", "due"],
+          "properties": {"deliverable": {"type": "string", "minLength": 1}, "due": {"type": "string", "format": "date"}},
+          "additionalProperties": false
+        },
+        "stated_on": {"type": "string", "format": "date"}
+      },
+      "additionalProperties": false
+    },
+    "delivered": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}
+
+
+========================================================================
+FILE: schemas/semantic-surface.schema.json
+========================================================================
+
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://formal-project-bootstrap.local/schemas/semantic-surface.schema.json",
+  "title": "Renderer-neutral semantic surface",
+  "type": "object",
+  "required": ["format", "resolutionId", "sourceState", "purpose", "context", "access", "members", "explanation", "dependencies"],
+  "properties": {
+    "format": {"const": "1"},
+    "resolutionId": {"type": "string", "minLength": 1},
+    "sourceState": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1},
+    "context": {"type": "string", "minLength": 1},
+    "access": {"type": "string", "minLength": 1},
+    "members": {"type": "array", "items": {"type": "object"}},
+    "explanation": {"type": "string", "minLength": 1},
+    "dependencies": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "rendererNeutral": {"type": "boolean"},
+    "operations": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
 }
 
 
@@ -8056,6 +8440,244 @@ if __name__ == "__main__":
 
 
 ========================================================================
+FILE: scripts/check-protocol-integrity.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Run protocol-aware integrity checks over an initialized project."""
+from __future__ import annotations
+import json
+import sys
+from pathlib import Path
+
+PROTECTED = {"production-deploy", "credential-create", "billing-change", "publish", "migration", "external-communication", "spending"}
+SURFACE_ACCESS = {"available", "unknown", "withheld", "absent", "ineligible"}
+SURFACE_FORBIDDEN = {"css", "dom", "component", "layout", "theme", "typography", "mutation", "canonicalStateUpdate"}
+
+def jsonl(path: Path) -> tuple[list[dict], list[str]]:
+    rows: list[dict] = []; errors: list[str] = []
+    if not path.exists(): return rows, errors
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if not line.strip(): continue
+        try: value = json.loads(line)
+        except json.JSONDecodeError as exc: errors.append(f"{path.name}:{number}: invalid JSON: {exc}"); continue
+        if not isinstance(value, dict): errors.append(f"{path.name}:{number}: record must be an object"); continue
+        rows.append(value)
+    return rows, errors
+
+def main() -> int:
+    root = Path.cwd(); errors: list[str] = []
+    try: profile = json.loads((root / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError): profile = {}
+    try: manifest = json.loads((root / "FORMAL_RESOURCE_MANIFEST.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError): manifest = {}
+    for resource in manifest.get("resources", []):
+        if not isinstance(resource, dict): errors.append("formal resource entry must be an object"); continue
+        if resource.get("required") and not resource.get("revisionOrDigest"): errors.append(f"required resource {resource.get('id')} has no immutable revision or digest")
+        if resource.get("required") and resource.get("canonicalSource") in {None, ""}: errors.append(f"required resource {resource.get('id')} has no canonical source")
+    declared = profile.get("protocolAdapters") or profile.get("profiles") or []
+    for adapter in declared:
+        if not (root / "profiles" / str(adapter) / "adapter.json").exists(): errors.append(f"declared adapter is not bundled: {adapter}")
+    if "esp-rcp" in declared:
+        try: instance = json.loads((root / "records/external-state.json").read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc: instance = {}; errors.append(f"external-state instance is unreadable: {exc}")
+        if instance.get("protocol", {}).get("id") != "esp": errors.append("ESP profile requires an esp external-state instance")
+        if instance.get("state") == "unbound" and instance.get("lifecycle") != "bootstrap": errors.append("unbound ESP profile must remain at bootstrap")
+        for name, relative in (instance.get("records") or {}).items():
+            if not isinstance(relative, str): errors.append(f"external-state ledger path for {name} must be a string"); continue
+            target = (root / relative).resolve()
+            if root.resolve() not in target.parents: errors.append(f"external-state ledger escapes project root for {name}: {relative}")
+            elif not target.exists(): errors.append(f"external-state ledger missing for {name}: {relative}")
+        if not (root / "records/recipient.json").exists(): errors.append("RCP profile requires records/recipient.json")
+        else:
+            try: recipient = json.loads((root / "records/recipient.json").read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc: recipient = {}; errors.append(f"recipient record is unreadable: {exc}")
+            if "status" in recipient: errors.append("RCP status must be derived, not stored as authority")
+    qualifications, qualification_errors = jsonl(root / "records/qualifications.jsonl")
+    errors.extend(qualification_errors)
+    for row in qualifications:
+        if row.get("disposition") == "QUALIFIED":
+            evidence = row.get("evidence") if isinstance(row.get("evidence"), list) else []
+            if not evidence or any(item.get("status") != "consumed" for item in evidence if isinstance(item, dict)): errors.append(f"qualification {row.get('qualificationId')} is QUALIFIED without exclusively consumed evidence")
+            if row.get("contradictions"): errors.append(f"qualification {row.get('qualificationId')} has unresolved contradictions")
+    contracts, contract_errors = jsonl(root / "records/interaction-contracts.jsonl")
+    errors.extend(contract_errors)
+    for row in contracts:
+        effect = row.get("effect") if isinstance(row.get("effect"), dict) else {}
+        if effect.get("class") in PROTECTED or effect.get("protected") is True:
+            authorization = row.get("authorization") if isinstance(row.get("authorization"), dict) else {}
+            if authorization.get("decision") != "ALLOW" or not authorization.get("decisionId"): errors.append(f"protected contract {row.get('contractId')} lacks ACP ALLOW decision")
+            if not authorization.get("idempotencyKey"): errors.append(f"protected contract {row.get('contractId')} lacks idempotency key")
+            if not authorization.get("auditRecordId"): errors.append(f"protected contract {row.get('contractId')} lacks audit record")
+            receipt = row.get("receipt")
+            if row.get("state") in {"observed", "verified", "closed", "recovered"} and (not isinstance(receipt, dict) or any(not receipt.get(key) for key in ("receiptId", "outcome", "observedAt"))): errors.append(f"protected contract {row.get('contractId')} lacks typed receipt")
+    surfaces, surface_errors = jsonl(root / "records/semantic-surfaces.jsonl")
+    errors.extend(surface_errors)
+    for row in surfaces:
+        if row.get("format") != "1": errors.append(f"semantic surface {row.get('resolutionId')} has unsupported format")
+        if row.get("access") not in SURFACE_ACCESS: errors.append(f"semantic surface {row.get('resolutionId')} has invalid access state")
+        if row.get("rendererNeutral") is False: errors.append(f"semantic surface {row.get('resolutionId')} is not renderer-neutral")
+        if not row.get("sourceState") or not row.get("explanation") or not row.get("dependencies"): errors.append(f"semantic surface {row.get('resolutionId')} lacks provenance or explanation")
+        for key in SURFACE_FORBIDDEN:
+            if key in row: errors.append(f"semantic surface {row.get('resolutionId')} contains forbidden renderer/domain field {key}")
+    if errors:
+        print("INVALID PROTOCOL INTEGRITY\n" + "\n".join(f"- {error}" for error in errors), file=sys.stderr); return 1
+    print(f"OK protocol integrity: {len(qualifications)} qualifications, {len(contracts)} interaction contracts, {len(surfaces)} semantic surfaces"); return 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/esp-instance.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Perform explicit, append-only ESP instance transitions."""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import tempfile
+from datetime import datetime
+from pathlib import Path
+
+LIFECYCLE = ["bootstrap", "discover", "define", "contract", "baseline", "map", "prepare", "execute", "observe", "qualify", "decide", "commit", "promote", "measure", "learn", "continue"]
+
+def load(project: Path, relative: str) -> dict:
+    return json.loads((project / relative).read_text(encoding="utf-8"))
+
+def append_event(project: Path, event: dict) -> None:
+    path = project / "records/external-state-events.jsonl"
+    existing_ids = set()
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip(): existing_ids.add(json.loads(line)["eventId"])
+    if event["eventId"] in existing_ids: raise ValueError(f"event already recorded: {event['eventId']}")
+    with path.open("a", encoding="utf-8") as handle: handle.write(json.dumps(event, sort_keys=True) + "\n")
+
+def save_instance(project: Path, instance: dict) -> None:
+    target = project / "records/external-state.json"
+    fd, temporary = tempfile.mkstemp(prefix="external-state.", suffix=".tmp", dir=target.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(instance, handle, indent=2, sort_keys=True); handle.write("\n")
+        os.replace(temporary, target)
+    finally:
+        if os.path.exists(temporary): os.unlink(temporary)
+
+def parse_at(value: str) -> str:
+    datetime.fromisoformat(value.replace("Z", "+00:00")); return value
+
+def main() -> int:
+    parser = argparse.ArgumentParser(); parser.add_argument("--project", default=".")
+    sub = parser.add_subparsers(dest="command", required=True)
+    bind = sub.add_parser("bind-owner"); bind.add_argument("--owner", required=True)
+    advance = sub.add_parser("advance"); advance.add_argument("--to", required=True, choices=LIFECYCLE)
+    recover = sub.add_parser("recover")
+    resume = sub.add_parser("resume")
+    close = sub.add_parser("close")
+    for command in (bind, advance, recover, resume, close):
+        command.add_argument("--event-id", required=True); command.add_argument("--actor", required=True); command.add_argument("--at", required=True); command.add_argument("--reason", required=True)
+    args = parser.parse_args(); project = Path(args.project).resolve()
+    try:
+        instance = load(project, "records/external-state.json"); at = parse_at(args.at)
+        if instance.get("state") == "closed": raise ValueError("closed ESP instance cannot transition")
+        if args.command == "bind-owner":
+            if instance.get("state") != "unbound" or instance.get("lifecycle") != "bootstrap": raise ValueError("owner binding is only valid for an unbound bootstrap instance")
+            if instance.get("owner") is not None: raise ValueError("owner is already bound")
+            instance["owner"] = args.owner; instance["authority"]["owner"] = args.owner; instance["state"] = "active"
+            event = {"eventId": args.event_id, "type": "OWNER_BOUND", "instanceId": instance["instanceId"], "actor": args.actor, "at": at, "reason": args.reason, "owner": args.owner}
+        elif args.command == "advance":
+            current = instance.get("lifecycle")
+            if instance.get("state") != "active" or not instance.get("owner"): raise ValueError("active owner-bound instance required")
+            if current not in LIFECYCLE or LIFECYCLE.index(args.to) != LIFECYCLE.index(current) + 1: raise ValueError(f"transition must advance one lifecycle step from {current} to the next state")
+            if args.to == "qualify" and not (project / "records/evidence.jsonl").read_text(encoding="utf-8").strip(): raise ValueError("qualify requires at least one evidence record")
+            if args.to == "decide" and not (project / "records/qualifications.jsonl").read_text(encoding="utf-8").strip(): raise ValueError("decide requires qualification records")
+            if args.to == "promote" and (not (project / "records/commitments.jsonl").read_text(encoding="utf-8").strip() or not (project / "records/qualifications.jsonl").read_text(encoding="utf-8").strip()): raise ValueError("promote requires commitment and qualification records")
+            instance["lifecycle"] = args.to
+            event = {"eventId": args.event_id, "type": "LIFECYCLE_ADVANCED", "instanceId": instance["instanceId"], "actor": args.actor, "at": at, "reason": args.reason, "from": current, "to": args.to}
+        elif args.command == "recover":
+            if instance.get("state") != "active": raise ValueError("only an active instance can enter recovery")
+            instance["state"] = "paused"
+            event = {"eventId": args.event_id, "type": "RECOVERY_STARTED", "instanceId": instance["instanceId"], "actor": args.actor, "at": at, "reason": args.reason, "lifecycle": instance["lifecycle"]}
+        elif args.command == "resume":
+            if instance.get("state") != "paused": raise ValueError("only a paused instance can resume")
+            instance["state"] = "active"
+            event = {"eventId": args.event_id, "type": "RECOVERY_COMPLETED", "instanceId": instance["instanceId"], "actor": args.actor, "at": at, "reason": args.reason, "lifecycle": instance["lifecycle"]}
+        else:
+            if instance.get("state") != "active": raise ValueError("only an active instance can close")
+            if instance.get("lifecycle") not in {"measure", "learn", "continue"}: raise ValueError("closure requires measure, learn, or continue lifecycle state")
+            if not (project / "records/receipts.jsonl").read_text(encoding="utf-8").strip(): raise ValueError("closure requires at least one receipt")
+            instance["state"] = "closed"
+            event = {"eventId": args.event_id, "type": "INSTANCE_CLOSED", "instanceId": instance["instanceId"], "actor": args.actor, "at": at, "reason": args.reason, "lifecycle": instance["lifecycle"]}
+        append_event(project, event); save_instance(project, instance)
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        print(f"REFUSED: {exc}"); return 1
+    print(json.dumps({"instanceId": instance["instanceId"], "lifecycle": instance["lifecycle"], "state": instance["state"], "eventId": args.event_id}, sort_keys=True)); return 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/esp-record.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Append a typed ESP/RCP record without overwriting existing identity."""
+from __future__ import annotations
+
+import argparse
+import json
+from datetime import datetime
+from pathlib import Path
+
+FILES = {
+    "campaign": "campaigns.jsonl", "commitment": "commitments.jsonl", "evidence": "evidence.jsonl",
+    "qualification": "qualifications.jsonl", "receipt": "receipts.jsonl", "measurement": "measurements.jsonl", "learning": "learning.jsonl",
+}
+IDS = {"campaign":"campaignId", "commitment":"commitmentId", "evidence":"evidenceId", "qualification":"qualificationId", "receipt":"receiptId", "measurement":"measurementId", "learning":"learningId"}
+REQUIRED = {
+    "campaign": {"campaignId", "objective"},
+    "commitment": {"commitmentId", "counterparty", "obligation", "status"},
+    "evidence": {"evidenceId", "claim", "source", "status"},
+    "qualification": {"format", "qualificationId", "candidate", "claim", "context", "profile", "obligations", "evidence", "evaluator", "authority", "disposition"},
+    "receipt": {"receiptId", "eventId", "observedAt", "outcome"},
+    "measurement": {"measurementId", "metric", "value", "at"},
+    "learning": {"learningId", "statement", "basis"},
+}
+
+def main() -> int:
+    parser = argparse.ArgumentParser(); parser.add_argument("--project", default="."); parser.add_argument("kind", choices=sorted(FILES)); parser.add_argument("--record", required=True, help="JSON object or path to a JSON file")
+    args = parser.parse_args(); project = Path(args.project).resolve()
+    try:
+        candidate = Path(args.record)
+        record = json.loads(candidate.read_text(encoding="utf-8")) if candidate.exists() else json.loads(args.record)
+        if not isinstance(record, dict): raise ValueError("record must be a JSON object")
+        missing = REQUIRED[args.kind] - set(record)
+        if missing: raise ValueError(f"{args.kind} record missing {sorted(missing)}")
+        if args.kind == "receipt": datetime.fromisoformat(str(record["observedAt"]).replace("Z", "+00:00"))
+        if args.kind == "measurement": datetime.fromisoformat(str(record["at"]).replace("Z", "+00:00"))
+        record_id = record[IDS[args.kind]]
+        path = project / "records" / FILES[args.kind]
+        existing: dict[str, dict] = {}
+        if path.exists():
+            for line in path.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    old = json.loads(line); existing[str(old[IDS[args.kind]])] = old
+        if str(record_id) in existing:
+            if existing[str(record_id)] == record:
+                print(json.dumps({"status":"already-recorded", "id":record_id}, sort_keys=True)); return 0
+            raise ValueError(f"{args.kind} identity already exists with different content: {record_id}")
+        with path.open("a", encoding="utf-8") as handle: handle.write(json.dumps(record, sort_keys=True) + "\n")
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        print(f"REFUSED: {exc}"); return 1
+    print(json.dumps({"status":"recorded", "kind":args.kind, "id":record_id}, sort_keys=True)); return 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
 FILE: scripts/gen-context.py
 ========================================================================
 
@@ -8424,6 +9046,51 @@ if __name__ == "__main__":
 
 
 ========================================================================
+FILE: scripts/iepe-adopt.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Produce a read-only IEPE-to-FPB adoption report."""
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+from pathlib import Path
+
+def read_json(path: Path) -> dict | None:
+    try: value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError): return None
+    return value if isinstance(value, dict) else None
+
+def git(project: Path, *args: str) -> str | None:
+    try: return subprocess.run(["git", *args], cwd=project, text=True, capture_output=True, check=True, timeout=5).stdout.strip()
+    except (OSError, subprocess.SubprocessError): return None
+
+def main() -> int:
+    parser = argparse.ArgumentParser(); parser.add_argument("--project", default="."); args = parser.parse_args(); project = Path(args.project).resolve()
+    reference = read_json(project / ".iepe/protocol-reference.json")
+    profile = read_json(project / "PROJECT_PROFILE.json")
+    findings: list[dict[str, str]] = []
+    if reference is None: findings.append({"severity":"missing", "path":".iepe/protocol-reference.json", "meaning":"IEPE immutable protocol reference is absent"})
+    else:
+        required = {"protocolId", "protocolVersion", "source", "revision", "relationship", "conformanceCommand"}
+        missing = required - set(reference)
+        if missing: findings.append({"severity":"error", "path":".iepe/protocol-reference.json", "meaning":f"IEPE reference missing {sorted(missing)}"})
+        if reference.get("protocolId") != "IEPE-001": findings.append({"severity":"error", "path":".iepe/protocol-reference.json", "meaning":"protocolId is not IEPE-001"})
+        if reference.get("relationship") not in {"reference", "vendored"}: findings.append({"severity":"error", "path":".iepe/protocol-reference.json", "meaning":"relationship must be reference or vendored"})
+    if profile is None: findings.append({"severity":"missing", "path":"PROJECT_PROFILE.json", "meaning":"FPB project profile is absent"})
+    authority_sources = [path for path in ("INTENT.md", "PROJECT_INTENT.md", "AGENTS.md") if (project / path).exists()]
+    if len([path for path in authority_sources if path in {"INTENT.md", "PROJECT_INTENT.md"}]) > 1:
+        findings.append({"severity":"review", "path":"INTENT.md/PROJECT_INTENT.md", "meaning":"both IEPE and FPB intent sources exist; retain one declared authority and bind the other as evidence"})
+    detected = {"intent": authority_sources, "authority": [path for path in ("AGENTS.md", "PROJECT_PROFILE.json") if (project / path).exists()], "work": [path for path in ("work", "issues", "records") if (project / path).exists()], "evidence": [path for path in ("evidence", "records/evidence.jsonl") if (project / path).exists()]}
+    result = {"format":"1", "project":str(project), "git":{"root":git(project,"rev-parse","--show-toplevel"),"head":git(project,"rev-parse","HEAD"),"status":git(project,"status","--short")}, "iepeReference":reference, "fpbProfile":profile, "detected":detected, "findings":findings, "readOnly":True, "nextActions":["approve intent and authority precedence", "bind the immutable IEPE revision in FPB formal resources", "map work, evidence, qualification, and promotion records", "run IEPE conformance command"]}
+    print(json.dumps(result, indent=2, sort_keys=True)); return 1 if any(item["severity"] in {"missing", "error"} for item in findings) else 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
 FILE: scripts/init-project.py
 ========================================================================
 
@@ -8467,8 +9134,9 @@ COPY_DOCS = [
     "RECOVERY.md",
     "SKILLS_INDEX.md",
     "WORK_GRAPH.md",
+    "PROTOCOL_ADAPTERS.md",
 ]
-SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py", "upgrade-project.py", "reconcile-project.py"]
+SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py", "upgrade-project.py", "reconcile-project.py", "validate-protocol-adapters.py", "validate-qualification.py", "validate-interaction-contract.py", "validate-semantic-surface.py", "recipient-status.py", "check-protocol-integrity.py", "esp-instance.py", "esp-record.py", "iepe-adopt.py"]
 GITIGNORE_LINES = [".env", ".env.local", ".agents/llms.txt", ".agents/llms-full.txt", "__pycache__/"]
 # Negations for paths a global core.excludesFile commonly ignores. Only the
 # repository's own .gitignore can override a global ignore.
@@ -8561,6 +9229,9 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     parser.add_argument("--mode", choices=["new", "existing"], default="new")
     parser.add_argument("--profile", action="append", default=[])
+    parser.add_argument("--iepe-source", default=None)
+    parser.add_argument("--iepe-revision", default=None)
+    parser.add_argument("--iepe-version", default="0.2.0")
     parser.add_argument("--acp-gateway-url", default=None,
                         help="bind acp-gateway as the authorization provider at this URL (token is never written)")
     parser.add_argument("--acp-owner", default=None, help="GitHub owner of the ProjectsV2 board")
@@ -8568,6 +9239,9 @@ def main() -> int:
     args = parser.parse_args()
     if (args.acp_owner is None) != (args.acp_project is None):
         print("REFUSED: --acp-owner and --acp-project must be given together", file=sys.stderr)
+        return 2
+    if "iepe" in args.profile and (not args.iepe_source or not args.iepe_revision):
+        print("REFUSED: --profile iepe requires --iepe-source and --iepe-revision", file=sys.stderr)
         return 2
 
     final_out = Path(args.output).resolve()
@@ -8590,6 +9264,9 @@ def main() -> int:
     (out / "records").mkdir(parents=True, exist_ok=True)
     for name in RECORD_FILES:
         (out / "records" / name).touch(exist_ok=True)
+    if "esp-rcp" in args.profile:
+        for name in ("campaigns.jsonl", "commitments.jsonl", "qualifications.jsonl", "receipts.jsonl", "measurements.jsonl", "learning.jsonl", "external-state-events.jsonl"):
+            (out / "records" / name).touch(exist_ok=True)
 
     collisions: list[str] = []
 
@@ -8617,6 +9294,7 @@ def main() -> int:
     profile["profileVersion"] = VERSION
     profile["operatingMode"] = args.mode
     profile["profiles"] = args.profile
+    profile["protocolAdapters"] = args.profile
     acp = profile.setdefault("authorizationProvider", {})
     acp["status"] = "bound" if args.acp_gateway_url else "declared"
     acp["board"] = {"owner": args.acp_owner, "number": args.acp_project}
@@ -8631,6 +9309,28 @@ def main() -> int:
         args.name,
     ).encode()
     write_candidate(out, "FORMAL_RESOURCE_MANIFEST.json", resources, collisions)
+
+    if "iepe" in args.profile:
+        reference = {
+            "$schema": "https://iepe.dev/schema/protocol-reference.schema.json",
+            "conformanceCommand": "python3 tools/validate.py",
+            "protocolId": "IEPE-001", "protocolVersion": args.iepe_version,
+            "relationship": "reference", "revision": args.iepe_revision, "source": args.iepe_source,
+        }
+        write_candidate(out, ".iepe/protocol-reference.json", (json.dumps(reference, indent=2) + "\n").encode(), collisions)
+
+    if "esp-rcp" in args.profile:
+        instance = {
+            "format": "1", "instanceId": args.id,
+            "protocol": {"id": "esp", "version": "0.3.0", "revisionOrDigest": "git:f1892e4"},
+            "lifecycle": "bootstrap", "state": "unbound",
+            "authority": {"owner": None, "qualification": None, "promotion": None}, "owner": None,
+            "records": {"campaigns": "records/campaigns.jsonl", "commitments": "records/commitments.jsonl", "evidence": "records/evidence.jsonl", "qualifications": "records/qualifications.jsonl", "receipts": "records/receipts.jsonl", "measurements": "records/measurements.jsonl", "learning": "records/learning.jsonl", "events": "records/external-state-events.jsonl"},
+            "lastReceiptId": None,
+        }
+        write_candidate(out, "records/external-state.json", (json.dumps(instance, indent=2) + "\n").encode(), collisions)
+
+        write_candidate(out, "records/recipient.json", (json.dumps({"recipient": None}, indent=2) + "\n").encode(), collisions)
 
     bindings = render_text(
         (ROOT / "bindings/PROJECT_BINDINGS_TEMPLATE.yaml").read_text(encoding="utf-8"),
@@ -8797,6 +9497,35 @@ if __name__ == "__main__":
 
 
 ========================================================================
+FILE: scripts/recipient-status.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Derive RCP status from a recipient record using an explicit as-of date."""
+from __future__ import annotations
+import argparse
+import datetime as dt
+import json
+import sys
+from pathlib import Path
+
+def main() -> int:
+    parser = argparse.ArgumentParser(); parser.add_argument("record"); parser.add_argument("--as-of", required=True); args = parser.parse_args()
+    try: value = json.loads(Path(args.record).read_text(encoding="utf-8")); as_of = dt.date.fromisoformat(args.as_of)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc: print(f"INVALID: {exc}", file=sys.stderr); return 2
+    recipient = value.get("recipient")
+    if recipient is None: status = "primitive"
+    elif not isinstance(recipient, dict) or not recipient.get("name") or not recipient.get("obligation", {}).get("deliverable") or not recipient.get("obligation", {}).get("due"): print("INVALID: recipient record is incomplete", file=sys.stderr); return 1
+    else:
+        try: due = dt.date.fromisoformat(recipient["obligation"]["due"])
+        except ValueError: print("INVALID: obligation.due must be ISO date", file=sys.stderr); return 1
+        status = "delivered" if value.get("delivered") is True else ("lapsed" if due < as_of else "active")
+    print(json.dumps({"status": status, "asOf": args.as_of}, sort_keys=True)); return 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
 FILE: scripts/reconcile-project.py
 ========================================================================
 
@@ -8806,6 +9535,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 def git(project: Path, *args: str) -> str | None:
@@ -8814,6 +9544,45 @@ def git(project: Path, *args: str) -> str | None:
     except (OSError, subprocess.SubprocessError):
         return None
     return result.stdout.strip()
+
+
+def read_json(project: Path, relative: str) -> dict | None:
+    try:
+        value = json.loads((project / relative).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def detect_protocols(project: Path, profile: dict | None) -> list[dict[str, str | None]]:
+    found: dict[str, dict[str, str | None]] = {}
+    manifest = read_json(project, "FORMAL_RESOURCE_MANIFEST.json")
+    if manifest:
+        for resource in manifest.get("resources", []):
+            if isinstance(resource, dict) and resource.get("id"):
+                found[str(resource["id"])] = {
+                    "id": str(resource["id"]),
+                    "version": resource.get("version"),
+                    "revisionOrDigest": resource.get("revisionOrDigest"),
+                    "source": resource.get("canonicalSource"),
+                    "evidence": "FORMAL_RESOURCE_MANIFEST.json",
+                }
+    if profile:
+        for adapter in profile.get("protocolAdapters", []) or profile.get("profiles", []) or []:
+            ident = str(adapter)
+            found.setdefault(ident, {"id": ident, "version": None, "revisionOrDigest": None, "source": None, "evidence": "PROJECT_PROFILE.json"})
+    iepe_ref = read_json(project, ".iepe/protocol-reference.json")
+    if iepe_ref:
+        protocol = iepe_ref.get("protocol") if isinstance(iepe_ref.get("protocol"), dict) else iepe_ref
+        ident = protocol.get("id") or protocol.get("protocolId") or "iepe"
+        found[str(ident)] = {
+            "id": str(ident),
+            "version": protocol.get("version") or protocol.get("protocolVersion"),
+            "revisionOrDigest": protocol.get("revision") or protocol.get("revisionOrDigest"),
+            "source": protocol.get("source") or protocol.get("canonicalSource"),
+            "evidence": ".iepe/protocol-reference.json",
+        }
+    return sorted(found.values(), key=lambda item: str(item["id"]))
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -8838,14 +9607,74 @@ def main() -> int:
             continue
         if label == "marker": marker = value
         else: profile = value
-    expected = ["AGENTS.md", ".agents", "CONTEXT_SOURCES.json", ".agents/context-lock.json", "scripts/gen-context.py", "scripts/validate-bootstrap.py", "scripts/acp.py", "scripts/upgrade-project.py", "scripts/reconcile-project.py", "schemas", "contracts", "docs/CONFORMANCE.md"]
+    expected = ["AGENTS.md", ".agents", "CONTEXT_SOURCES.json", ".agents/context-lock.json", "scripts/gen-context.py", "scripts/validate-bootstrap.py", "scripts/acp.py", "scripts/upgrade-project.py", "scripts/reconcile-project.py", "scripts/validate-protocol-adapters.py", "scripts/validate-qualification.py", "scripts/validate-interaction-contract.py", "scripts/validate-semantic-surface.py", "scripts/recipient-status.py", "scripts/check-protocol-integrity.py", "scripts/esp-instance.py", "scripts/esp-record.py", "scripts/iepe-adopt.py", "schemas", "schemas/protocol-adapter.schema.json", "schemas/qualification-record.schema.json", "schemas/recipient-contract.schema.json", "schemas/interaction-contract.schema.json", "schemas/external-state-instance.schema.json", "schemas/semantic-surface.schema.json", "contracts", "docs/CONFORMANCE.md", "docs/PROTOCOL_ADAPTERS.md"]
     artifacts = {path: ("present" if (project / path).exists() else "missing") for path in expected}
     for path, state in artifacts.items():
         if state == "missing": findings.append({"severity": "missing", "path": path, "meaning": "expected bootstrap or governance artifact is absent"})
     if marker and profile:
         if marker.get("projectId") != profile.get("projectId"): findings.append({"severity": "conflict", "path": ".formal-bootstrap.json/PROJECT_PROFILE.json", "meaning": "project identifiers differ"})
         if marker.get("bootstrapVersion") != profile.get("profileVersion"): findings.append({"severity": "conflict", "path": ".formal-bootstrap.json/PROJECT_PROFILE.json", "meaning": "bootstrap versions differ"})
-    result = {"format": "1", "project": str(project), "git": {"root": git(project, "rev-parse", "--show-toplevel"), "head": git(project, "rev-parse", "HEAD"), "branch": git(project, "branch", "--show-current"), "status": git(project, "status", "--short"), "remote": git(project, "config", "--get", "remote.origin.url")}, "bootstrap": {"initialized": marker is not None and profile is not None, "marker": marker, "profile": profile, "artifacts": artifacts}, "findings": findings}
+    resource_ids = []
+    if isinstance(profile, dict):
+        resource_ids.extend(profile.get("profiles") or [])
+    if isinstance(profile, dict) and isinstance(profile.get("formalResourceManifest"), str):
+        manifest_path = project / profile["formalResourceManifest"]
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            resource_ids.extend(item.get("id") for item in manifest.get("resources", []) if isinstance(item, dict) and item.get("id"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            pass
+    protocol_evidence = []
+    for path in (".iepe", ".agents", "PROJECT_PROFILE.json", "FORMAL_RESOURCE_MANIFEST.json", "PROJECT_INTENT.md", "INTENT.md"):
+        candidate = project / path
+        if candidate.exists():
+            protocol_evidence.append({"path": path, "kind": "adoption-or-authority-source"})
+    detected_protocols = detect_protocols(project, profile)
+    canonical_documents = [
+        path for path in ("AGENTS.md", "PROJECT_INTENT.md", "INTENT.md", "AUTHORITY.md", "PROJECT_PROFILE.json", "bindings/PROJECT_BINDINGS.yaml")
+        if (project / path).exists()
+    ]
+    required_records = ["records/evidence.jsonl", "records/negative-results.jsonl", "records/deviations.jsonl", "records/alignment.jsonl"]
+    if isinstance(profile, dict) and "esp-rcp" in (profile.get("protocolAdapters") or profile.get("profiles") or []):
+        required_records.extend(["records/campaigns.jsonl", "records/commitments.jsonl", "records/qualifications.jsonl", "records/receipts.jsonl", "records/measurements.jsonl", "records/learning.jsonl", "records/external-state-events.jsonl", "records/recipient.json", "records/external-state.json"])
+    missing_required_records = [path for path in required_records if not (project / path).exists()]
+    detected_by_id = {str(item["id"]): item for item in detected_protocols}
+    version_revision_drift: list[dict[str, str | None]] = []
+    unsupported_protocol_features: list[dict[str, object]] = []
+    for adapter_id in (profile or {}).get("protocolAdapters", []) if isinstance(profile, dict) else []:
+        adapter = read_json(project, f"profiles/{adapter_id}/adapter.json")
+        if not adapter:
+            version_revision_drift.append({"adapter": str(adapter_id), "meaning": "adapter declaration is missing or unreadable"})
+            continue
+        protocol = adapter.get("protocol") if isinstance(adapter.get("protocol"), dict) else {}
+        ident = str(protocol.get("id") or adapter_id)
+        detected = detected_by_id.get(ident) or detected_by_id.get(str(adapter_id))
+        if not detected:
+            version_revision_drift.append({"adapter": str(adapter_id), "meaning": f"pinned protocol {ident} is not declared in project evidence"})
+        else:
+            for field, expected in (("version", protocol.get("version")), ("revisionOrDigest", protocol.get("revisionOrDigest"))):
+                if expected and detected.get(field) and detected.get(field) != expected:
+                    version_revision_drift.append({"adapter": str(adapter_id), "field": field, "expected": str(expected), "observed": str(detected.get(field))})
+        unsupported_protocol_features.append({"adapter": str(adapter_id), "protocol": ident, "declaredUnsupported": adapter.get("unsupported", [])})
+    if (project / "INTENT.md").exists() and (project / "PROJECT_INTENT.md").exists():
+        findings.append({"severity": "review", "path": "INTENT.md/PROJECT_INTENT.md", "meaning": "two intent sources exist; authority precedence must be declared"})
+    if (project / ".iepe").exists() and (project / "PROJECT_PROFILE.json").exists() and not (profile or {}).get("protocolAdapters"):
+        findings.append({"severity": "review", "path": ".iepe/PROJECT_PROFILE.json", "meaning": "IEPE state exists without an explicit FPB protocol adapter binding"})
+    context_freshness = "not-applicable"
+    context_script = project / "scripts/gen-context.py"
+    if context_script.exists() and (project / ".agents/context-lock.json").exists():
+        try:
+            check = subprocess.run([sys.executable, str(context_script), "--check"], cwd=project, text=True, capture_output=True, timeout=30)
+            context_freshness = "fresh" if check.returncode == 0 else "stale-or-invalid"
+        except (OSError, subprocess.SubprocessError):
+            context_freshness = "unavailable"
+    authority_conflicts = [item for item in findings if item["severity"] in {"conflict", "review"}]
+    recommended_migration_steps = []
+    if missing_required_records: recommended_migration_steps.append("create missing required ledgers or records after authority review")
+    if version_revision_drift: recommended_migration_steps.append("reconcile protocol pins and re-run conformance checks")
+    if authority_conflicts: recommended_migration_steps.append("resolve authority overlaps before copying or promoting any canonical document")
+    if context_freshness != "fresh": recommended_migration_steps.append("refresh generated context only after source authority is settled")
+    result = {"format": "1", "project": str(project), "git": {"root": git(project, "rev-parse", "--show-toplevel"), "head": git(project, "rev-parse", "HEAD"), "branch": git(project, "branch", "--show-current"), "status": git(project, "status", "--short"), "remote": git(project, "config", "--get", "remote.origin.url")}, "bootstrap": {"initialized": marker is not None and profile is not None, "marker": marker, "profile": profile, "artifacts": artifacts, "declaredProtocolResources": sorted(set(resource_ids)), "protocolEvidence": protocol_evidence, "detectedProtocols": detected_protocols, "canonicalDocuments": canonical_documents, "missingRequiredRecords": missing_required_records, "versionRevisionDrift": version_revision_drift, "unsupportedProtocolFeatures": unsupported_protocol_features, "contextFreshness": context_freshness}, "authorityConflicts": authority_conflicts, "recommendedMigrationSteps": recommended_migration_steps, "findings": findings}
     result["reconcileRequired"] = any(item["severity"] in {"missing", "conflict", "error"} for item in findings)
     print(json.dumps(result, indent=2 if args.pretty else None, sort_keys=True))
     return 1 if result["reconcileRequired"] else 0
@@ -9230,6 +10059,12 @@ COMMON = [
     "schemas/context-sources.schema.json",
     "schemas/formal-resource-manifest.schema.json",
     "schemas/work-disposition.schema.json",
+    "schemas/protocol-adapter.schema.json",
+    "schemas/qualification-record.schema.json",
+    "schemas/recipient-contract.schema.json",
+    "schemas/interaction-contract.schema.json",
+    "schemas/external-state-instance.schema.json",
+    "schemas/semantic-surface.schema.json",
     "contracts/acp-protected-effects.yaml",
     ".agents/skills/authorize-protected-effect/SKILL.md",
     "scripts/gen-context.py",
@@ -9237,6 +10072,15 @@ COMMON = [
     "scripts/reconcile-project.py",
     "scripts/acp-check.py",
     "scripts/acp.py",
+    "scripts/validate-protocol-adapters.py",
+    "scripts/validate-qualification.py",
+    "scripts/validate-interaction-contract.py",
+    "scripts/recipient-status.py",
+    "scripts/check-protocol-integrity.py",
+    "scripts/esp-instance.py",
+    "scripts/esp-record.py",
+    "scripts/iepe-adopt.py",
+    "scripts/validate-semantic-surface.py",
 ]
 ACP_DECISIONS = {"ALLOW", "DENY", "AUTH_REQUIRED", "REVERIFY_REQUIRED", "QUARANTINE",
                  "LOCKED", "RECOVERY_AUTHORIZED", "VERIFY_RECOVERY"}
@@ -9423,6 +10267,14 @@ def main() -> int:
         if rc:
             return rc
 
+    adapter_check = subprocess.call([sys.executable, str(ROOT / "scripts/validate-protocol-adapters.py")])
+    if adapter_check:
+        return adapter_check
+
+    integrity_check = subprocess.call([sys.executable, str(ROOT / "scripts/check-protocol-integrity.py")])
+    if integrity_check:
+        return integrity_check
+
     mode = "project" if project_mode else "repository"
     print(f"OK {mode} structure v{version}")
     return 0
@@ -9473,6 +10325,208 @@ def main() -> int:
         yaml.safe_load(path.read_text(encoding="utf-8"))
 
     print(f"OK formal files: {len(schema_paths)} schemas, 1 formal JSON instance, {len(set(yaml_paths))} yaml")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/validate-interaction-contract.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Validate an ICP contract, including protected-effect authorization and receipts."""
+from __future__ import annotations
+import argparse
+import json
+import sys
+from pathlib import Path
+
+PROTECTED = {"production-deploy", "credential-create", "billing-change", "publish", "migration", "external-communication", "spending"}
+OBSERVED = {"observed", "verified", "closed", "recovered"}
+
+def main() -> int:
+    parser = argparse.ArgumentParser(); parser.add_argument("contract"); args = parser.parse_args()
+    try: value = json.loads(Path(args.contract).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc: print(f"INVALID: {exc}", file=sys.stderr); return 2
+    required = {"format","contractId","intent","participants","boundary","state","actions","checks","transition","effect","invariants","recovery","receipt","closure"}
+    errors = [f"missing {sorted(required - set(value))}"] if required - set(value) else []
+    effect_class = value.get("effect", {}).get("class")
+    protected = effect_class in PROTECTED or value.get("effect", {}).get("protected") is True
+    auth = value.get("authorization")
+    if protected:
+        if not isinstance(auth, dict) or auth.get("decision") != "ALLOW" or not auth.get("decisionId"): errors.append("protected effect requires an ACP ALLOW decision and decisionId")
+        if not isinstance(auth, dict) or not auth.get("idempotencyKey"): errors.append("protected effect requires idempotencyKey")
+        if not isinstance(auth, dict) or not auth.get("auditRecordId"): errors.append("protected effect requires an audit record id")
+        receipt = value.get("receipt")
+        if value.get("state") in OBSERVED and (not isinstance(receipt, dict) or any(not receipt.get(key) for key in ("receiptId", "outcome", "observedAt"))): errors.append("observed protected effect requires a typed receipt")
+    if value.get("state") in {"closed", "recovered"} and value.get("closure", {}).get("status") != value["state"]: errors.append("terminal state and closure status must agree")
+    if not value.get("recovery", {}).get("plan"): errors.append("recovery plan is required")
+    if errors: print("INVALID INTERACTION CONTRACT\n" + "\n".join(f"- {error}" for error in errors), file=sys.stderr); return 1
+    print(f"OK interaction contract {value['contractId']}: {value['state']}"); return 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/validate-protocol-adapters.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Validate every bundled protocol adapter without external dependencies."""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+CURRENT_BOOTSTRAP = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+REQUIRED = {"format", "adapterId", "protocol", "supportedBootstrap", "authority", "mappings", "unsupported", "compatibility", "checks", "migration"}
+DIMENSIONS = {"syntax", "schema", "behavior", "semantics", "authority", "evidence"}
+
+
+def main() -> int:
+    schema = ROOT / "schemas/protocol-adapter.schema.json"
+    if not schema.exists():
+        print(f"INVALID: missing {schema}", file=sys.stderr)
+        return 2
+    adapters = sorted((ROOT / "profiles").glob("*/adapter.json"))
+    if not adapters:
+        print("OK protocol adapters: none selected")
+        return 0
+    errors: list[str] = []
+    ids: set[str] = set()
+    for path in adapters:
+        try:
+            value = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"{path}: {exc}")
+            continue
+        missing = REQUIRED - set(value)
+        if missing:
+            errors.append(f"{path}: missing {sorted(missing)}")
+        ident = value.get("adapterId")
+        if ident in ids:
+            errors.append(f"duplicate adapter id: {ident}")
+        ids.add(ident)
+        protocol = value.get("protocol", {})
+        for field in ("id", "version", "revisionOrDigest", "canonicalSource"):
+            if not isinstance(protocol.get(field), str) or not protocol[field]:
+                errors.append(f"{path}: protocol.{field} is required")
+        compatibility = value.get("compatibility", {})
+        if set(compatibility) != DIMENSIONS:
+            errors.append(f"{path}: compatibility must contain exactly {sorted(DIMENSIONS)}")
+        for section in ("imports", "projects", "lifecycle", "evidence"):
+            if not isinstance(value.get("mappings", {}).get(section), list):
+                errors.append(f"{path}: mappings.{section} must be an array")
+        supported = value.get("supportedBootstrap")
+        if supported not in {CURRENT_BOOTSTRAP, f"{CURRENT_BOOTSTRAP.rsplit('.', 1)[0]}.x"}:
+            errors.append(f"{path}: supportedBootstrap {supported!r} does not cover FPB {CURRENT_BOOTSTRAP}")
+    if errors:
+        print("INVALID PROTOCOL ADAPTERS", file=sys.stderr)
+        print("\n".join(f"- {error}" for error in errors), file=sys.stderr)
+        return 1
+    print(f"OK protocol adapters: {len(adapters)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/validate-qualification.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Validate an EQP qualification record and fail closed on incomplete qualification."""
+from __future__ import annotations
+import argparse
+import json
+import sys
+from pathlib import Path
+
+DISPOSITIONS = {"QUALIFIED", "NOT_QUALIFIED", "BLOCKED", "SUPERSEDED"}
+VALID_EVIDENCE = {"consumed", "rejected", "contradictory", "out-of-scope", "superseded"}
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("record")
+    args = parser.parse_args()
+    try:
+        record = json.loads(Path(args.record).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        print(f"INVALID: {exc}", file=sys.stderr); return 2
+    required = {"format", "qualificationId", "candidate", "claim", "context", "profile", "obligations", "evidence", "evaluator", "authority", "disposition"}
+    missing = required - set(record)
+    errors = [f"missing {sorted(missing)}"] if missing else []
+    if record.get("format") != "1": errors.append("format must be 1")
+    if record.get("disposition") not in DISPOSITIONS: errors.append("invalid disposition")
+    evidence = record.get("evidence") if isinstance(record.get("evidence"), list) else []
+    evidence_ids = set()
+    for item in evidence:
+        if not isinstance(item, dict) or not item.get("id") or item.get("id") in evidence_ids: errors.append("evidence ids must be unique and non-empty"); continue
+        evidence_ids.add(item["id"])
+        if item.get("status") not in VALID_EVIDENCE: errors.append(f"invalid evidence status: {item.get('status')}")
+        if item.get("status") in {"rejected", "contradictory", "out-of-scope", "superseded"} and not item.get("reason"): errors.append(f"evidence {item['id']} needs a reason")
+    if record.get("disposition") == "QUALIFIED":
+        if not record.get("obligations"): errors.append("QUALIFIED requires obligations")
+        if not evidence: errors.append("QUALIFIED requires evidence")
+        if any(item.get("status") != "consumed" for item in evidence if isinstance(item, dict)): errors.append("QUALIFIED requires every listed evidence item to be consumed")
+        if record.get("contradictions"): errors.append("QUALIFIED cannot carry unresolved contradictions")
+    if errors:
+        print("INVALID QUALIFICATION\n" + "\n".join(f"- {error}" for error in errors), file=sys.stderr); return 1
+    print(f"OK qualification {record['qualificationId']}: {record['disposition']}"); return 0
+
+if __name__ == "__main__": raise SystemExit(main())
+
+
+========================================================================
+FILE: scripts/validate-semantic-surface.py
+========================================================================
+
+#!/usr/bin/env python3
+"""Validate an SES/SSS surface projection without granting it domain authority."""
+from __future__ import annotations
+import json
+import sys
+from pathlib import Path
+
+FORBIDDEN = {"css", "dom", "component", "layout", "theme", "typography", "mutation", "canonicalStateUpdate"}
+DISTINCT_ACCESS = {"available", "unknown", "withheld", "absent", "ineligible"}
+
+
+def main() -> int:
+    if len(sys.argv) != 2:
+        print("usage: validate-semantic-surface.py SURFACE.json", file=sys.stderr)
+        return 2
+    try:
+        value = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        print(f"INVALID: {exc}", file=sys.stderr)
+        return 2
+    required = {"format", "resolutionId", "sourceState", "purpose", "context", "access", "members", "explanation", "dependencies"}
+    errors = [f"missing {sorted(required - set(value))}"] if required - set(value) else []
+    if value.get("format") != "1":
+        errors.append("format must be 1")
+    if value.get("rendererNeutral") is False:
+        errors.append("surface must be renderer-neutral")
+    if value.get("access") not in DISTINCT_ACCESS:
+        errors.append("access must preserve an explicit SSS access state")
+    if not isinstance(value.get("members"), list):
+        errors.append("members must be an array")
+    if not isinstance(value.get("dependencies"), list) or not value.get("dependencies"):
+        errors.append("dependencies must identify source and resolver inputs")
+    for key in FORBIDDEN:
+        if key in value:
+            errors.append(f"renderer/domain field is not allowed at surface root: {key}")
+    if errors:
+        print("INVALID SEMANTIC SURFACE\n" + "\n".join(f"- {error}" for error in errors), file=sys.stderr)
+        return 1
+    print(f"OK semantic surface {value['resolutionId']}: {value['access']}")
     return 0
 
 
@@ -9767,6 +10821,240 @@ class AcpClientTests(unittest.TestCase):
         cp = self.acp("--allow-ungoverned", script="scripts/acp-check.py")
         self.assertEqual(cp.returncode, 0)
         self.assertIn("WARNING", cp.stderr)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+========================================================================
+FILE: tests/test_protocol_adapters.py
+========================================================================
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class ProtocolAdapterTests(unittest.TestCase):
+    def test_all_bundled_adapters_validate(self) -> None:
+        result = subprocess.run(
+            [sys.executable, "scripts/validate-protocol-adapters.py"],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("5", result.stdout)
+
+    def test_iepe_profile_is_explicitly_bound_on_initialization(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, "scripts/init-project.py", "--name", "IEPE Fixture", "--id", "iepe-fixture", "--profile", "iepe", "--iepe-source", "https://github.com/zachshallbetter/IEPE", "--iepe-revision", "0970d358f4156bfc44b326295a45844e717734c1", "--output", directory],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            profile = json.loads((Path(directory) / "PROJECT_PROFILE.json").read_text())
+            self.assertEqual(profile["protocolAdapters"], ["iepe"])
+            self.assertTrue((Path(directory) / "profiles/iepe/adapter.json").exists())
+            reference = json.loads((Path(directory) / ".iepe/protocol-reference.json").read_text())
+            self.assertEqual(reference["protocolId"], "IEPE-001")
+            self.assertEqual(reference["revision"], "0970d358f4156bfc44b326295a45844e717734c1")
+
+    def test_qualification_fails_closed_when_evidence_is_not_consumed(self) -> None:
+        record = {
+            "format": "1", "qualificationId": "q-1", "candidate": "c-1", "claim": "claim",
+            "context": "test", "profile": "default", "obligations": ["o-1"],
+            "evidence": [{"id": "e-1", "status": "out-of-scope", "reason": "wrong context"}],
+            "evaluator": "evaluator", "authority": "authority", "disposition": "QUALIFIED",
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "qualification.json"
+            path.write_text(json.dumps(record))
+            result = subprocess.run([sys.executable, "scripts/validate-qualification.py", str(path)], cwd=ROOT, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_qualification_preserves_supersession_without_promoting(self) -> None:
+        record = {
+            "format": "1", "qualificationId": "q-old", "candidate": "c-1", "claim": "claim",
+            "context": "old context", "profile": "default", "obligations": ["o-1"],
+            "evidence": [{"id": "e-old", "status": "superseded", "reason": "newer context"}],
+            "evaluator": "evaluator", "authority": "authority", "disposition": "SUPERSEDED",
+            "supersedes": "q-new", "scope": "old", "freshness": "expired",
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "qualification.json"
+            path.write_text(json.dumps(record))
+            result = subprocess.run([sys.executable, "scripts/validate-qualification.py", str(path)], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_protected_interaction_requires_acp_and_receipt(self) -> None:
+        contract = {
+            "format":"1", "contractId":"ic-1", "intent":"deploy", "participants":["agent"], "boundary":"service",
+            "state":"observed", "actions":{"available":[],"authorized":[],"enabled":[],"exposed":[]}, "checks":[],
+            "transition":"deploy", "effect":{"class":"production-deploy","target":"service"}, "invariants":[],
+            "authorization":{"decision":"ALLOW","decisionId":"d-1","idempotencyKey":"k-1"},
+            "recovery":{"plan":"rollback","reversibleBeforeCommit":True}, "receipt":None, "closure":{"status":"open"},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "contract.json"
+            path.write_text(json.dumps(contract))
+            result = subprocess.run([sys.executable, "scripts/validate-interaction-contract.py", str(path)], cwd=ROOT, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_semantic_surface_requires_provenance_and_neutrality(self) -> None:
+        surface = {
+            "format": "1", "resolutionId": "surface-1", "sourceState": "publication-1",
+            "purpose": "reading", "context": "member", "access": "available", "members": [],
+            "explanation": "selected by declared purpose", "dependencies": ["publication-1", "resolver-1"],
+            "rendererNeutral": True,
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "surface.json"
+            path.write_text(json.dumps(surface))
+            result = subprocess.run([sys.executable, "scripts/validate-semantic-surface.py", str(path)], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_semantic_surface_rejects_renderer_leakage(self) -> None:
+        surface = {
+            "format": "1", "resolutionId": "surface-2", "sourceState": "publication-1",
+            "purpose": "reading", "context": "member", "access": "withheld", "members": [],
+            "explanation": "protected", "dependencies": ["publication-1"], "css": ".secret {}",
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "surface.json"
+            path.write_text(json.dumps(surface))
+            result = subprocess.run([sys.executable, "scripts/validate-semantic-surface.py", str(path)], cwd=ROOT, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_recipient_status_is_derived_from_explicit_date(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "recipient.json"
+            path.write_text(json.dumps({"recipient": None}))
+            result = subprocess.run([sys.executable, "scripts/recipient-status.py", str(path), "--as-of", "2026-09-28"], cwd=ROOT, capture_output=True, text=True, check=True)
+            self.assertIn('"status": "primitive"', result.stdout)
+
+    def test_esp_profile_initializes_unbound_instance_and_empty_ledgers(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            result = subprocess.run(
+                [sys.executable, "scripts/init-project.py", "--name", "ESP Fixture", "--id", "esp-fixture", "--profile", "esp-rcp", "--output", directory],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            instance = json.loads((Path(directory) / "records/external-state.json").read_text())
+            self.assertEqual(instance["lifecycle"], "bootstrap")
+            self.assertEqual(instance["state"], "unbound")
+            self.assertIsNone(instance["owner"])
+            self.assertEqual((Path(directory) / "records/recipient.json").read_text().strip(), '{\n  "recipient": null\n}')
+            self.assertEqual((Path(directory) / "records/commitments.jsonl").read_text(), "")
+
+    def test_esp_lifecycle_requires_binding_and_records_idempotent_events(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            init = subprocess.run([sys.executable, "scripts/init-project.py", "--name", "ESP Lifecycle", "--id", "esp-life", "--profile", "esp-rcp", "--output", directory], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(init.returncode, 0, init.stderr)
+            command = [sys.executable, "scripts/esp-instance.py", "--project", directory, "bind-owner", "--owner", "owner-1", "--actor", "owner-1", "--at", "2026-09-28T12:00:00+00:00", "--event-id", "event-1", "--reason", "explicit owner binding"]
+            self.assertEqual(subprocess.run(command, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            advance = [sys.executable, "scripts/esp-instance.py", "--project", directory, "advance", "--to", "discover", "--actor", "owner-1", "--at", "2026-09-28T12:01:00+00:00", "--event-id", "event-2", "--reason", "begin discovery"]
+            self.assertEqual(subprocess.run(advance, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            duplicate = [sys.executable, "scripts/esp-instance.py", "--project", directory, "advance", "--to", "define", "--actor", "owner-1", "--at", "2026-09-28T12:02:00+00:00", "--event-id", "event-2", "--reason", "duplicate id"]
+            self.assertNotEqual(subprocess.run(duplicate, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            events = (Path(directory) / "records/external-state-events.jsonl").read_text().splitlines()
+            self.assertEqual(len(events), 2)
+
+    def test_reconciliation_detects_existing_iepe_pin_without_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            (project / ".iepe").mkdir()
+            reference = {"protocol": {"id": "IEPE-001", "version": "0.2.0", "revision": "rev-1", "source": "local-iepe"}}
+            (project / ".iepe/protocol-reference.json").write_text(json.dumps(reference, indent=2))
+            before = (project / ".iepe/protocol-reference.json").read_bytes()
+            result = subprocess.run([sys.executable, "scripts/reconcile-project.py", "--project", directory], cwd=ROOT, capture_output=True, text=True)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["bootstrap"]["detectedProtocols"][0]["id"], "IEPE-001")
+            self.assertEqual(report["bootstrap"]["detectedProtocols"][0]["revisionOrDigest"], "rev-1")
+            self.assertEqual((project / ".iepe/protocol-reference.json").read_bytes(), before)
+
+    def test_reconciliation_reports_stale_generated_context(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            init = subprocess.run([sys.executable, "scripts/init-project.py", "--name", "Stale Context", "--id", "stale-context", "--output", str(project)], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(init.returncode, 0, init.stderr)
+            (project / "PROJECT_INTENT.md").write_text((project / "PROJECT_INTENT.md").read_text() + "\nchanged\n")
+            result = subprocess.run([sys.executable, "scripts/reconcile-project.py", "--project", str(project)], cwd=ROOT, capture_output=True, text=True)
+            report = json.loads(result.stdout)
+            self.assertEqual(report["bootstrap"]["contextFreshness"], "stale-or-invalid")
+
+    def test_iepe_adoption_report_is_read_only(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            project = Path(directory)
+            (project / ".iepe").mkdir()
+            (project / ".iepe/protocol-reference.json").write_text(json.dumps({"protocolId":"IEPE-001","protocolVersion":"0.2.0","source":"local","revision":"revision-1","relationship":"reference","conformanceCommand":"python3 tools/validate.py"}))
+            before = sorted(str(path.relative_to(project)) for path in project.rglob("*"))
+            result = subprocess.run([sys.executable, "scripts/iepe-adopt.py", "--project", directory], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 1)
+            report = json.loads(result.stdout)
+            self.assertTrue(report["readOnly"])
+            self.assertEqual(report["iepeReference"]["revision"], "revision-1")
+            after = sorted(str(path.relative_to(project)) for path in project.rglob("*"))
+            self.assertEqual(before, after)
+
+    def test_esp_records_are_typed_and_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            init = subprocess.run([sys.executable, "scripts/init-project.py", "--name", "ESP Records", "--id", "esp-records", "--profile", "esp-rcp", "--output", directory], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(init.returncode, 0, init.stderr)
+            commitment = json.dumps({"commitmentId":"commit-1","counterparty":"person-1","obligation":"deliverable-1","status":"open"})
+            command = [sys.executable, "scripts/esp-record.py", "--project", directory, "commitment", "--record", commitment]
+            self.assertEqual(subprocess.run(command, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            self.assertEqual(subprocess.run(command, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            conflicting = json.dumps({"commitmentId":"commit-1","counterparty":"person-2","obligation":"deliverable-1","status":"open"})
+            conflict_command = [sys.executable, "scripts/esp-record.py", "--project", directory, "commitment", "--record", conflicting]
+            self.assertNotEqual(subprocess.run(conflict_command, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            self.assertEqual(len((Path(directory) / "records/commitments.jsonl").read_text().splitlines()), 1)
+
+    def test_esp_recovery_is_explicit_and_resumable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            init = subprocess.run([sys.executable, "scripts/init-project.py", "--name", "ESP Recovery", "--id", "esp-recovery", "--profile", "esp-rcp", "--output", directory], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(init.returncode, 0, init.stderr)
+            common = ["--project", directory]
+            bind = [sys.executable, "scripts/esp-instance.py", *common, "bind-owner", "--owner", "owner-1", "--actor", "owner-1", "--at", "2026-09-28T12:00:00+00:00", "--event-id", "bind-1", "--reason", "bind"]
+            self.assertEqual(subprocess.run(bind, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            recover = [sys.executable, "scripts/esp-instance.py", *common, "recover", "--actor", "owner-1", "--at", "2026-09-28T12:01:00+00:00", "--event-id", "recover-1", "--reason", "pause for external correction"]
+            self.assertEqual(subprocess.run(recover, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            instance = json.loads((Path(directory) / "records/external-state.json").read_text())
+            self.assertEqual(instance["state"], "paused")
+            resume = [sys.executable, "scripts/esp-instance.py", *common, "resume", "--actor", "owner-1", "--at", "2026-09-28T12:02:00+00:00", "--event-id", "resume-1", "--reason", "correction verified"]
+            self.assertEqual(subprocess.run(resume, cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            instance = json.loads((Path(directory) / "records/external-state.json").read_text())
+            self.assertEqual(instance["state"], "active")
+
+    def test_esp_promotion_requires_qualified_evidence_and_commitment(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            init = subprocess.run([sys.executable, "scripts/init-project.py", "--name", "ESP Promotion", "--id", "esp-promotion", "--profile", "esp-rcp", "--output", directory], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(init.returncode, 0, init.stderr)
+            def run_instance(command: str, target: str, number: int) -> subprocess.CompletedProcess[str]:
+                return subprocess.run([sys.executable, "scripts/esp-instance.py", "--project", directory, command, "--to", target, "--actor", "owner-1", "--at", f"2026-09-28T12:{number:02d}:00+00:00", "--event-id", f"event-{number}", "--reason", target], cwd=ROOT, capture_output=True, text=True)
+            bind = subprocess.run([sys.executable, "scripts/esp-instance.py", "--project", directory, "bind-owner", "--owner", "owner-1", "--actor", "owner-1", "--at", "2026-09-28T12:00:00+00:00", "--event-id", "bind", "--reason", "bind"], cwd=ROOT, capture_output=True, text=True)
+            self.assertEqual(bind.returncode, 0)
+            for number, target in enumerate(["discover", "define", "contract", "baseline", "map", "prepare", "execute", "observe"], 1):
+                self.assertEqual(run_instance("advance", target, number).returncode, 0)
+            self.assertNotEqual(run_instance("advance", "qualify", 9).returncode, 0)
+            evidence = json.dumps({"evidenceId":"e-1","claim":"claim-1","source":"receipt-1","status":"consumed"})
+            self.assertEqual(subprocess.run([sys.executable, "scripts/esp-record.py", "--project", directory, "evidence", "--record", evidence], cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            self.assertEqual(run_instance("advance", "qualify", 10).returncode, 0)
+            self.assertNotEqual(run_instance("advance", "decide", 11).returncode, 0)
+            qualification = json.dumps({"format":"1","qualificationId":"q-1","candidate":"c-1","claim":"claim-1","context":"ctx","profile":"default","obligations":["o-1"],"evidence":[{"id":"e-1","status":"consumed"}],"evaluator":"eval-1","authority":"auth-1","disposition":"QUALIFIED"})
+            self.assertEqual(subprocess.run([sys.executable, "scripts/esp-record.py", "--project", directory, "qualification", "--record", qualification], cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            self.assertEqual(run_instance("advance", "decide", 12).returncode, 0)
+            self.assertEqual(run_instance("advance", "commit", 13).returncode, 0)
+            self.assertNotEqual(run_instance("advance", "promote", 14).returncode, 0)
+            commitment = json.dumps({"commitmentId":"commit-1","counterparty":"person-1","obligation":"deliverable-1","status":"open"})
+            self.assertEqual(subprocess.run([sys.executable, "scripts/esp-record.py", "--project", directory, "commitment", "--record", commitment], cwd=ROOT, capture_output=True, text=True).returncode, 0)
+            self.assertEqual(run_instance("advance", "promote", 15).returncode, 0)
 
 
 if __name__ == "__main__":

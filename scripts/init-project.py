@@ -38,8 +38,9 @@ COPY_DOCS = [
     "RECOVERY.md",
     "SKILLS_INDEX.md",
     "WORK_GRAPH.md",
+    "PROTOCOL_ADAPTERS.md",
 ]
-SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py", "upgrade-project.py", "reconcile-project.py"]
+SCRIPT_FILES = ["gen-context.py", "validate-bootstrap.py", "acp-check.py", "acp.py", "upgrade-project.py", "reconcile-project.py", "validate-protocol-adapters.py", "validate-qualification.py", "validate-interaction-contract.py", "validate-semantic-surface.py", "recipient-status.py", "check-protocol-integrity.py", "esp-instance.py", "esp-record.py", "iepe-adopt.py"]
 GITIGNORE_LINES = [".env", ".env.local", ".agents/llms.txt", ".agents/llms-full.txt", "__pycache__/"]
 # Negations for paths a global core.excludesFile commonly ignores. Only the
 # repository's own .gitignore can override a global ignore.
@@ -132,6 +133,9 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     parser.add_argument("--mode", choices=["new", "existing"], default="new")
     parser.add_argument("--profile", action="append", default=[])
+    parser.add_argument("--iepe-source", default=None)
+    parser.add_argument("--iepe-revision", default=None)
+    parser.add_argument("--iepe-version", default="0.2.0")
     parser.add_argument("--acp-gateway-url", default=None,
                         help="bind acp-gateway as the authorization provider at this URL (token is never written)")
     parser.add_argument("--acp-owner", default=None, help="GitHub owner of the ProjectsV2 board")
@@ -139,6 +143,9 @@ def main() -> int:
     args = parser.parse_args()
     if (args.acp_owner is None) != (args.acp_project is None):
         print("REFUSED: --acp-owner and --acp-project must be given together", file=sys.stderr)
+        return 2
+    if "iepe" in args.profile and (not args.iepe_source or not args.iepe_revision):
+        print("REFUSED: --profile iepe requires --iepe-source and --iepe-revision", file=sys.stderr)
         return 2
 
     final_out = Path(args.output).resolve()
@@ -161,6 +168,9 @@ def main() -> int:
     (out / "records").mkdir(parents=True, exist_ok=True)
     for name in RECORD_FILES:
         (out / "records" / name).touch(exist_ok=True)
+    if "esp-rcp" in args.profile:
+        for name in ("campaigns.jsonl", "commitments.jsonl", "qualifications.jsonl", "receipts.jsonl", "measurements.jsonl", "learning.jsonl", "external-state-events.jsonl"):
+            (out / "records" / name).touch(exist_ok=True)
 
     collisions: list[str] = []
 
@@ -188,6 +198,7 @@ def main() -> int:
     profile["profileVersion"] = VERSION
     profile["operatingMode"] = args.mode
     profile["profiles"] = args.profile
+    profile["protocolAdapters"] = args.profile
     acp = profile.setdefault("authorizationProvider", {})
     acp["status"] = "bound" if args.acp_gateway_url else "declared"
     acp["board"] = {"owner": args.acp_owner, "number": args.acp_project}
@@ -202,6 +213,28 @@ def main() -> int:
         args.name,
     ).encode()
     write_candidate(out, "FORMAL_RESOURCE_MANIFEST.json", resources, collisions)
+
+    if "iepe" in args.profile:
+        reference = {
+            "$schema": "https://iepe.dev/schema/protocol-reference.schema.json",
+            "conformanceCommand": "python3 tools/validate.py",
+            "protocolId": "IEPE-001", "protocolVersion": args.iepe_version,
+            "relationship": "reference", "revision": args.iepe_revision, "source": args.iepe_source,
+        }
+        write_candidate(out, ".iepe/protocol-reference.json", (json.dumps(reference, indent=2) + "\n").encode(), collisions)
+
+    if "esp-rcp" in args.profile:
+        instance = {
+            "format": "1", "instanceId": args.id,
+            "protocol": {"id": "esp", "version": "0.3.0", "revisionOrDigest": "git:f1892e4"},
+            "lifecycle": "bootstrap", "state": "unbound",
+            "authority": {"owner": None, "qualification": None, "promotion": None}, "owner": None,
+            "records": {"campaigns": "records/campaigns.jsonl", "commitments": "records/commitments.jsonl", "evidence": "records/evidence.jsonl", "qualifications": "records/qualifications.jsonl", "receipts": "records/receipts.jsonl", "measurements": "records/measurements.jsonl", "learning": "records/learning.jsonl", "events": "records/external-state-events.jsonl"},
+            "lastReceiptId": None,
+        }
+        write_candidate(out, "records/external-state.json", (json.dumps(instance, indent=2) + "\n").encode(), collisions)
+
+        write_candidate(out, "records/recipient.json", (json.dumps({"recipient": None}, indent=2) + "\n").encode(), collisions)
 
     bindings = render_text(
         (ROOT / "bindings/PROJECT_BINDINGS_TEMPLATE.yaml").read_text(encoding="utf-8"),
