@@ -5,12 +5,11 @@
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
-    "includedCount": 86,
-    "includedBytes": 333707,
+    "includedCount": 109,
+    "includedBytes": 418041,
     "excludedCounts": {
-      "excluded-directory": 1166,
-      "extension": 5,
-      "symlink": 4
+      "excluded-directory": 7,
+      "extension": 5
     }
   },
   "repositoryState": {
@@ -19,14 +18,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "522fb31f92b73fe0539798c006b078f98c0abb0e",
-        "branch": "feat/harden-context-generator",
+        "commit": "ade41b975dd20cb1125f744338220759e027cac2",
+        "branch": "protocol-aware-bootstrap-fpb",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "dc618ac2a6ae0ece25046d1b6187959c12b2067702c621778dba7ce16edbde77",
+  "aggregateSourceDigest": "224aa538e97155f3faacc46b356ed9b784b47aadde8b05ffcbb3fefe63cdcb5a",
   "sources": [
     {
       "path": ".agents/skills/authorize-protected-effect/SKILL.md",
@@ -155,8 +154,8 @@
     },
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "bytes": 3365,
-      "sha256": "69f855ee84cbc7fdc96214a16c9b3767e864c7bc44924032528ae526b218d158"
+      "bytes": 3391,
+      "sha256": "ad461674bdc1f01e76896c28db4a9dde497a9424476401d2c6cac53739485ff3"
     },
     {
       "path": "README.md",
@@ -284,6 +283,11 @@
       "sha256": "8bc6f6625735e60d062e08c32f834252a3ae4e05307f855d6810a3f1372c8a4c"
     },
     {
+      "path": "docs/PROTOCOL_ADAPTERS.md",
+      "bytes": 2229,
+      "sha256": "1b546812abd66d29217fb8b11370201760ad43769f5e9c1f5e685625a7bb40aa"
+    },
+    {
       "path": "docs/RECOVERY.md",
       "bytes": 1115,
       "sha256": "b084f0a4bbad4012bd9d2525a07239e38ff4f563bbdefbd8491518fec14882e9"
@@ -349,6 +353,36 @@
       "sha256": "78999b3ec2dfbe340753f27aa9a6f74c979d8ca99b6494663016ae5623c5c497"
     },
     {
+      "path": "profiles/eqp/adapter.json",
+      "bytes": 1752,
+      "sha256": "db9341dc7d00809a407e9cdb1eab2c61c389b179f703bf94ba2599f086982204"
+    },
+    {
+      "path": "profiles/esp-rcp/README.md",
+      "bytes": 1465,
+      "sha256": "de019c045c377c62e498cea64517f85b6c24b108412b4affccd3536170fdb546"
+    },
+    {
+      "path": "profiles/esp-rcp/adapter.json",
+      "bytes": 1967,
+      "sha256": "bca0160d5e68588b18e9bef63200a325f548e26bf990ba534b6d6463e60b39ac"
+    },
+    {
+      "path": "profiles/icp/adapter.json",
+      "bytes": 1804,
+      "sha256": "1399ffa231e0c89d3990b16e7db367028be0312411d6f893815d5d0c1c98de59"
+    },
+    {
+      "path": "profiles/iepe/adapter.json",
+      "bytes": 1861,
+      "sha256": "93c835321c5bd46304ccc01a698777082a8447b1d3931be4f4e6ca76f97fe5c1"
+    },
+    {
+      "path": "profiles/ses-sps/adapter.json",
+      "bytes": 1766,
+      "sha256": "80fc0f45964da6cf755d7e830e11d6c9110bd4d6d25ece7657dbf057007e1666"
+    },
+    {
       "path": "pyproject.toml",
       "bytes": 222,
       "sha256": "a352b6cc5000e1b3ebb217abe6d9f454a5f79ed01c9b1f6b62c5e289d1289647"
@@ -379,9 +413,39 @@
       "sha256": "a12460da1fda3c38c5810b4adb6c17225bb92ce14c67cf98b641883cbb77c224"
     },
     {
+      "path": "schemas/external-state-instance.schema.json",
+      "bytes": 1750,
+      "sha256": "fe28e2309ba983eb46d9dcca11d2fa3ea6c29808d5d91b5b9ce2e031472c43cb"
+    },
+    {
       "path": "schemas/formal-resource-manifest.schema.json",
       "bytes": 1676,
       "sha256": "465c3eae445d530087e1149d7f14e267400b32df00fa5b506e0b3af278a9b928"
+    },
+    {
+      "path": "schemas/interaction-contract.schema.json",
+      "bytes": 2509,
+      "sha256": "77772853ca61f842d778001873c5bab35922d9d2f3b9281f9616871987ae98cd"
+    },
+    {
+      "path": "schemas/protocol-adapter.schema.json",
+      "bytes": 2590,
+      "sha256": "7ee509a9e37c8104e18781871e9b2455baf560c1920c5c97ca5a6c927cc0d4b2"
+    },
+    {
+      "path": "schemas/qualification-record.schema.json",
+      "bytes": 1612,
+      "sha256": "e1561f13338dfe675a064803422d028de9efce07f35c235f8ef50c340bfb8335"
+    },
+    {
+      "path": "schemas/recipient-contract.schema.json",
+      "bytes": 1027,
+      "sha256": "273e599266d5a87bfc6dec1aea779dd3225f18ec9f6e85b272949577af3a15bc"
+    },
+    {
+      "path": "schemas/semantic-surface.schema.json",
+      "bytes": 1010,
+      "sha256": "460473f332f3b6f9eab8efad14a7c6f73d2a4dec4a0f9660138bcb6ed101cefd"
     },
     {
       "path": "schemas/work-disposition.schema.json",
@@ -409,14 +473,34 @@
       "sha256": "ca0766679ddbaec8045f3da28a40d2a4837d0b6789dba5e44b499980d883946b"
     },
     {
+      "path": "scripts/check-protocol-integrity.py",
+      "bytes": 6917,
+      "sha256": "fdac207980574121a5a7be9316c6cbb436c9f32c521c2d6100d14ce16733f96d"
+    },
+    {
+      "path": "scripts/esp-instance.py",
+      "bytes": 6455,
+      "sha256": "50d18578225fd4956c12d1aad4a3641d6749cc1c3a945f0eea27f00497550f91"
+    },
+    {
+      "path": "scripts/esp-record.py",
+      "bytes": 3201,
+      "sha256": "7c2b67c8d19db18ad8b507f5f59c08f0320edb156d6374ea6e7f04d6741b67a4"
+    },
+    {
       "path": "scripts/gen-context.py",
       "bytes": 12973,
       "sha256": "e1a41938dfc37dab80e56248b3030922feaa93f3a52a6798fd69126d5862f43c"
     },
     {
+      "path": "scripts/iepe-adopt.py",
+      "bytes": 3463,
+      "sha256": "cb992581bd7f1436b7049387ef9bdb19708cb384af0bcf10eeac9ef73a149931"
+    },
+    {
       "path": "scripts/init-project.py",
-      "bytes": 10865,
-      "sha256": "a4a4ab282940a84292f568c3b9df144f6e6ee94aee0c64de2c127e8f777d6571"
+      "bytes": 13348,
+      "sha256": "c7223ca6ad536e4b6da06bc73ea53b9b36e27512ee87f8e946c4ed556f88a1ca"
     },
     {
       "path": "scripts/package-release.py",
@@ -424,9 +508,14 @@
       "sha256": "5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa"
     },
     {
+      "path": "scripts/recipient-status.py",
+      "bytes": 1417,
+      "sha256": "1c513611c928a6a4b7a8c16ae071172fd434a9e8c4675a7fb91089f469a26e78"
+    },
+    {
       "path": "scripts/reconcile-project.py",
-      "bytes": 3398,
-      "sha256": "943fc058e0bc7b2d9e64643c6e3a0ce4fc63fcc4aa0839a4c2aaa03ee5269106"
+      "bytes": 11596,
+      "sha256": "a9d4002736f1fef51ba2c124f4abb2414e67fd131016b42604bd57c633facedd"
     },
     {
       "path": "scripts/upgrade-project.py",
@@ -435,8 +524,8 @@
     },
     {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 9559,
-      "sha256": "819416b450c631b48fc7a780f606ddc15d3226d5b560c2c4000ff23e0e06b2a5"
+      "bytes": 10507,
+      "sha256": "b533e35772def0bcab6404456c9a1286fa848736ccbd0faccc0255e440377707"
     },
     {
       "path": "scripts/validate-formal-files.py",
@@ -444,9 +533,34 @@
       "sha256": "fb340a2f8361dd55e5ef0668f3e978d35fdbba19e5905024c034feee70c9b1d7"
     },
     {
+      "path": "scripts/validate-interaction-contract.py",
+      "bytes": 2441,
+      "sha256": "74de7cf8d3efa6cca102e2982377d9829f35218632dbea1eb0f6ab7d39706b2a"
+    },
+    {
+      "path": "scripts/validate-protocol-adapters.py",
+      "bytes": 2670,
+      "sha256": "ac74eb0216a520051b10bf86c31c078b4b7a5723fd0e8862bc30a4590114ec95"
+    },
+    {
+      "path": "scripts/validate-qualification.py",
+      "bytes": 2530,
+      "sha256": "5bb33c997b5ef86dc69a8b6b4d39b8fe4931c3c6a44521250aea7739d1a42188"
+    },
+    {
+      "path": "scripts/validate-semantic-surface.py",
+      "bytes": 1973,
+      "sha256": "3de4a4152442b5bb34fbbfd94ee6fdad6839fda8f80a41bbfb7f6647c6897797"
+    },
+    {
       "path": "tests/test_acp_client.py",
       "bytes": 15396,
       "sha256": "34d942572b7dc65f588bd01790d6e8b886ae521979d5629da20db07ea503e3d8"
+    },
+    {
+      "path": "tests/test_protocol_adapters.py",
+      "bytes": 18270,
+      "sha256": "68fd312aa497bf051aab679c489dd779797bd11a1eb1c25360e930751fc9ca68"
     },
     {
       "path": "tests/test_repository.py",

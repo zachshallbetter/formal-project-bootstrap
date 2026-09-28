@@ -117,6 +117,7 @@
     "requireContextLock": true,
     "refreshOnMaterialSourceChange": true
   },
+  "protocolAdapters": [],
   "profiles": [],
   "formalResourceManifest": "FORMAL_RESOURCE_MANIFEST.json"
 }

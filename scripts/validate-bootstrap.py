@@ -35,6 +35,12 @@ COMMON = [
     "schemas/context-sources.schema.json",
     "schemas/formal-resource-manifest.schema.json",
     "schemas/work-disposition.schema.json",
+    "schemas/protocol-adapter.schema.json",
+    "schemas/qualification-record.schema.json",
+    "schemas/recipient-contract.schema.json",
+    "schemas/interaction-contract.schema.json",
+    "schemas/external-state-instance.schema.json",
+    "schemas/semantic-surface.schema.json",
     "contracts/acp-protected-effects.yaml",
     ".agents/skills/authorize-protected-effect/SKILL.md",
     "scripts/gen-context.py",
@@ -42,6 +48,15 @@ COMMON = [
     "scripts/reconcile-project.py",
     "scripts/acp-check.py",
     "scripts/acp.py",
+    "scripts/validate-protocol-adapters.py",
+    "scripts/validate-qualification.py",
+    "scripts/validate-interaction-contract.py",
+    "scripts/recipient-status.py",
+    "scripts/check-protocol-integrity.py",
+    "scripts/esp-instance.py",
+    "scripts/esp-record.py",
+    "scripts/iepe-adopt.py",
+    "scripts/validate-semantic-surface.py",
 ]
 ACP_DECISIONS = {"ALLOW", "DENY", "AUTH_REQUIRED", "REVERIFY_REQUIRED", "QUARANTINE",
                  "LOCKED", "RECOVERY_AUTHORIZED", "VERIFY_RECOVERY"}
@@ -227,6 +242,14 @@ def main() -> int:
         rc = subprocess.call([sys.executable, str(ROOT / "scripts/gen-context.py"), "--check"])
         if rc:
             return rc
+
+    adapter_check = subprocess.call([sys.executable, str(ROOT / "scripts/validate-protocol-adapters.py")])
+    if adapter_check:
+        return adapter_check
+
+    integrity_check = subprocess.call([sys.executable, str(ROOT / "scripts/check-protocol-integrity.py")])
+    if integrity_check:
+        return integrity_check
 
     mode = "project" if project_mode else "repository"
     print(f"OK {mode} structure v{version}")
