@@ -26,6 +26,8 @@ def main() -> int:
 
     resource_template = json.loads((ROOT / "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json").read_text(encoding="utf-8"))
     Draft202012Validator(schemas["formal-resource-manifest.schema.json"]).validate(resource_template)
+    context_policy = json.loads((ROOT / "CONTEXT_SOURCES_TEMPLATE.json").read_text(encoding="utf-8"))
+    Draft202012Validator(schemas["context-sources.schema.json"]).validate(context_policy)
 
     yaml_paths = list(ROOT.glob("*.yaml")) + list((ROOT / "bindings").glob("*.yaml"))
     yaml_paths += list((ROOT / "profiles").rglob("*.yaml")) + list((ROOT / ".github").rglob("*.yml"))

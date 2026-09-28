@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0 — Comprehensive bootstrap and ACP hardening
+
+- Added transactional initialization, read-only reconciliation, and non-destructive upgrade tooling.
+- Hardened deterministic context compilation, source selection, sensitive-file exclusion, and CI drift checks.
+- Added production ACP signing, durable-state, audit-chain, and Railway deployment verification alignment.
+
 ## 0.5.3 — ACP client, governed-repository check, reporting contract
 
 - `scripts/acp.py`: stdlib client for every ACP call a project makes —
