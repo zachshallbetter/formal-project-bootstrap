@@ -17,6 +17,7 @@ COMMON = [
     "docs/ALIGNMENT.md",
     "docs/BOOTSTRAP_SEQUENCE.md",
     "docs/CONTEXT_COMPILATION.md",
+    "docs/UPGRADING.md",
     "docs/EVIDENCE_METHOD.md",
     "docs/EXECUTION_PIPELINE.md",
     "docs/EXECUTION_PROVIDER_CONTRACT.md",
@@ -31,11 +32,14 @@ COMMON = [
     "schemas/agent-message.schema.json",
     "schemas/acp-decision.schema.json",
     "schemas/context-lock.schema.json",
+    "schemas/context-sources.schema.json",
     "schemas/formal-resource-manifest.schema.json",
     "schemas/work-disposition.schema.json",
     "contracts/acp-protected-effects.yaml",
     ".agents/skills/authorize-protected-effect/SKILL.md",
     "scripts/gen-context.py",
+    "scripts/upgrade-project.py",
+    "scripts/reconcile-project.py",
     "scripts/acp-check.py",
     "scripts/acp.py",
 ]
@@ -91,7 +95,7 @@ def validate_acp(profile: dict) -> int:
         if not ref or not (ROOT / ref).exists():
             print(f"INVALID: authorizationProvider.{key} must reference an existing file ({ref})", file=sys.stderr)
             return 2
-    # Optional until every adopting project has re-pinned to 0.5.3.
+    # Optional until every adopting project has re-pinned to the current release.
     client = acp.get("clientScript")
     if client is not None and not (ROOT / client).exists():
         print(f"INVALID: authorizationProvider.clientScript must reference an existing file ({client})", file=sys.stderr)
@@ -181,6 +185,7 @@ def main() -> int:
         "schemas/agent-message.schema.json",
         "schemas/acp-decision.schema.json",
         "schemas/context-lock.schema.json",
+        "schemas/context-sources.schema.json",
         "schemas/formal-resource-manifest.schema.json",
         "schemas/work-disposition.schema.json",
     ]

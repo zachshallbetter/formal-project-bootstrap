@@ -29,7 +29,7 @@ jobs:
         # repositoryState is provenance (the commit it was generated at), which a
         # committed lock can never match. Compare the corpora and the digest.
         run: |
-          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt VERSION PROJECT_PROFILE_TEMPLATE.json
+          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt .agents/context-lock.json VERSION PROJECT_PROFILE_TEMPLATE.json CONTEXT_SOURCES_TEMPLATE.json
           python - <<'PY'
           import json, subprocess
           committed = json.loads(subprocess.check_output(["git", "show", "HEAD:.agents/context-lock.json"]))
@@ -37,6 +37,8 @@ jobs:
           key = "aggregateSourceDigest"
           assert committed[key] == current[key], f"context-lock {key} changed: {committed[key]} -> {current[key]}"
           print("context-lock source digest unchanged:", current[key])
+          for field in ("format", "generatorVersion", "selectedPaths", "sourceSelection", "sources"):
+              assert committed[field] == current[field], f"context-lock {field} changed"
           PY
       - name: Upload release candidate
         if: matrix.python == '3.13'

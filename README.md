@@ -1,7 +1,7 @@
 # Formal Project Bootstrap
 
 **Status:** Candidate reusable project substrate  
-**Version:** 0.5.3
+**Version:** 0.6.0
 
 Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
 
@@ -122,6 +122,10 @@ python3 scripts/init-project.py \
 
 The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and compiled context; then it runs the project validator. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
 
+Installed projects can be upgraded with the non-destructive `scripts/upgrade-project.py` workflow described in `docs/UPGRADING.md`. It plans three-way changes, stages conflicts, applies only safe updates, regenerates context, validates the result, and retains a rollback backup.
+
+Existing projects can be inspected before adoption with the read-only `scripts/reconcile-project.py` inventory; it reports repository identity, bootstrap metadata, expected artifacts, and conflicts without modifying the project.
+
 ## Authorization provider
 
 Every project binds `acp-gateway` as its protection/authorization provider (`docs/ACP_INTEGRATION.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
@@ -215,7 +219,7 @@ A tag `vX.Y.Z` is releasable only when it equals `VERSION`; the release workflow
 
 ## Status honesty
 
-Formal Project Bootstrap v0.5.3 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
+Formal Project Bootstrap v0.6.0 has implemented repository tooling and executable checks. That does **not** establish that the methodology is empirically superior across models, projects, organizations, or domains. Directed conformance, behavioral transfer, and comparative claims require separate qualification. In particular, a worker prompt that restates the target behavior can establish conformance but not unprompted behavioral transfer.
 
 ## License
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -21,6 +22,9 @@ class RepositoryTests(unittest.TestCase):
         profile = json.loads((ROOT / "PROJECT_PROFILE_TEMPLATE.json").read_text(encoding="utf-8"))
         self.assertEqual(profile["profileVersion"], VERSION)
         self.assertIn(f"**Version:** {VERSION}", (ROOT / "README.md").read_text(encoding="utf-8"))
+        pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+        self.assertIn(f'version = "{VERSION}"', pyproject)
+        self.assertIn(f"v{VERSION}", (ROOT / "docs/STATUS.md").read_text(encoding="utf-8"))
 
     def test_context_generation_is_deterministic(self):
         self.run_ok(sys.executable, "scripts/gen-context.py")
@@ -34,6 +38,104 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(first_lock["aggregateSourceDigest"], second_lock["aggregateSourceDigest"])
         self.assertEqual(first_lock["validityBasis"], "aggregate-source-digest")
         self.assertEqual(first_lock["repositoryState"]["validationRole"], "provenance")
+
+    def test_context_generator_excludes_sensitive_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "project"
+            (out / "scripts").mkdir(parents=True)
+            shutil.copy2(ROOT / "scripts/gen-context.py", out / "scripts/gen-context.py")
+            (out / "VERSION").write_text("0.6.0\n", encoding="utf-8")
+            (out / "CONTEXT_SOURCES.json").write_text(json.dumps({
+                "excludeDirectories": [".git", ".agents"],
+                "excludePaths": [],
+                "includeExtensions": [".txt"],
+                "maxFileBytes": 1024,
+            }), encoding="utf-8")
+            (out / "public.txt").write_text("public\n", encoding="utf-8")
+            (out / ".env.production").write_text("TOP_SECRET\n", encoding="utf-8")
+            self.run_ok(sys.executable, "scripts/gen-context.py", cwd=out)
+            corpus = (out / ".agents/llms-full.txt").read_text(encoding="utf-8")
+            self.assertIn("public", corpus)
+            self.assertNotIn("TOP_SECRET", corpus)
+
+    def test_context_generator_does_not_follow_symlinks(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "project"
+            (out / "scripts").mkdir(parents=True)
+            shutil.copy2(ROOT / "scripts/gen-context.py", out / "scripts/gen-context.py")
+            (out / "VERSION").write_text("0.6.0\n", encoding="utf-8")
+            (out / "CONTEXT_SOURCES.json").write_text(json.dumps({
+                "excludeDirectories": [".git", ".agents"],
+                "excludePaths": [],
+                "includeExtensions": [".txt"],
+                "maxFileBytes": 1024,
+            }), encoding="utf-8")
+            outside = Path(tmp) / "outside.txt"
+            outside.write_text("OUTSIDE_BOUNDARY\n", encoding="utf-8")
+            (out / "linked.txt").symlink_to(outside)
+            self.run_ok(sys.executable, "scripts/gen-context.py", cwd=out)
+            corpus = (out / ".agents/llms-full.txt").read_text(encoding="utf-8")
+            self.assertNotIn("OUTSIDE_BOUNDARY", corpus)
+
+    def test_context_check_does_not_create_agents_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "project"
+            (out / "scripts").mkdir(parents=True)
+            shutil.copy2(ROOT / "scripts/gen-context.py", out / "scripts/gen-context.py")
+            (out / "VERSION").write_text("0.6.0\n", encoding="utf-8")
+            (out / "CONTEXT_SOURCES.json").write_text(json.dumps({
+                "excludeDirectories": [".git", ".agents"],
+                "excludePaths": [],
+                "includeExtensions": [".txt"],
+                "maxFileBytes": 1024,
+            }), encoding="utf-8")
+            cp = subprocess.run(
+                [sys.executable, "scripts/gen-context.py", "--check"],
+                cwd=out, text=True, capture_output=True,
+            )
+            self.assertEqual(cp.returncode, 2)
+            self.assertFalse((out / ".agents").exists())
+
+    def test_upgrade_plans_applies_and_rolls_back_safe_changes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            release = Path(tmp) / "release"
+            self.run_ok(
+                sys.executable,
+                "scripts/init-project.py",
+                "--name", "Upgrade Fixture",
+                "--id", "upgrade-fixture",
+                "--mode", "new",
+                "--output", str(project),
+            )
+            shutil.copytree(
+                ROOT,
+                release,
+                ignore=shutil.ignore_patterns(".venv", ".git", ".wt", "dist", "build", "__pycache__"),
+            )
+            (release / "VERSION").write_text("0.5.4\n", encoding="utf-8")
+            (release / "docs/ALIGNMENT.md").write_text(
+                (release / "docs/ALIGNMENT.md").read_text(encoding="utf-8") + "\nUpgrade fixture marker.\n",
+                encoding="utf-8",
+            )
+            upgrade = ROOT / "scripts/upgrade-project.py"
+            plan = subprocess.run(
+                [sys.executable, str(upgrade), "--project", str(project), "--from", str(release),
+                 "--base", str(ROOT), "--check"],
+                text=True, capture_output=True,
+            )
+            self.assertEqual(plan.returncode, 0, plan.stdout + plan.stderr)
+            self.assertFalse((project / ".formal-bootstrap/upgrades/0.5.4/plan.json").exists())
+            self.run_ok(
+                sys.executable, str(upgrade), "--project", str(project), "--from", str(release),
+                "--base", str(ROOT), "--apply",
+            )
+            self.assertEqual((project / "VERSION").read_text(encoding="utf-8").strip(), "0.5.4")
+            self.assertIn("Upgrade fixture marker", (project / "docs/ALIGNMENT.md").read_text(encoding="utf-8"))
+            self.run_ok(sys.executable, str(upgrade), "--project", str(project), "--from", str(release), "--verify")
+            self.run_ok(sys.executable, str(upgrade), "--project", str(project), "--from", str(release), "--rollback")
+            self.assertEqual((project / "VERSION").read_text(encoding="utf-8").strip(), "0.6.0")
+            self.assertNotIn("Upgrade fixture marker", (project / "docs/ALIGNMENT.md").read_text(encoding="utf-8"))
 
     def test_initializer_produces_valid_new_project(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -57,6 +159,21 @@ class RepositoryTests(unittest.TestCase):
             for name in ["evidence.jsonl", "negative-results.jsonl", "deviations.jsonl", "alignment.jsonl"]:
                 self.assertTrue((out / "records" / name).exists())
             self.run_ok(sys.executable, "scripts/validate-bootstrap.py", "--check-context", cwd=out)
+
+    def test_reconcile_inventory_is_read_only_and_complete(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            self.run_ok(
+                sys.executable, "scripts/init-project.py", "--name", "Inventory Fixture",
+                "--id", "inventory-fixture", "--mode", "new", "--output", str(project),
+            )
+            before = subprocess.run(["git", "status", "--short"], cwd=project, text=True, capture_output=True).stdout
+            result = self.run_ok(sys.executable, "scripts/reconcile-project.py", "--project", str(project))
+            after = subprocess.run(["git", "status", "--short"], cwd=project, text=True, capture_output=True).stdout
+            inventory = json.loads(result.stdout)
+            self.assertTrue(inventory["bootstrap"]["initialized"])
+            self.assertFalse(inventory["reconcileRequired"])
+            self.assertEqual(before, after)
 
     def test_existing_mode_preserves_conflicting_authority(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -185,6 +302,7 @@ class RepositoryTests(unittest.TestCase):
             "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json",
             "schemas/agent-message.schema.json",
             "schemas/context-lock.schema.json",
+            "schemas/context-sources.schema.json",
             "schemas/formal-resource-manifest.schema.json",
             "schemas/work-disposition.schema.json",
         ]:
