@@ -73,6 +73,8 @@ CONTROL_ARTIFACTS = (
     (".agents/board.env", "repository_identity", False),
     ("scripts/acp.py", "client_control", True),
     ("scripts/acp-check.py", "client_control", True),
+    ("scripts/upgrade-project.py", "client_control", True),
+    ("scripts/reconcile-project.py", "client_control", True),
 )
 # Trees whose every file is governed without being pinned by digest.
 CONTROL_PATTERNS = (

@@ -1,7 +1,7 @@
 {
   "projectId": "<PROJECT_ID>",
   "projectName": "<PROJECT_NAME>",
-  "profileVersion": "0.5.3",
+  "profileVersion": "0.6.0",
   "profileStatus": "provisional",
   "intentRef": "PROJECT_INTENT.md",
   "authorityRef": "docs/AUTHORITY_MODEL.md",
@@ -49,7 +49,12 @@
       "allowedEffects": [
         "read",
         "authorize",
-        "report"
+        "report",
+        "verify-capability",
+        "integrity-snapshot",
+        "recovery-complete",
+        "board-discovery",
+        "board-context"
       ],
       "protectedEffects": [
         "policy.modify",
