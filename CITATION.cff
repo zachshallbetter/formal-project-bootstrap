@@ -11,15 +11,15 @@ authors:
     given-names: Zachary
     orcid: "https://orcid.org/0009-0009-9450-3429"
 version: "0.6.0"
-date-released: "2026-10-05"
+date-released: "2026-10-11"
 license: MIT
 repository-code: "https://github.com/zachshallbetter/formal-project-bootstrap"
 url: "https://github.com/zachshallbetter/formal-project-bootstrap"
 keywords:
-  - agent projects
+  - project substrate
   - formal methods
   - authority
   - evidence
   - bounded autonomy
-  - project substrate
+  - agent projects
 # doi: 10.5281/zenodo.XXXXXXXX  # concept DOI — fill after first Zenodo version

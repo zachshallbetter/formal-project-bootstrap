@@ -2,7 +2,7 @@
   "title": "Formal Project Bootstrap",
   "version": "0.6.0",
   "upload_type": "software",
-  "description": "A formal operating substrate for bounded autonomous agent projects. Intent, authority, work, evidence, context, coordination, and recovery are explicit so agents can operate with bounded autonomy.",
+  "description": "Formal Project Bootstrap version 0.6.0: a formal operating substrate for bounded autonomous agent projects.",
   "creators": [
     {
       "name": "Shallbetter, Zachary",
@@ -10,12 +10,12 @@
     }
   ],
   "keywords": [
-    "agent projects",
+    "project substrate",
     "formal methods",
     "authority",
     "evidence",
     "bounded autonomy",
-    "project substrate"
+    "agent projects"
   ],
   "license": "mit-license",
   "access_right": "open",
