@@ -1,5 +1,5 @@
-# License status
+# License
 
-No repository-wide license has been selected yet.
+This repository is licensed under the MIT License. See [`LICENSE`](./LICENSE).
 
-Do not infer permission from public availability. The project owner should choose the license before the first public release. Bound third-party protocols and vendored resources retain their own licenses regardless of the license selected for this repository.
+Bound third-party protocols and vendored resources retain their own licenses.
