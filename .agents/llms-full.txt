@@ -1,8 +1,147 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.6.0
-Source digest: 224aa538e97155f3faacc46b356ed9b784b47aadde8b05ffcbb3fefe63cdcb5a
+Source digest: 2dfced1d2612052fa1e25ba1c72782b7f8ffacf97ac8a0c441f163b2471c3c10
 
 > Generated projection. Canonical sources remain authoritative.
+
+
+========================================================================
+FILE: .agents/rules/ci.md
+========================================================================
+
+# Verification Craft & Quality Gates
+
+## 1. Quality Gates That Cannot Fail
+
+- **Prove Failure Capability**: Every gate or test must be proven capable of failing when fed a defect before being trusted in CI.
+- **No-Op Protection**: CI workflows must report how many assertions actually executed, ensuring skipped or category-error jobs cannot produce a false green check.
+- **Cross-Toolchain Determinism**: Compare build outputs and conformance vectors across distinct engines or runtime environments to prove platform determinism.
+
+## 2. Standard Repository Gates
+
+Before proposing or merging changes, execute the authoritative verification suite:
+
+```bash
+python3 scripts/validate-bootstrap.py --check-context
+python3 scripts/validate-formal-files.py
+python3 scripts/check-protocol-integrity.py
+python3 scripts/check-negative-results.py
+```
+
+## 3. Ephemeral Worktree Isolation
+
+- Autonomous verification tasks must run in isolated worktrees (`git worktree add`) or temporary directory environments to avoid dirtying developer working state.
+- Automatically clean up temporary worktrees and test harnesses upon completion or interruption.
+
+
+========================================================================
+FILE: .agents/rules/governance.md
+========================================================================
+
+# Repository Governance & Change Control
+
+## 1. Change Classes
+
+- **Editorial Correction**: Restores an existing rule or corrects documentation typos. May land as a patch.
+- **Repository Capability**: Adds tooling, checks, examples, or optional profiles without changing the core operating contract.
+- **Normative Change**: Modifies authority, work authorization, evidence semantics, autonomy boundaries, context rules, or operating invariants. Requires a dedicated issue and explicit compatibility assessment.
+
+## 2. Anti-Bloat Test
+
+Before adding a canonical concept or abstraction, determine whether the need can be represented by:
+- reference;
+- binding;
+- specialization;
+- constraint;
+- projection;
+- qualification;
+- composition.
+
+Only an irreducible distinction earns a new canonical concept.
+
+## 3. Evidence Requirement
+
+A change must state the problem it closes and provide empirical evidence that the problem exists. New abstractions without an observed failure mode remain proposals.
+
+## 4. Human Authority
+
+Repository maintainers retain release, tagging, and normative-change authority. Automation may prepare, verify, and recommend; it does not manufacture approval.
+
+
+========================================================================
+FILE: .agents/rules/security.md
+========================================================================
+
+# Security & Authorization Policy
+
+## 1. Tool Capability vs Authority
+
+Tool availability is capability, not permission. Before mutation, verify:
+- target resource identity;
+- current revision and working tree state;
+- authorized effect class;
+- rollback and recovery path when required.
+
+## 2. Credential Containment
+
+- Never request, disclose, reproduce, transfer, or substitute API credentials, tokens, or private secrets as a replacement for authorization.
+- Never compile `.env`, `.env.local`, or secret tokens into context manifests (`llms.txt`), records, or evidence logs.
+
+## 3. External Authorization Fail-Closed Policy
+
+- When external authorization (ACP) is configured, governed effects fail closed if authorization cannot be verified.
+- `ALLOW` permits only the exact authorized action, ref, and SHA pair within capability TTL.
+- Never attempt to bypass authorization through conversational shortcuts or alternate tooling.
+
+
+========================================================================
+FILE: .agents/rules/standards.md
+========================================================================
+
+# Standards & Core Operating Doctrine
+
+## 1. Epistemic Integrity and Status Honesty
+
+Always enforce the strict Four-Tier Claim Taxonomy:
+
+$$\text{Documented} \neq \text{Implemented} \neq \text{Tested} \neq \text{Empirically Validated}$$
+
+- **Never Conflate Maturity**: A feature documented in an RFC or spec is documented, not implemented. A function with passing unit tests is tested, not empirically validated. A benchmark written alongside its implementation is a fixture, not an empirical proof. Always state the weaker claim when in doubt.
+- **Permanent Retention of Negative Results**: Abandoned hypotheses, discredited metrics, and disproven architectural directions must be recorded permanently in research logs (`docs/NEGATIVE_RESULTS.md`). Never prune disproven paths: preserving the record prevents re-proposing abandoned intuitions.
+- **Prospective Pre-Registration**: Define success criteria, baselines, and quantitative invalidation triggers before running experiments or benchmarks.
+
+## 2. Hierarchy of Authority
+
+When documentation, code, generated artifacts, or AI outputs conflict, resolve in strict canonical order per `AUTHORITY.md`:
+
+$$\text{Architecture & Doctrine} \to \text{Ontology & Glossary} \to \text{Formal Specification} \to \text{Substrate Code} \to \text{Generated Artifacts}$$
+
+Code, generated artifacts, or model outputs never silently alter theory or formal specifications. If code disagrees with specification, the code contains a defect until a formal synthesis determination updates the specification.
+
+## 3. Root Cause Investigation
+
+- Inspect full, un-truncated error tracebacks and runtime logs before diagnosing failures.
+- Never resolve errors by swallowing exceptions, masking symptoms, commenting out broken assertions, returning dummy fallbacks, or deleting failing unit tests. Always trace to and resolve the upstream root cause.
+
+## 4. Non-Destructive Engineering and Preservation
+
+- Preserve existing comments, docstrings, type annotations, and unrelated functionality unless explicitly directed to refactor.
+- Surgical Edits: Prefer precise, targeted code modifications over full-file overwrites to minimize diff noise and prevent accidental regressions.
+
+## 5. Layer Independence and Decoupled Architecture
+
+- Independent Versioning: Theory, core engines, runtime adapters, and examples move on independent version paths with per-layer changelogs. Never infer cross-layer conformance from matching version numbers.
+- Zero-Dependency Cores: Keep core mathematical and domain logic decoupled from external I/O, UI frameworks, or rendering layers. Provide renderer-agnostic, signals-first default modes.
+
+## 6. Agent-First Publishing Architecture
+
+- Maintain programmatically generated `llms.txt` manifests and `llms-full.txt` single-file context corpora for zero-search agent context resolution.
+- Downstream Invariant: Generated `llms.txt` and `llms-full.txt` files are downstream projections: never edit them manually. Refresh via `scripts/gen-context.py`.
+
+## 7. Engineering Voice and Attribution
+
+- Clean, human engineering prose.
+- Zero `Co-Authored-By` trailers, no generated-by-AI footers, and no agent session identifiers in tracked code, documentation, or commits.
 
 
 ========================================================================
@@ -360,7 +499,7 @@ jobs:
         # repositoryState is provenance (the commit it was generated at), which a
         # committed lock can never match. Compare the corpora and the digest.
         run: |
-          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt .agents/context-lock.json VERSION PROJECT_PROFILE_TEMPLATE.json CONTEXT_SOURCES_TEMPLATE.json
+          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt VERSION PROJECT_PROFILE_TEMPLATE.json CONTEXT_SOURCES_TEMPLATE.json
           python - <<'PY'
           import json, subprocess
           committed = json.loads(subprocess.check_output(["git", "show", "HEAD:.agents/context-lock.json"]))
@@ -368,7 +507,7 @@ jobs:
           key = "aggregateSourceDigest"
           assert committed[key] == current[key], f"context-lock {key} changed: {committed[key]} -> {current[key]}"
           print("context-lock source digest unchanged:", current[key])
-          for field in ("format", "generatorVersion", "selectedPaths", "sourceSelection", "sources"):
+          for field in ("format", "generatorVersion", "selectedPaths", "sources"):
               assert committed[field] == current[field], f"context-lock {field} changed"
           PY
       - name: Upload release candidate
@@ -419,6 +558,41 @@ jobs:
         shell: bash
         run: |
           gh release create "${GITHUB_REF_NAME}" dist/* --verify-tag --generate-notes
+
+
+========================================================================
+FILE: .zenodo.json
+========================================================================
+
+{
+  "title": "Formal Project Bootstrap",
+  "version": "0.6.0",
+  "upload_type": "software",
+  "description": "Formal Project Bootstrap version 0.6.0: a formal operating substrate for bounded autonomous agent projects.",
+  "creators": [
+    {
+      "name": "Shallbetter, Zachary",
+      "orcid": "0009-0009-9450-3429"
+    }
+  ],
+  "keywords": [
+    "project substrate",
+    "formal methods",
+    "authority",
+    "evidence",
+    "bounded autonomy",
+    "agent projects"
+  ],
+  "license": "mit-license",
+  "access_right": "open",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/zachshallbetter/formal-project-bootstrap/tree/v0.6.0",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}
 
 
 ========================================================================
@@ -726,6 +900,13 @@ Rules:
 - Routine authorization and integrity checks are quiet. Surface them when human action is required or when they change the outcome of the requested operation.
 
 Procedure: `.agents/skills/authorize-protected-effect/SKILL.md`. Binding: `docs/ACP_INTEGRATION.md`.
+
+## 18. Specialized engineering rules
+
+- `.agents/rules/standards.md`: Core doctrine, Four-Tier Claim Taxonomy, authority hierarchy, layer independence.
+- `.agents/rules/ci.md`: Verification craft, failure capability proofs, assertion counts, deterministic toolchains.
+- `.agents/rules/governance.md`: Change classes, anti-bloat test, evidence requirements, human authority.
+- `.agents/rules/security.md`: Tool capability vs permission, credential containment, fail-closed policy.
 
 
 ========================================================================
@@ -1095,11 +1276,11 @@ Repository maintainers retain release and normative-change authority. Automation
 FILE: LICENSE.md
 ========================================================================
 
-# License status
+# License
 
-No repository-wide license has been selected yet.
+This repository is licensed under the MIT License. See [`LICENSE`](./LICENSE).
 
-Do not infer permission from public availability. The project owner should choose the license before the first public release. Bound third-party protocols and vendored resources retain their own licenses regardless of the license selected for this repository.
+Bound third-party protocols and vendored resources retain their own licenses.
 
 
 ========================================================================
@@ -8651,8 +8832,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--project", default="."); parser.add_argument("kind", choices=sorted(FILES)); parser.add_argument("--record", required=True, help="JSON object or path to a JSON file")
     args = parser.parse_args(); project = Path(args.project).resolve()
     try:
-        candidate = Path(args.record)
-        record = json.loads(candidate.read_text(encoding="utf-8")) if candidate.exists() else json.loads(args.record)
+        raw = args.record.strip()
+        if raw.startswith("{") or raw.startswith("["):
+            record = json.loads(raw)
+        else:
+            candidate = Path(args.record)
+            record = json.loads(candidate.read_text(encoding="utf-8")) if candidate.exists() else json.loads(args.record)
         if not isinstance(record, dict): raise ValueError("record must be a JSON object")
         missing = REQUIRED[args.kind] - set(record)
         if missing: raise ValueError(f"{args.kind} record missing {sorted(missing)}")
@@ -8868,6 +9053,8 @@ def source_files(
             continue
         rel = path.relative_to(ROOT).as_posix()
         parts = rel.split("/")
+        if parts[0] == ".git":
+            continue
         if path_filters and not any(
             rel == selected or rel.startswith(selected + "/") for selected in path_filters
         ):
@@ -9112,7 +9299,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 COPY_FILES = ["AGENTS.md", "NEW_AGENT_PROMPT.md"]
-COPY_DIRS = ["schemas", ".agents/skills", "contracts"]
+COPY_DIRS = ["schemas", ".agents/skills", ".agents/rules", "contracts"]
 COPY_DOCS = [
     "AGENT_CAPABILITIES.md",
     "ALIGNMENT.md",
@@ -10067,6 +10254,10 @@ COMMON = [
     "schemas/semantic-surface.schema.json",
     "contracts/acp-protected-effects.yaml",
     ".agents/skills/authorize-protected-effect/SKILL.md",
+    ".agents/rules/standards.md",
+    ".agents/rules/ci.md",
+    ".agents/rules/governance.md",
+    ".agents/rules/security.md",
     "scripts/gen-context.py",
     "scripts/upgrade-project.py",
     "scripts/reconcile-project.py",

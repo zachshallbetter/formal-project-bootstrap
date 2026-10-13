@@ -5,11 +5,11 @@
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
-    "includedCount": 109,
-    "includedBytes": 418041,
+    "includedCount": 114,
+    "includedBytes": 425878,
     "excludedCounts": {
-      "excluded-directory": 7,
-      "extension": 5
+      "excluded-directory": 3,
+      "extension": 6
     }
   },
   "repositoryState": {
@@ -18,15 +18,35 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "ade41b975dd20cb1125f744338220759e027cac2",
-        "branch": "protocol-aware-bootstrap-fpb",
+        "commit": "21998cbdca281aecaaf41d310932009fd10c76f5",
+        "branch": "feat/agent-rules-architecture",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "224aa538e97155f3faacc46b356ed9b784b47aadde8b05ffcbb3fefe63cdcb5a",
+  "aggregateSourceDigest": "2dfced1d2612052fa1e25ba1c72782b7f8ffacf97ac8a0c441f163b2471c3c10",
   "sources": [
+    {
+      "path": ".agents/rules/ci.md",
+      "bytes": 1139,
+      "sha256": "04f63a639bb87b537b2d059b6f252cfef0e648d392ec105e091e86ee2af3a2df"
+    },
+    {
+      "path": ".agents/rules/governance.md",
+      "bytes": 1181,
+      "sha256": "43ad0bca0a6b0533b075cf8d6057a9a10b31cfd45daf9fd185ba457040790143"
+    },
+    {
+      "path": ".agents/rules/security.md",
+      "bytes": 934,
+      "sha256": "fbc0c29f0c286a5f216bdc66d8d13a5c91dca8de12311806960d56669e7085ab"
+    },
+    {
+      "path": ".agents/rules/standards.md",
+      "bytes": 3223,
+      "sha256": "2dbf08cffb7497e349c61917f8620caab78a48773149cbc3204f3146b5f35a00"
+    },
     {
       "path": ".agents/skills/authorize-protected-effect/SKILL.md",
       "bytes": 2758,
@@ -89,8 +109,8 @@
     },
     {
       "path": ".github/workflows/ci.yml",
-      "bytes": 1912,
-      "sha256": "4e45042cc5d6c8880b92fc2f6588729ac6d9021d780daef3abf899dbd403fbcf"
+      "bytes": 1867,
+      "sha256": "8e10ce7fd5075f32fdc2593543e8dc5c1bfd0e516fe36a37880ff11b7a4010cf"
     },
     {
       "path": ".github/workflows/release.yml",
@@ -98,9 +118,14 @@
       "sha256": "96eaf5e9ec3973911e6cf012fe93c1d9ffb801adda8d23cba9cf2acdff22b644"
     },
     {
+      "path": ".zenodo.json",
+      "bytes": 738,
+      "sha256": "4306d6bf69e452583b97f520e0a0ed5e097a92a71a5bc49151b9409a2528aa76"
+    },
+    {
       "path": "AGENTS.md",
-      "bytes": 10130,
-      "sha256": "f901b6748bf339834b99274feec5936fae6abbbf7a552a10cc36bbedd066f366"
+      "bytes": 10611,
+      "sha256": "9ccb7c144fbb9d26ccd74c0b5cb015b90de9cbe404fef95d20a2d941005a2469"
     },
     {
       "path": "AUTHORITY.md",
@@ -139,8 +164,8 @@
     },
     {
       "path": "LICENSE.md",
-      "bytes": 329,
-      "sha256": "9f76f776e9c50f3a29cca1a1a20c00f4a937c3e48c3ed089eef96544d4fc9645"
+      "bytes": 169,
+      "sha256": "0642a622222ea1808d7b359ae66a9af965e1bfb898e298bfc83668a8bc8d03e3"
     },
     {
       "path": "NEW_AGENT_PROMPT.md",
@@ -484,13 +509,13 @@
     },
     {
       "path": "scripts/esp-record.py",
-      "bytes": 3201,
-      "sha256": "7c2b67c8d19db18ad8b507f5f59c08f0320edb156d6374ea6e7f04d6741b67a4"
+      "bytes": 3349,
+      "sha256": "bef91b795da6027db2d607d4e97278dce0f170c478fd27d130b00d6e86d3a464"
     },
     {
       "path": "scripts/gen-context.py",
-      "bytes": 12973,
-      "sha256": "e1a41938dfc37dab80e56248b3030922feaa93f3a52a6798fd69126d5862f43c"
+      "bytes": 13025,
+      "sha256": "eee7f301274b03d452987e5f3eb82891c828a951900454cf983cca3a97b25c87"
     },
     {
       "path": "scripts/iepe-adopt.py",
@@ -499,8 +524,8 @@
     },
     {
       "path": "scripts/init-project.py",
-      "bytes": 13348,
-      "sha256": "c7223ca6ad536e4b6da06bc73ea53b9b36e27512ee87f8e946c4ed556f88a1ca"
+      "bytes": 13365,
+      "sha256": "ea89ccd0ed5645a826becce47090a818a4708d5482115ec95f73f50292910a72"
     },
     {
       "path": "scripts/package-release.py",
@@ -524,8 +549,8 @@
     },
     {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 10507,
-      "sha256": "b533e35772def0bcab6404456c9a1286fa848736ccbd0faccc0255e440377707"
+      "bytes": 10636,
+      "sha256": "377ee4ba3f343373db6c4a6f12f04bd2176995b3b2df2dde7966020f78338f76"
     },
     {
       "path": "scripts/validate-formal-files.py",

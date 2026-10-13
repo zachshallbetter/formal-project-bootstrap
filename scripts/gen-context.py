@@ -185,6 +185,8 @@ def source_files(
             continue
         rel = path.relative_to(ROOT).as_posix()
         parts = rel.split("/")
+        if parts[0] == ".git":
+            continue
         if path_filters and not any(
             rel == selected or rel.startswith(selected + "/") for selected in path_filters
         ):

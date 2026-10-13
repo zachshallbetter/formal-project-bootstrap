@@ -299,3 +299,10 @@ Rules:
 - Routine authorization and integrity checks are quiet. Surface them when human action is required or when they change the outcome of the requested operation.
 
 Procedure: `.agents/skills/authorize-protected-effect/SKILL.md`. Binding: `docs/ACP_INTEGRATION.md`.
+
+## 18. Specialized engineering rules
+
+- `.agents/rules/standards.md`: Core doctrine, Four-Tier Claim Taxonomy, authority hierarchy, layer independence.
+- `.agents/rules/ci.md`: Verification craft, failure capability proofs, assertion counts, deterministic toolchains.
+- `.agents/rules/governance.md`: Change classes, anti-bloat test, evidence requirements, human authority.
+- `.agents/rules/security.md`: Tool capability vs permission, credential containment, fail-closed policy.

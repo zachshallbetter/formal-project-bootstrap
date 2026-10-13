@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 COPY_FILES = ["AGENTS.md", "NEW_AGENT_PROMPT.md"]
-COPY_DIRS = ["schemas", ".agents/skills", "contracts"]
+COPY_DIRS = ["schemas", ".agents/skills", ".agents/rules", "contracts"]
 COPY_DOCS = [
     "AGENT_CAPABILITIES.md",
     "ALIGNMENT.md",
