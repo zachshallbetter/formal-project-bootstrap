@@ -26,8 +26,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(); parser.add_argument("--project", default="."); parser.add_argument("kind", choices=sorted(FILES)); parser.add_argument("--record", required=True, help="JSON object or path to a JSON file")
     args = parser.parse_args(); project = Path(args.project).resolve()
     try:
-        candidate = Path(args.record)
-        record = json.loads(candidate.read_text(encoding="utf-8")) if candidate.exists() else json.loads(args.record)
+        raw = args.record.strip()
+        if raw.startswith("{") or raw.startswith("["):
+            record = json.loads(raw)
+        else:
+            candidate = Path(args.record)
+            record = json.loads(candidate.read_text(encoding="utf-8")) if candidate.exists() else json.loads(args.record)
         if not isinstance(record, dict): raise ValueError("record must be a JSON object")
         missing = REQUIRED[args.kind] - set(record)
         if missing: raise ValueError(f"{args.kind} record missing {sorted(missing)}")

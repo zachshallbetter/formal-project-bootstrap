@@ -1,9 +1,13 @@
 # Project Context Index
 > Generator: 0.6.0
-> Source digest: `224aa538e97155f3faacc46b356ed9b784b47aadde8b05ffcbb3fefe63cdcb5a`
+> Source digest: `2dfced1d2612052fa1e25ba1c72782b7f8ffacf97ac8a0c441f163b2471c3c10`
 
 > Generated projection. Canonical sources remain authoritative.
 
+- `.agents/rules/ci.md` | 1139 bytes | `04f63a639bb87b537b2d059b6f252cfef0e648d392ec105e091e86ee2af3a2df`
+- `.agents/rules/governance.md` | 1181 bytes | `43ad0bca0a6b0533b075cf8d6057a9a10b31cfd45daf9fd185ba457040790143`
+- `.agents/rules/security.md` | 934 bytes | `fbc0c29f0c286a5f216bdc66d8d13a5c91dca8de12311806960d56669e7085ab`
+- `.agents/rules/standards.md` | 3223 bytes | `2dbf08cffb7497e349c61917f8620caab78a48773149cbc3204f3146b5f35a00`
 - `.agents/skills/authorize-protected-effect/SKILL.md` | 2758 bytes | `480ffefc42bc4d9d744484149f26a86ddb9b19a8d6adb63053720f5fc0c7865f`
 - `.agents/skills/compile-context/SKILL.md` | 561 bytes | `10c8156d05da083eddb606769183d8cabf4f924c241a3e3b462ef76f7aecf28d`
 - `.agents/skills/coordinate-workers/SKILL.md` | 593 bytes | `6be105841accc1f67dc11e12541b3b343fa2029a0ff6e5085c907b36381ba57b`
@@ -16,9 +20,10 @@
 - `.github/ISSUE_TEMPLATE/protocol-change.yml` | 1082 bytes | `8326f3fd31de252e6dd2ddcbc66d7069de275c16855efc03edf8cf54622d372d`
 - `.github/dependabot.yml` | 115 bytes | `214d940291cfd9b997df6bc72802aac3ddcbb4895843195a94453f97215075ca`
 - `.github/pull_request_template.md` | 520 bytes | `387755381fa073d8ccce6dbd45c54ad634d05c24153f0714724ebcae66ba6b3f`
-- `.github/workflows/ci.yml` | 1912 bytes | `4e45042cc5d6c8880b92fc2f6588729ac6d9021d780daef3abf899dbd403fbcf`
+- `.github/workflows/ci.yml` | 1867 bytes | `8e10ce7fd5075f32fdc2593543e8dc5c1bfd0e516fe36a37880ff11b7a4010cf`
 - `.github/workflows/release.yml` | 869 bytes | `96eaf5e9ec3973911e6cf012fe93c1d9ffb801adda8d23cba9cf2acdff22b644`
-- `AGENTS.md` | 10130 bytes | `f901b6748bf339834b99274feec5936fae6abbbf7a552a10cc36bbedd066f366`
+- `.zenodo.json` | 738 bytes | `4306d6bf69e452583b97f520e0a0ed5e097a92a71a5bc49151b9409a2528aa76`
+- `AGENTS.md` | 10611 bytes | `9ccb7c144fbb9d26ccd74c0b5cb015b90de9cbe404fef95d20a2d941005a2469`
 - `AUTHORITY.md` | 1436 bytes | `9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb`
 - `CHANGELOG.md` | 9269 bytes | `0b87eeb9ab512c7780840bf002bacb03fd7a68d22ce45491c960863cc21a0f1d`
 - `CODE_OF_CONDUCT.md` | 404 bytes | `7592f346c7f6aaa166bc865c2ff6e1c7b06bdac73440947471f19bd140755649`
@@ -26,7 +31,7 @@
 - `CONTRIBUTING.md` | 804 bytes | `48dbdd4f2ce101462939d3d825e2885cb0cfb3d047e03134be1bff9848d3e9c7`
 - `FORMAL_RESOURCE_MANIFEST_TEMPLATE.json` | 277 bytes | `9327b7c5db0d6442e2bb829d8cf0447db2192a7d88eed9914d4e6ab60bfe52f4`
 - `GOVERNANCE.md` | 1154 bytes | `ff29e964319543fc484a051487d1a5abd4a5f73d3419c38d1acd02a670927898`
-- `LICENSE.md` | 329 bytes | `9f76f776e9c50f3a29cca1a1a20c00f4a937c3e48c3ed089eef96544d4fc9645`
+- `LICENSE.md` | 169 bytes | `0642a622222ea1808d7b359ae66a9af965e1bfb898e298bfc83668a8bc8d03e3`
 - `NEW_AGENT_PROMPT.md` | 1010 bytes | `7fd2a102cb560b4e792ccf05a61aaf4fbf0d5139a708f03010d5d1577503bd2f`
 - `PROJECT_INTENT_TEMPLATE.md` | 1259 bytes | `b63c26018d4f9614ed8c7de14e002767a3e0d2d02b058ed26ab889e81d46440f`
 - `PROJECT_PROFILE_TEMPLATE.json` | 3391 bytes | `ad461674bdc1f01e76896c28db4a9dde497a9424476401d2c6cac53739485ff3`
@@ -95,15 +100,15 @@
 - `scripts/check-negative-results.py` | 7397 bytes | `ca0766679ddbaec8045f3da28a40d2a4837d0b6789dba5e44b499980d883946b`
 - `scripts/check-protocol-integrity.py` | 6917 bytes | `fdac207980574121a5a7be9316c6cbb436c9f32c521c2d6100d14ce16733f96d`
 - `scripts/esp-instance.py` | 6455 bytes | `50d18578225fd4956c12d1aad4a3641d6749cc1c3a945f0eea27f00497550f91`
-- `scripts/esp-record.py` | 3201 bytes | `7c2b67c8d19db18ad8b507f5f59c08f0320edb156d6374ea6e7f04d6741b67a4`
-- `scripts/gen-context.py` | 12973 bytes | `e1a41938dfc37dab80e56248b3030922feaa93f3a52a6798fd69126d5862f43c`
+- `scripts/esp-record.py` | 3349 bytes | `bef91b795da6027db2d607d4e97278dce0f170c478fd27d130b00d6e86d3a464`
+- `scripts/gen-context.py` | 13025 bytes | `eee7f301274b03d452987e5f3eb82891c828a951900454cf983cca3a97b25c87`
 - `scripts/iepe-adopt.py` | 3463 bytes | `cb992581bd7f1436b7049387ef9bdb19708cb384af0bcf10eeac9ef73a149931`
-- `scripts/init-project.py` | 13348 bytes | `c7223ca6ad536e4b6da06bc73ea53b9b36e27512ee87f8e946c4ed556f88a1ca`
+- `scripts/init-project.py` | 13365 bytes | `ea89ccd0ed5645a826becce47090a818a4708d5482115ec95f73f50292910a72`
 - `scripts/package-release.py` | 3221 bytes | `5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa`
 - `scripts/recipient-status.py` | 1417 bytes | `1c513611c928a6a4b7a8c16ae071172fd434a9e8c4675a7fb91089f469a26e78`
 - `scripts/reconcile-project.py` | 11596 bytes | `a9d4002736f1fef51ba2c124f4abb2414e67fd131016b42604bd57c633facedd`
 - `scripts/upgrade-project.py` | 14138 bytes | `e0ac6478ec44fee27f8ead869ebaae80952a817203d253e1556701b6d522e346`
-- `scripts/validate-bootstrap.py` | 10507 bytes | `b533e35772def0bcab6404456c9a1286fa848736ccbd0faccc0255e440377707`
+- `scripts/validate-bootstrap.py` | 10636 bytes | `377ee4ba3f343373db6c4a6f12f04bd2176995b3b2df2dde7966020f78338f76`
 - `scripts/validate-formal-files.py` | 1603 bytes | `fb340a2f8361dd55e5ef0668f3e978d35fdbba19e5905024c034feee70c9b1d7`
 - `scripts/validate-interaction-contract.py` | 2441 bytes | `74de7cf8d3efa6cca102e2982377d9829f35218632dbea1eb0f6ab7d39706b2a`
 - `scripts/validate-protocol-adapters.py` | 2670 bytes | `ac74eb0216a520051b10bf86c31c078b4b7a5723fd0e8862bc30a4590114ec95`
