@@ -1,6 +1,6 @@
 # PROJECT COMPILED CONTEXT
 Generator: 0.6.0
-Source digest: 2dfced1d2612052fa1e25ba1c72782b7f8ffacf97ac8a0c441f163b2471c3c10
+Source digest: 1754ccd5159a810cc0b105c80e8fd3456db20454996b80c121388bdfccc3f38a
 
 > Generated projection. Canonical sources remain authoritative.
 
@@ -32,6 +32,111 @@ python3 scripts/check-negative-results.py
 
 - Autonomous verification tasks must run in isolated worktrees (`git worktree add`) or temporary directory environments to avoid dirtying developer working state.
 - Automatically clean up temporary worktrees and test harnesses upon completion or interruption.
+
+
+========================================================================
+FILE: .agents/rules/codestyle.md
+========================================================================
+
+---
+description: Code style, compiler lint requirements, formatting rules, unsafe code boundaries, and concurrency safety
+globs: ["**/*"]
+---
+
+# Code Style & Engineering Standards
+
+This document defines the authoritative coding conventions, compiler lint requirements, formatting rules, and safety boundaries across projects operating under the Formal Project Bootstrap doctrine.
+
+---
+
+## 1. Toolchain & Workspace Standards
+
+- **Rust Edition**: Modern stable Rust (Edition 2021 or 2024 as specified in workspace package).
+- **Monorepo Crate Inheritance**:
+  New crates inherit workspace package properties and lints:
+  ```toml
+  [package]
+  edition.workspace = true
+  license.workspace = true
+  rust-version.workspace = true
+
+  [lints]
+  workspace = true
+  ```
+
+---
+
+## 2. Formatting Standards (`rustfmt.toml`)
+
+All Rust code must adhere to the ecosystem formatting configuration:
+
+```toml
+max_width = 150
+use_small_heuristics = "Max"
+```
+
+- **Imports**: Group imports cleanly: standard library (`std::`), external crates, internal workspace crates, and local module items (`super::`, `self::`).
+- **Trailing Commas**: Prefer trailing commas in multiline struct definitions, enum variants, and function arguments to minimize git diff churn.
+
+---
+
+## 3. Strict Quality Lints & Never-Crash Policy
+
+Every crate root (`src/lib.rs` or `src/main.rs`) must explicitly enforce the Never-Crash compiler lints:
+
+```rust
+#![deny(
+    clippy::unwrap_used,
+    clippy::expect_used,
+    clippy::panic,
+    clippy::unimplemented,
+    clippy::todo,
+    clippy::unreachable
+)]
+```
+
+### Compiler Warning Zero-Tolerance
+In CI and pre-commit checks, compiler warnings are treated as build errors:
+```bash
+cargo clippy --workspace --all-targets -- -D warnings
+```
+
+### Test Scope Exceptions
+Unit and integration tests are allowed to use indexing and unwrapping for brevity, configured in `clippy.toml`:
+```toml
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+allow-indexing-slicing-in-tests = true
+```
+
+---
+
+## 4. Unsafe Code Boundary
+
+- **Unsafe Code Forbidden**:
+  Across shared libraries and high-level applications, unsafe code is strictly forbidden by default:
+  ```rust
+  #![forbid(unsafe_code)]
+  ```
+- **Isolated Hardware / Low-Level FFI Exceptions**:
+  Where physical hardware interaction, memory mapping, or native platform APIs require unsafe code, it must be:
+  1. Isolated in a dedicated low-level foundation crate.
+  2. Gated behind crate-wide `#![deny(unsafe_code)]` with per-block unsafe scopes.
+  3. Documented with explicit `// SAFETY:` rationale explaining pointer provenance, thread affinity, and lifetime guarantees.
+  4. Unit-tested against edge conditions and boundary violations.
+
+---
+
+## 5. Concurrency & Resource Safety
+
+- **Graceful Lock Poisoning Handling**:
+  Never panic when acquiring mutexes or rwlocks. Recover from poisoned locks gracefully:
+  ```rust
+  let mut guard = mutex.lock().unwrap_or_else(PoisonError::into_inner);
+  ```
+- **Bounded Resource Allocations**:
+  Real-time or latency-sensitive paths must never block indefinitely or allocate unbounded memory sized by foreign input.
 
 
 ========================================================================
@@ -145,6 +250,189 @@ Code, generated artifacts, or model outputs never silently alter theory or forma
 
 
 ========================================================================
+FILE: .agents/rules/types.md
+========================================================================
+
+---
+description: Type system architecture, non-panicking returns, safe arithmetic, and hostile input handling
+globs: ["**/*"]
+---
+
+# Type System Architecture & Domain Invariants
+
+This document defines the core type invariants, numerical representations, and error handling contracts across projects operating under the Formal Project Bootstrap doctrine.
+
+---
+
+## 1. Non-Panicking Return Types
+
+Library and production code must completely eliminate implicit panics by modeling all fallibility through explicit Rust type signatures.
+
+- **Explicit `Result<T, E>` & `Option<T>`**:
+  Every operation that can encounter missing data, malformed inputs, full disks, or unsupported features must return an explicit `Result` or `Option`.
+- **Domain-Specific Error Enums**:
+  Each crate defines its own rich error enum using `thiserror`. Never use generic string errors (`Result<T, String>`) or boxed trait objects (`Result<T, Box<dyn Error>>`) in public crate APIs.
+- **Unsupported Feature Representation**:
+  Unfinished features or missing format chunks must return an explicit `Err(Error::Unsupported(...))` variant rather than calling `todo!()` or `unimplemented!()`.
+- **Never Unwrap**:
+  No `.unwrap()`, `.expect()`, or `panic!()`. Use `ok_or(..)?`, `let ... else { return Err(...); }`, or `unwrap_or_default()` / `unwrap_or_else()` where a safe, non-corrupting fallback is logically guaranteed.
+
+---
+
+## 2. Hostile Numerical Types & Safe Arithmetic
+
+All numerical data received from files, foreign protocols, IPC sockets, or user parameters must be treated as hostile:
+
+- **Safe Slicing & Indexing**:
+  - Direct indexing (`v[i]`, `s[a..b]`) is strictly forbidden on input-derived numbers.
+  - Always use `.get(index)` or `.get(range)` and handle `None`.
+  - Slicing strings requires explicit character boundary validation:
+    ```rust
+    if s.is_char_boundary(idx) {
+        let prefix = &s[..idx];
+    }
+    ```
+- **Checked & Saturating Arithmetic**:
+  - Byte lengths, offsets, coordinate grids, and buffer capacities must use `checked_*` or `saturating_*` arithmetic methods to prevent integer overflows.
+  - Guard against division by zero before executing modular arithmetic or scaling ratios.
+- **Floating-Point Verification**:
+  - Float values for dimensions, coordinates, scale factors, and layout bounds must be verified as finite (`f.is_finite()`).
+  - Reject or clamp `NaN`, `+inf`, and `-inf` before converting floats to integers (`as usize` / `as u32`).
+
+---
+
+## 3. Geometric & Spatial Primitives
+
+Coordinate spaces across 2D/3D systems must distinguish screen space, canvas space, and world space:
+
+- **Subpixel Coordinate Types**:
+  - Use strongly typed coordinate math (`glam`, `kurbo`, or `euclid`).
+  - Maintain clear separation between physical device pixels, logical layout points, and normalized texture UV coordinates.
+- **Non-Invertible Transformations**:
+  - Affine transformation matrices must check for invertibility before calculating inverse projections (e.g. pointer click to 3D world ray).
+- **Bounding Boxes**:
+  - Bounding boxes (`Rect` or `Aabb`) must remain normalized (`min <= max`). Invalid or inverted bounding volumes must never be passed to spatial query acceleration trees.
+
+
+========================================================================
+FILE: .agents/rules/workflow.md
+========================================================================
+
+# Professional Contributor & Engineering Workflow Standards
+
+This document establishes the mandatory operational rules and workflow standards for contributing to repositories operating under the Formal Project Bootstrap doctrine. Every action taken by engineers or autonomous agents must adhere to these standards to project uncompromising craft, precision, and professional consistency.
+
+---
+
+## 1. The Clean Public Engineering Persona
+
+Every commit, branch, pull request, issue comment, and code review must reflect the standards of a senior systems engineer:
+
+- **Attribution & Authorship**:
+  - Author: Zach Shallbetter (`Zach Shallbetter <zachshallbetter@icloud.com>`).
+  - **Zero AI Attribution**: Strictly forbid `Co-Authored-By` trailers, "Generated by AI" footers, assistant session identifiers, or tool names anywhere in code, commit history, documentation, or public GitHub comments.
+- **Tone & Communication Voice**:
+  - Direct, technical, active-voice human engineering prose.
+  - Zero promotional puffery, marketing jargon, sycophancy, emotional filler, or apologies.
+  - State the problem, technical rationale, exact changes, verified facts, and concrete test numbers plainly.
+
+### Rule 1.1: Grounded References (No Uncited Claims)
+- Never say *"the work I have been doing"* or make unreferenced claims about ongoing efforts.
+- Always provide explicit markdown links to the exact pull request, issue, or commit: e.g. `[org/repo#9](https://github.com/org/repo/pull/9)`.
+
+### Rule 1.2: Natural Punctuation & Tone (Zero Em-Dash Crutches)
+- Avoid stylistic AI tells such as overusing em-dashes (long dashes), academic thesis headings, and nested bullet boilerplate.
+- Write natural, direct sentences using standard punctuation (periods, commas, colons).
+
+### Rule 1.3: Natural Language Over Synthetic Identifiers
+- Strictly forbid inventing private, synthetic tracking codes.
+- Use standard, discoverable tooling and domain terminology (`cargo test`, worktree isolation, dirty snapshotting).
+
+### Rule 1.4: Natural Engineering Voice (Avoid Predictable Rhetoric)
+- Avoid repetitive contrast formulas such as opening paragraphs with *"However, this introduces..."*, *"While X is correct, Y remains..."*, *"The concern is not X, but Y"*, or *"This is not X; it is Y"*.
+- State findings, questions, and observations directly without defensive or academic framing.
+- Acknowledge author fixes cleanly without immediately tacking on a new theoretical concern.
+
+### Rule 1.5: Vocabulary Discipline & Action Over Abstraction
+- Favor direct verbs over abstract noun phrases:
+  - Say *"test it"* instead of *"establish a qualification mechanism"*.
+  - Say *"decide which crate owns it"* instead of *"resolve the ownership boundary"*.
+  - Say *"keep existing behavior working"* instead of *"preserve behavioral compatibility"*.
+  - Say *"agree on what the API should do"* instead of *"reconcile the implementation contract"*.
+- Avoid dense clustering of formal buzzwords (`boundary`, `contract`, `invariant`, `qualification`, `provenance`, `surface`, `canonical`). Use simpler everyday terms (`separation`, `API`, `rule`, `testing`, `source`, `standard`).
+
+### Rule 1.6: Calibrated Authority & Honest Formulations
+- Distinguish verified facts, risks, suggestions, and policy with exact language:
+  - *"This fails when..."*: Verified defect with code or test reproduction.
+  - *"This may fail when..."*: Hypothesized risk needing investigation.
+  - *"Could we consider..."*: Design suggestion or technical preference.
+  - *"The repository requires..."*: Verified public policy.
+  - *"I recommend..."*: Personal technical judgment.
+- Never present personal design preferences or unmerged proposals as established repository rules.
+
+### Rule 1.7: Three-Tier Review Grading & Actionable Focus
+- Structure pull request reviews around three distinct categories:
+  1. **Blocking**: A demonstrated bug, security vulnerability, broken build, or compatibility break that must be resolved prior to merge.
+  2. **Non-blocking**: A worthwhile optimization, cleanup, or ergonomics note that the author can address now or defer.
+  3. **Architectural follow-up**: A broader design consideration that belongs in a separate issue or RFC rather than blocking the immediate PR.
+- Avoid excessive completeness in PR reviews. State the finding, explain the concrete consequence, and ask an actionable question rather than delivering an exhaustive multi-page essay.
+- Stop repeating the same argument once an author has acknowledged it; ask for a specific decision.
+
+### Rule 1.8: Zero Conversational Padding & Wordy Openings
+- Avoid polite meta-praise, flattering preamble, and wordy opening formulas.
+- Never spend sentences on conversational warm-ups, performative gratitude, or deference.
+- Jump straight into the technical facts, corrections, or proposals in the very first sentence.
+
+---
+
+## 2. Git Hygiene & Zero-Noise Issue Timeline Protocol
+
+GitHub's issue activity feed is an **append-only audit log**. Pushing commits containing `#<issue>` permanently records timeline events (`added N commits that reference this issue`) that cannot be deleted or hidden, even after squashing or force-pushing.
+
+To maintain pristine, professional issue threads and commit history, follow this protocol:
+
+### Rule 2.1: Local-First Iteration & Scratch Commits
+- Perform all exploratory, iterative, and scratch work locally.
+- **Never include `#<issue>` or `refs #<issue>` in intermediate scratch commits.**
+- Scratch commits (*"wip"*, *"fix lint"*, *"address review"*) must never be pushed to a public PR branch.
+
+### Rule 2.2: Single Cohesive Commit Per PR
+- By default, every feature or bugfix pull request branch must contain **exactly one cohesive, squashed commit** before opening the PR or requesting review.
+- Multi-commit branches are permitted **only** for large multi-crate architectural extractions where every individual commit compiles independently, passes all quality gates, and represents an isolated logical milestone.
+
+### Rule 2.3: Issue Reference Placement
+- Issue reference tags (`closes #<issue>` or `fixes #<issue>`) belong strictly in two places:
+  1. The **subject or body of the final squashed commit**.
+  2. The **Pull Request description** (`Closes #<issue>`).
+- This guarantees that GitHub links the PR to the issue cleanly and auto-closes it upon merge without cluttering the issue conversation feed with dozens of transient commit SHAs.
+
+### Rule 2.4: Always Rebase on `origin/main` Before Pushing
+- Before pushing a new branch or pushing updates to a PR branch, always fetch and rebase on the latest `origin/main`:
+  ```bash
+  git fetch origin main
+  git rebase origin/main
+  ```
+- Ensure zero merge conflicts and that the proposed change integrates seamlessly with newly landed upstream commits.
+
+---
+
+## 3. Pull Request Standards
+
+Every pull request must be structured for immediate, low-friction review by maintainers:
+
+### Rule 3.1: Commit Title & Body Architecture
+- **Title**: Imperative mood, under 72 characters, prefixed by crate/module scope where appropriate (e.g. `core: Fix buffer overflow in packet parser`).
+- **Body**: Three clean, concise sections:
+  1. **Problem**: What defect or gap exists, why it matters, and who is affected.
+  2. **Solution**: What architectural or code change was made, how it solves the problem, and non-obvious trade-offs.
+  3. **Verification**: Concrete commands run, tests executed, and evidence observed.
+
+### Rule 3.2: Never Claim Completion Without Supporting Evidence
+- Never declare work complete without running the strongest practical verification gate.
+- Document exact command lines, output excerpts, and assertion counts.
+
+
+========================================================================
 FILE: .agents/skills/authorize-protected-effect/SKILL.md
 ========================================================================
 
@@ -210,6 +498,2888 @@ description: Use when two or more workers operate concurrently, exchange finding
 6. Preserve superseded/reverted work as evidence when useful.
 7. Serialize project-wide state transitions.
 8. Never treat peer consensus as authority.
+
+
+========================================================================
+FILE: .agents/skills/github-projects/SKILL.md
+========================================================================
+
+---
+name: github-projects
+description: >-
+  Fully manage GitHub Projects (ProjectsV2) — the org/user planning boards at
+  github.com/orgs/<org>/projects/<n> — through the gh CLI and GraphQL API. Use
+  this whenever the task involves a GitHub project board, roadmap, sprint, or
+  backlog: creating or editing a project, adding issues/PRs to a board, creating
+  draft issues, setting or reading Status / Priority / Estimate / iteration
+  fields, moving items between columns, building or reporting on a board, bulk
+  triage, or setting up custom fields and views. Trigger on phrases like "add
+  this issue to the project", "set the status to In Progress", "what's on the
+  board", "create a sprint field", "move done items", "Projects v2", "GitHub
+  project board", or any github.com/orgs/.../projects/... URL — even when the
+  user just says "the project" or "the board" in a GitHub context. Also covers
+  multi-agent coordination on a board: claiming items so you can tell which agent
+  works which, keeping a local board snapshot to avoid hammering the API, and
+  running an autonomous coordinator that spawns cheap worker agents to resolve
+  items (open PRs, verify, auto-merge). Trigger on "coordinate the board", "have
+  agents work the backlog", "who's working what", "resolve the ready items". Covers
+  everything the Projects feature can do, end to end.
+---
+
+# GitHub Projects (ProjectsV2)
+
+> **Check for a repo-specific version first.** Before acting, look for a copy of
+> this skill inside the current repository — `.agents/skills/github-projects/`
+> (canonical) or `.github/skills/github-projects/` — and if one exists, read
+> **its** `SKILL.md` and follow it where the two disagree. The repo copy carries
+> the org's local law: board field templates, status vocabularies, evidence
+> rules, execution profiles (e.g. Infinite-Verse points board creation at its
+> `docs/PROJECT_BOARDS.md`). This generic copy remains the engine — its
+> `scripts/` and references work everywhere — but structure decisions (creating
+> boards, adding fields, choosing vocabularies) belong to the repo overlay when
+> one is present. Designing a board from this file alone, inside a repo that
+> ships its own profile, is how off-template boards happen.
+
+## Mental model
+
+A project is `owner` (org or user login) + `number` (the integer in its URL).
+It contains:
+- **Fields** — columns. Built-in (Title, Status, Assignees, Labels, Milestone,
+  Repository, Linked PRs) and custom (text, number, date, single-select, iteration).
+- **Items** — rows. Each is a real **issue**, a real **PR**, or a **draft issue**.
+- **Field values** — an item's value for a field (its Status, its Estimate…).
+
+Everything is addressed by **opaque node IDs**. Setting one field value needs the
+project ID + field ID + item ID together — and for single-select/iteration fields,
+the option/iteration ID too. That ID-juggling is the whole difficulty; the bundled
+scripts exist to erase it.
+
+> **ProjectsV2 is GraphQL-only. There is no REST API.** The REST `/…/projects`
+> endpoints are *classic* Projects (deprecated) and return 404/410 here. Use
+> `gh project …` for common work and `gh api graphql` for the rest — never
+> `gh api /orgs/.../projects`.
+
+## Preflight (do this first)
+
+The token must carry the **`project`** scope, or every command fails:
+```bash
+gh auth status      # confirm 'project' appears in the token scopes
+gh auth refresh -s project   # add it if missing
+```
+A `GITHUB_TOKEN` env var overrides the keyring token — verify *its* scopes if
+results surprise you. Private org projects also require the account to have access,
+not just the scope (a 404 on a visible project usually means missing access).
+
+## Reading through an ACP gateway (optional)
+
+If the repository (or the environment) sets `ACP_GATEWAY_URL` — `lib.sh` also
+reads it and `ACP_GATEWAY_TOKEN` from `<git-root>/.env.local` — every board
+**read** goes through that gateway instead of your `gh` credentials:
+`snapshot.sh`, `project-ids.sh` and `claims.sh` switch automatically, and no
+`project` scope or GitHub App key is needed locally. Writes are unaffected:
+the gateway is pull-only by design, so `add-item.sh`, `new-item.sh`,
+`set-field.sh` and `claim.sh` keep using your own `gh` credentials.
+
+With no gateway configured nothing changes — the scripts behave exactly as
+documented everywhere else in this file.
+
+**When a gateway read fails, read what it says.** Every refusal is JSON with a
+stable `error` code, a `detail`, a `remedy` and the context needed to retry;
+`lib.sh` prints all of it to stderr and exits `78`. Act on that text rather
+than retrying or reaching for `ACP_ALLOW_NATIVE_GITHUB=1`:
+
+| `error` | what it means |
+|---|---|
+| `OWNER_REQUIRED` / `PROJECT_REQUIRED` | the call named no board; the body lists the owners and boards the gateway can see |
+| `PROJECT_NOT_ALLOWED` | the board is outside the gateway's `ACP_PROJECT_ALLOWLIST` — a deployment change, not a skill bug |
+| `OWNER_NOT_INSTALLED` | the App is not installed on that account; the body carries the install URL |
+| `PROJECTS_PERMISSION_MISSING` | the installation exists but holds no owner-level Projects permission |
+| `APP_NOT_CONFIGURED` / `UPSTREAM_FAILURE` | gateway-side; check its `/internal/app-probe` |
+
+With no board selected, the "no project selected" error also lists the owners
+the gateway can read — or, when an owner is known, that owner's boards and
+their numbers (`/internal/installations`, `/internal/projects?owner=`).
+
+`tests/test_acp_context.sh` covers this path with a stubbed `curl`.
+
+## Selecting the project (switch between boards)
+
+Commands take `--owner <org-or-user> --project <number>`, but you can avoid repeating
+them: pick an **active project** once and the scripts fall back to it.
+```bash
+scripts/project.sh use example-org 2     # set the active project (validated before saving)
+scripts/project.sh current           # show it
+scripts/project.sh list              # list the active owner's projects (★ = active)
+scripts/project.sh list someorg      # list another owner's projects to switch to
+scripts/project.sh use someorg 5     # switch boards
+scripts/project.sh clear             # forget it
+```
+After `use`, the four scripts below run with **no** `--owner/--project`. Precedence:
+an explicit flag **>** env `GH_PROJECT_OWNER`/`GH_PROJECT_NUMBER` (one-off override)
+**>** the saved active project (`~/.config/github-projects/current`). The example-org org
+board is `example-org` #2.
+
+## The fast path: bundled scripts
+
+Four scripts in `scripts/` handle the node-ID resolution that otherwise has to be
+redone by hand every time. Prefer them over raw `item-edit`. They need `gh` + `jq`.
+All accept `--owner/--project`, but fall back to the active project (above) when omitted.
+
+**`new-item.sh`** — create an item and set its fields in **one command**. Pass `--repo`
+to make a real issue (built-in fields auto-fill from it — the easy, recommended path);
+omit it for a draft. See `references/conventions.md` for why real issues beat drafts.
+```bash
+scripts/new-item.sh --owner example-org --project 2 --repo example-org/generation \
+  --title "SSRF guard on fetch-time URL allowlist" --label security \
+  --set "Status=To triage" --set "Band=Wave 0" --set "Severity=High"
+```
+
+**`project-ids.sh <owner> <number>`** — the Rosetta stone. Resolves the project node
+ID and every field's ID, data type, single-select options, and iterations in one
+call (auto-detecting org vs user; `@me` works too). Run once, cache the JSON, reuse it.
+```bash
+scripts/project-ids.sh example-org 2
+# → { projectId, title, fields:[{name,id,dataType,options,iterations}] }
+```
+
+**`set-field.sh`** — set item fields by **plain names**. Resolves the field ID and,
+for single-select/iteration, the option/iteration ID; picks the right typed value
+flag. Use repeatable `--set "Field=Value"` to set many fields in **one call** (it
+resolves the project once) — prefer this in bulk loops. It prints a line per field
+and exits non-zero if any field fails, so don't suppress its output.
+```bash
+scripts/set-field.sh --owner example-org --project 2 --item PVTI_xxx --field Status --value "In progress"
+scripts/set-field.sh --owner example-org --project 2 --item PVTI_xxx --field "Target date" --value 2026-07-01
+scripts/set-field.sh --owner example-org --project 2 --item PVTI_xxx --field Status --clear
+# many fields at once:
+scripts/set-field.sh --owner example-org --project 2 --item PVTI_xxx \
+  --set "Status=In progress" --set "Effort=M" --set "Repos=generation"
+```
+
+**`add-item.sh`** — add an issue/PR by URL and print the new item ID, ready to pipe
+into `set-field.sh` (idempotent — re-adding returns the same ID).
+```bash
+ITEM=$(scripts/add-item.sh --owner example-org --project 2 \
+         --url https://github.com/example-org/systems/issues/42)
+scripts/set-field.sh --owner example-org --project 2 --item "$ITEM" --field Status --value Ready
+```
+
+## Common operations at a glance
+
+| Goal | How |
+|------|-----|
+| List an owner's projects | `gh project list --owner <o>` |
+| View a project / its fields | `gh project view <n> --owner <o> [--format json]` |
+| Create / edit / close a project | `gh project create\|edit\|close <n> --owner <o> …` |
+| List items (raise the limit!) | `gh project item-list <n> --owner <o> --limit 500 --format json` |
+| Add an existing issue/PR | `scripts/add-item.sh …` (or `gh project item-add`) |
+| Create a draft issue | `gh project item-create <n> --owner <o> --title "…"` |
+| Set a field value | `scripts/set-field.sh …` |
+| Read custom field values | CLI list (lowercased keys) or GraphQL `fieldValues` for node IDs — `references/graphql.md` |
+| Create a field | `gh project field-create <n> --owner <o> --name … --data-type …` |
+| Archive / delete an item | `gh project item-archive\|item-delete <n> --owner <o> --id PVTI_xxx` |
+| Link project to a repo | `gh project link <n> --owner <o> --repo <repo>` |
+| Convert draft → real issue | GraphQL `convertProjectV2DraftIssueItemToIssue` — see `references/graphql.md` |
+| Claim an item for an agent | `scripts/claim.sh --item PVTI_xxx` (id = git branch/worktree; `--agent` to override) |
+| See who's working what | `scripts/claims.sh` · hand off with `scripts/release.sh --item … --status …` |
+| Look up an item id by name | `scripts/snapshot.sh id "W0.7"` (offline, from the local snapshot) |
+| Refresh the local board model | `scripts/snapshot.sh` → `<git-root>/.board_snapshot.jsonl` (+ `.tsv` view) |
+| Coordinator views (offline) | `scripts/coord.sh summary\|ready\|orphans\|stale\|mine\|prs\|done-open` |
+
+## Traps that waste the most time
+
+- **`item-list` defaults to 30 items** — pass `--limit` or you process a partial board.
+- **`item-list --format json` keys custom fields by lowercased name** — `"Estimate"`
+  → `.estimate`, `"Target date"` → `."target date"` (it does *not* omit them). Use the
+  GraphQL `fieldValues` query only when you need node IDs or exact name mapping.
+- **`field-list --format json` uses `type` (a typename), not `dataType`** — the
+  GraphQL API and `project-ids.sh` use `dataType`. Don't cross the two in jq.
+- **`updateProjectV2Field` replaces the whole option/iteration set** — omitting an
+  existing option deletes it. Fetch current options first, pass them all back.
+- **Single-select needs the option *ID*, not its label** — `set-field.sh` handles it.
+- **Assignees/Labels/Milestone/Repository live on the issue, not the item** — set
+  them with `gh issue edit`, not `item-edit`; they then appear as board columns.
+- **Built-in workflows (auto-add, auto-archive, "closed → Done") aren't API-scriptable**
+  — configure once in the UI or replicate with your own scheduled script/Action.
+- **Reserved field names** — you can't create a custom field named `Repo`, `Repository`,
+  `Status`, or any built-in (error: "Name cannot have a reserved value"). Use `Repos`,
+  `Component`, etc.
+- **Bulk loops run in *your* shell (often zsh), not bash** — in zsh, unquoted `$var`
+  doesn't word-split (don't stash a command in a variable and call it), and `status` is
+  a reserved read-only variable (don't use it as a loop var). These cause silent loader
+  failures; see the bulk-load recipe and `references/gotchas.md` #14.
+
+Full list with explanations: `references/gotchas.md`.
+
+## Script index
+
+Every script in `scripts/` — each has a usage header at the top of the file, accepts
+`--owner/--project` (or falls back to the active project), and needs `gh` + `jq`.
+
+**Items & fields**
+
+| Script | Does |
+|--------|------|
+| `project-ids.sh` | Resolve a project's node IDs — project + every field/option/iteration (the "Rosetta stone") |
+| `new-item.sh` | Create an item (real issue with `--repo`, else a draft) and set its fields in one call |
+| `add-item.sh` | Add an existing issue/PR by URL; print the new project-item ID |
+| `set-field.sh` | Set field value(s) by plain name (`--set "F=V"`, repeatable) or `--clear` |
+| `project.sh` | Pick/switch the active project: `use` / `current` / `list` / `clear` |
+| `lib.sh` | Shared helpers (sourced, not run directly): active-project resolution + free snapshot auto-align |
+
+**Local board model**
+
+| Script | Does |
+|--------|------|
+| `snapshot.sh` | Build/refresh the rich `.board_snapshot.jsonl` (+ `.tsv` view); `find` / `id` / `get` lookups |
+| `coord.sh` | Offline views over the snapshot: `summary` `ready` `orphans` `stale` `mine` `prs` `done-open` |
+| `repo-map.sh` | `generate` / `resolve` — turn a `Repos` hint into repo path + owner/name + crate |
+
+**Multi-agent & autonomy**
+
+| Script | Does |
+|--------|------|
+| `claim.sh` | Claim an item (Agent=branch + In progress) with pre-check + post-verify |
+| `release.sh` | Release a claim (clear Agent), optionally move Status |
+| `claims.sh` | Who's working what, grouped by agent (+ orphaned / stale-claim anomalies) |
+| `spawn.sh` | Spawn a cheap headless `claude -p` worker for one ticket (`--role`, `--resume` for rework) |
+| `coordinator.sh` | Autonomous loop: pick → claim → worktree → resolve → verify → PR → CI-gated auto-merge → blame/retry |
+| `protect.sh` | Enable a required CI check on a repo branch (opt a repo into safe auto-merge) |
+
+Worker role prompts live in `assets/roles/{resolver,verifier,triager}.md`.
+
+## Files this skill creates
+
+Caches/artifacts written at the fleet root — all safe to add to `.gitignore`:
+
+- `.board_snapshot.jsonl` / `.board_snapshot.tsv` — the local board model (`snapshot.sh`)
+- `.repo_map.tsv` — category/service → repo path · owner/name · crate (`repo-map.sh`)
+- `.coord-log/<item-id>.log` — the coordinator's blame / attempt trail
+- `~/.config/github-projects/current` — the active project (`project.sh`; machine-local, per-user)
+
+## Binding a repository to its board
+
+Drop `<git-root>/.agents/board.env` in a repo and every script in this skill
+targets that board from anywhere inside it — no flags, no active-project state:
+
+```bash
+# .agents/board.env — committed; the gateway secret lives in .env.local
+GH_PROJECT_OWNER=zachshallbetter
+GH_PROJECT_NUMBER=37
+GP_FIELD_STATUS=Lifecycle          # this board's workflow field
+GP_STATUS_ACTIVE=In Progress       # ...and its state names
+GP_STATUS_REVIEW=In Review
+GP_FIELD_BAND=Phase
+```
+
+Only `GH_PROJECT_OWNER`, `GH_PROJECT_NUMBER` and `GP_*` keys are honoured, the
+file is parsed rather than sourced (a repo file must not run code), and an
+exported environment variable always wins over it.
+
+## Using it on another board
+
+Nothing is hardwired to a specific org or project. **Owner + project** are fully
+parameterized — pass `--owner <org-or-user> --project <number>` to any command, or set a
+default once with `project.sh use <owner> <number>`.
+
+The **coordinator / claim layer** additionally assumes a field schema — an `Agent` field,
+`Status` values `Ready` / `In progress` / `In review`, and the `Band` / `Repos` / `Gate`
+customs. Those are **configurable via env vars** (defaults match the example-org board), so a
+board with a different schema just exports the differences:
+```bash
+export GP_FIELD_AGENT=Owner   GP_FIELD_STATUS=Status   GP_FIELD_REPOS=Repos
+export GP_STATUS_READY=Todo   GP_STATUS_ACTIVE="In Progress"   GP_STATUS_REVIEW="In review"
+```
+The full set with defaults is at the top of `scripts/lib.sh`. The low-level
+project/item/field/snapshot scripts need no vocabulary — they already work on any board.
+(The board it manages also needs an `Agent` text field for claiming; add one with
+`gh project field-create <n> --owner <o> --name Agent --data-type TEXT`.)
+
+## Where to go next
+
+Stay in this file for the common 80%. Read a reference file when you need depth:
+
+- **`references/conventions.md`** — how to create items so it's easy and the fields
+  fill themselves: prefer real issues over drafts (auto-fill table), keep the field
+  set minimal, single-selects for manual fields, body ≠ data. Also covers **multi-agent
+  claiming** — how agents stamp the `Agent` field so you can tell who's working what,
+  and why claiming is best-effort. Read this before designing a board or bulk-loading.
+- **`references/coordinator.md`** — the full coordinator story: the local board model
+  (`snapshot.sh` → `.board_snapshot.jsonl`) kept aligned for free, offline `coord.sh`
+  views (ready/orphans/stale/prs/done-open), the repo map (`repo-map.sh`), PR
+  verification, spawning cheap `claude -p` workers (`spawn.sh` + `assets/roles/`), and
+  the autonomous `coordinator.sh` runner (claim → resolve → verify → PR → CI-gated
+  auto-merge → blame/retry). Read this to drive the kanban or automate resolution.
+- **`references/cli.md`** — every `gh project` subcommand, its flags, and JSON
+  parsing patterns. Start here for routine board operations.
+- **`references/graphql.md`** — the GraphQL queries/mutations for what the CLI can't
+  do: reading custom field values, pagination, creating iteration fields, editing
+  single-select options, converting drafts, views, bulk updates.
+- **`references/recipes.md`** — copy-paste end-to-end workflows (triage an issue with
+  a status, bulk-add by label, move a whole column, snapshot the board as a report,
+  stand up a project with custom fields).
+- **`references/gotchas.md`** — the complete failure-mode catalog. Read it when an
+  error or empty result doesn't make sense.
+
+When verifying a destructive change (delete, bulk move) on a **shared** org board,
+prefer a reversible probe — create a draft, act on it, delete it — rather than
+mutating real items, and clean up anything you create.
+
+
+========================================================================
+FILE: .agents/skills/github-projects/assets/roles/resolver.md
+========================================================================
+
+You are a **Resolver** micro-agent. You are given ONE ticket describing a concrete
+change, and you work inside an **isolated git worktree** that the coordinator has
+already created for you (the ticket gives its path and branch). Keep context minimal
+and act directly.
+
+Rules:
+- Work ONLY inside the given worktree. Never touch the main checkout or other worktrees.
+- Make the **smallest correct change** that satisfies the ticket's acceptance/gate
+  condition. Match the surrounding code's style and conventions. Never bump version numbers.
+- Build/test **locally** to prove it compiles, using the exact command the ticket gives
+  (e.g. `cargo check -p <crate>`). Do not claim success without running it.
+- **Do not let a build pollute the diff.** If running the build regenerated `Cargo.lock`
+  (or any `*/Cargo.lock`) and you did not intentionally change dependencies, restore it:
+  `git checkout -- Cargo.lock` before committing. Commit only the files your change needs.
+- **Commit** to the worktree's branch with a clear message; end the message with:
+  `Co-Authored-By: Claude <noreply@anthropic.com>`. Do **NOT** push and do **NOT** open a
+  pull request — the coordinator handles pushing, the PR, and the merge.
+- If the ticket is ambiguous, blocked, or larger than described, **stop and report** —
+  do not guess or expand scope.
+
+End your turn with a single JSON line and nothing after it:
+{"verdict":"done|blocked|failed","summary":"<one line>","files":["..."],"build":"pass|fail","note":"<why, if not done>"}
+
+
+========================================================================
+FILE: .agents/skills/github-projects/assets/roles/triager.md
+========================================================================
+
+You are a **Triager** micro-agent. You are given ONE freshly-discovered board item and
+you decide its disposition. Be fast and cheap; do not change code.
+
+Rules:
+- Read the ticket title/body and, only if needed, glance at the cited files/paths to
+  confirm it's real.
+- Decide: **valid** (real, actionable), **duplicate** (of another item — name it), or
+  **invalid** (stale/wrong/not reproducible).
+- For valid items, set the board metadata with the provided scripts: `Band`, `Effort`
+  (S/M/L/XL), and `Severity` if it's a security/correctness risk. Board fields only —
+  no code edits, no repo changes.
+
+End your turn with a single JSON line and nothing after it:
+{"verdict":"valid|duplicate|invalid","band":"...","effort":"S|M|L|XL","severity":"...","duplicate_of":"<title or empty>","note":"<one line>"}
+
+
+========================================================================
+FILE: .agents/skills/github-projects/assets/roles/verifier.md
+========================================================================
+
+You are a **Verifier** micro-agent. You are given a ticket and an isolated worktree
+where a Resolver claims to have made the change. Independently check the work — be
+skeptical and cheap.
+
+Rules:
+- Run the **build/test commands the ticket specifies** yourself; read the actual diff
+  (`git diff`, `git log -1 -p`). Trust observed results, not the Resolver's claims.
+- Judge against TWO bars: (1) the ticket's gate/acceptance condition is genuinely met,
+  and (2) the build/tests are green. If either is unmet or you're unsure, **fail it**.
+- Do **not** modify code. Verification only.
+
+End your turn with a single JSON line and nothing after it:
+{"verdict":"pass|fail","build":"pass|fail","reasons":["..."]}
+
+
+========================================================================
+FILE: .agents/skills/github-projects/references/cli.md
+========================================================================
+
+# `gh project` CLI reference
+
+The `gh project` command group covers ~80% of GitHub Projects work without touching
+GraphQL. Every command takes the project **number** (the integer in the URL, e.g. `2`
+in `/orgs/example-org/projects/2`) plus `--owner`. The owner is an **org login**
+or a **user login**; use `@me` for the authenticated user's own projects.
+
+All read commands accept `--format json` and `-q/--jq <expr>` for parsing. Prefer
+JSON + jq over scraping the human table output.
+
+## Contents
+- [Preflight](#preflight)
+- [Project lifecycle](#project-lifecycle)
+- [Fields](#fields)
+- [Items](#items)
+- [Linking](#linking)
+- [Output and parsing](#output-and-parsing)
+
+## Preflight
+
+```bash
+gh auth status                      # confirm logged in; look for 'project' in token scopes
+gh auth refresh -s project          # add project scope if missing (interactive)
+```
+The token MUST carry the `project` scope (read+write) or `read:project` (read only).
+Without it every command fails with a scope error. `GITHUB_TOKEN` in the environment
+overrides the keyring token — verify *that* token's scopes if results surprise you.
+
+## Project lifecycle
+
+```bash
+# List projects for an owner (number, title, state, node ID)
+gh project list --owner example-org
+gh project list --owner @me --closed          # include closed
+
+# View one project (fields, counts, URL). --web opens it in a browser.
+gh project view 2 --owner example-org
+gh project view 2 --owner example-org --format json
+
+# Create. Prints the new project's URL and number.
+gh project create --owner example-org --title "Q3 Roadmap"
+
+# Edit metadata
+gh project edit 2 --owner example-org --title "New title"
+gh project edit 2 --owner example-org --description "..." --readme "## How we work…"
+gh project edit 2 --owner example-org --visibility PUBLIC   # or PRIVATE
+
+# Copy (duplicate fields/views into a new project; --drafts keeps draft items)
+gh project copy 2 --source-owner example-org --target-owner example-org --title "Q4 Roadmap"
+
+# Templates
+gh project mark-template 2 --owner example-org            # org templates only
+gh project close 2 --owner example-org                    # --undo to reopen
+gh project delete 2 --owner example-org                   # irreversible
+```
+
+## Fields
+
+```bash
+# List fields (id, name, type; single-select options included in JSON)
+gh project field-list 2 --owner example-org --format json
+
+# Create fields. data-type ∈ {TEXT, SINGLE_SELECT, DATE, NUMBER}
+gh project field-create 2 --owner example-org --name "Estimate" --data-type NUMBER
+gh project field-create 2 --owner example-org --name "Target date" --data-type DATE
+gh project field-create 2 --owner example-org --name "Priority" --data-type SINGLE_SELECT \
+  --single-select-options "P0,P1,P2,P3"
+
+# Delete a field (needs the field's node ID from field-list)
+gh project field-delete --id PVTF_xxxxx
+```
+
+The CLI **cannot create ITERATION fields**, edit a field's name, or add/remove
+single-select options after creation. Those need GraphQL — see `graphql.md`.
+
+**Reserved names:** a custom field cannot reuse a built-in or reserved name —
+`field-create` returns `GraphQL: Name cannot have a reserved value`. That includes
+every built-in (Title, Assignees, Status, Labels, Linked pull requests, Milestone,
+Repository, Reviewers, Parent issue, Sub-issues progress, Created, Updated, Closed)
+**and abbreviations like `Repo`**. Use a distinct name (`Repos`, `Component`, …).
+
+## Items
+
+An "item" is a row on the board: a real issue, a real PR, or a draft issue. Every
+item has its own node ID (`PVTI_…`), distinct from the issue/PR's own node ID.
+
+```bash
+# List items. DEFAULT LIMIT IS 30 — always raise it for real boards.
+gh project item-list 2 --owner example-org --limit 200 --format json
+
+# Add an existing issue/PR by URL (idempotent — re-adding returns the same item)
+gh project item-add 2 --owner example-org --url https://github.com/example-org/systems/issues/42
+
+# Create a draft issue (lives only inside the project until "converted")
+gh project item-create 2 --owner example-org --title "Spike: evaluate X" --body "notes…"
+
+# Edit a single field value per call. Needs item ID + project ID + field ID.
+# Value flag must match the field's data type:
+gh project item-edit --id PVTI_xxx --project-id PVT_xxx --field-id PVTF_xxx --text "hello"
+gh project item-edit --id PVTI_xxx --project-id PVT_xxx --field-id PVTF_xxx --number 5
+gh project item-edit --id PVTI_xxx --project-id PVT_xxx --field-id PVTF_xxx --date 2026-07-01
+gh project item-edit --id PVTI_xxx --project-id PVT_xxx --field-id PVTSSF_xxx --single-select-option-id 47fc9ee4
+gh project item-edit --id PVTI_xxx --project-id PVT_xxx --field-id PVTIF_xxx --iteration-id <iter-id>
+gh project item-edit --id PVTI_xxx --project-id PVT_xxx --field-id PVTF_xxx --clear   # unset
+
+# Edit a DRAFT item's own title/body (no project-id needed for these)
+gh project item-edit --id PVTI_xxx --title "new title" --body "new body"
+
+# Archive keeps the item (recoverable); delete removes the row from the project.
+gh project item-archive 2 --owner example-org --id PVTI_xxx          # --undo to restore
+gh project item-delete 2 --owner example-org --id PVTI_xxx
+```
+
+> The fiddly part is supplying three node IDs and the right value flag — especially
+> mapping a single-select *name* ("In progress") to its *option ID* (`47fc9ee4`).
+> Use `scripts/set-field.sh` instead; it resolves everything from plain names.
+
+## Linking
+
+Link a project to a repo or team so it appears in that repo/team's Projects tab and
+can power auto-add workflows.
+
+```bash
+gh project link   2 --owner example-org --repo systems
+gh project link   2 --owner example-org --team platform
+gh project unlink 2 --owner example-org --repo systems
+```
+
+## Output and parsing
+
+```bash
+# Map every item to "status | title"
+gh project item-list 2 --owner example-org --limit 200 --format json \
+  | jq -r '.items[] | "\(.status // "—") | \(.title)"'
+
+# Just the IDs of items currently "In progress"
+gh project item-list 2 --owner example-org --limit 200 --format json \
+  | jq -r '.items[] | select(.status=="In progress") | .id'
+
+# Field node IDs by name
+gh project field-list 2 --owner example-org --format json \
+  | jq -r '.fields[] | "\(.name)\t\(.id)"'
+```
+
+Two parsing facts worth knowing (both verified, easy to trip on):
+
+- **`item-list --format json` *includes* custom field values**, keyed by the field
+  name **lowercased, spaces preserved** — `"Estimate"` → `.estimate`, `"Target date"`
+  → `."target date"`. Single-select → option-name string; iteration → an object
+  `{title,startDate,duration}`. Reach for the GraphQL `fieldValues` query (graphql.md)
+  only when you need node IDs, an exact (case-sensitive) name mapping, or to
+  disambiguate fields whose lowercased names collide.
+- **`field-list --format json` uses `type`, not `dataType`.** The key is `type` with
+  a GraphQL *typename* value (`"ProjectV2SingleSelectField"`), and `dataType` is null
+  here. The GraphQL API and `scripts/project-ids.sh` use `dataType`
+  (`"SINGLE_SELECT"`). Don't write jq against `field-list` expecting `.dataType`.
+
+```bash
+# correct: read every item's Estimate from the CLI list (lowercased key)
+gh project item-list 2 --owner example-org --limit 200 --format json \
+  | jq -r '.items[] | "\(.title): \(.estimate // "—")"'
+```
+
+
+========================================================================
+FILE: .agents/skills/github-projects/references/conventions.md
+========================================================================
+
+# Conventions for creating items
+
+Goal: make adding a board item fast, consistent, and **as automatic as possible**.
+The big lever is using **real issues instead of drafts** — that alone makes most
+fields fill themselves.
+
+## The one rule that does the most work: prefer real issues over drafts
+
+When a board item is a real issue (or PR), GitHub auto-populates the built-in fields
+from the issue. When it's a draft, every one of them stays empty. Verified:
+
+| Field | Real issue | Draft issue |
+|---|---|---|
+| Repository | **auto** (from the issue's repo) | empty — you'd need a manual field |
+| Assignees / Labels / Milestone | **auto** (carried from the issue) | empty |
+| Created / Updated | **auto** (real timestamps) | "None yet" |
+| Linked pull requests / sub-issues | **auto** | empty |
+| Can be referenced by `Fixes #`, commits, PRs | yes | no |
+
+So: file the issue in its repo, add it to the board, set only the few *project-only*
+fields. Reserve drafts for ideas with no repo yet — and convert them
+(`convertProjectV2DraftIssueItemToIssue`, see graphql.md) once they're real work.
+Security findings and anything actionable should be real issues in the owning repo,
+not drafts on a board.
+
+## The easy path: `new-item.sh`
+
+One command creates the item and sets its fields. Pass `--repo` to make a real issue
+(built-ins auto-fill); omit it for a draft.
+
+```bash
+# real issue — Repository/Assignees/Labels fill themselves:
+scripts/new-item.sh --owner example-org --project 2 --repo example-org/generation \
+  --title "SSRF guard on fetch-time URL allowlist" --label security \
+  --set "Status=To triage" --set "Band=Wave 0" --set "Severity=High" --set "Effort=M"
+
+# draft — only for an unscoped idea:
+scripts/new-item.sh --owner example-org --project 2 --title "Spike: cache layer" \
+  --set "Status=Backlog" --set "Band=Wave 0" --set "Effort=S"
+```
+For many items at once, see the bulk-load recipe (recipes.md #9).
+
+## Keep the field set minimal
+
+Every field you keep is a field someone has to consider on every item. Audit the board
+and **delete fields nothing uses** — empty fields are safe to delete (no data lost).
+Check what actually holds values before deciding:
+
+```bash
+# count how many items populate each field (single-select / number / date / iteration)
+gh api graphql -f query='query{organization(login:"OWNER"){projectV2(number:N){items(first:100){nodes{fieldValues(first:40){nodes{
+  __typename ... on ProjectV2ItemFieldSingleSelectValue{field{... on ProjectV2FieldCommon{name}}}}}}}}}}' ... # paginate
+```
+
+Guidelines:
+- **One field per concept.** Don't keep `Size` *and* `Estimate` *and* `Effort` — pick one.
+- **Don't shadow built-ins.** A manual `Repos` text field duplicates the built-in
+  `Repository` (which auto-fills for real issues). Drop the manual one once items are issues.
+- **Drop the template defaults you don't use.** New projects ship with `Priority`,
+  `Size`, `Estimate`, `Iteration`, `Start date`, `Target date`. Delete the ones you
+  won't fill rather than leaving them empty on every card.
+
+## Make manual fields one-click
+
+For the fields you *do* keep that need a human (program phase, sizing, severity), use
+**single-select** types, not free text. One click, constrained values, no typos, and
+`set-field.sh` resolves them by name. Free-text fields (like `Gate`) are fine for prose
+that has no fixed vocabulary.
+
+## The body is for description, not data
+
+Don't restate structured fields in the draft/issue body (e.g. a body that says
+"Gate: …  Repos: …" when those are already fields). It's double entry that drifts out
+of sync. Put the *why/context* in the body; put structured values in fields.
+
+## Let creation defaults do their job
+
+- New items inherit the project's **default Status** automatically — you usually don't
+  need to set it unless it differs.
+- With real issues, Repository/Assignees/Labels/Milestone need no action at all.
+- That typically leaves only 2–3 project-only fields to set per item (e.g. Band,
+  Effort, Severity) — one `--set …` call.
+
+## Who's working which item (multi-agent claiming)
+
+All agents act through the **same GitHub token**, so `creator` and `Assignees` are
+identical across them — GitHub-native attribution can't tell agents apart. The only
+way to know which agent owns an item is for the agent to **stamp an identifier into a
+field**. The board carries an `Agent` (text) field for this; the id is the agent's
+**git branch / worktree name** (each agent runs in its own `.wt/` worktree, so it's
+unique and links the item to its branch/PR).
+
+```bash
+scripts/claim.sh   --item PVTI_xxx                 # claim for the current branch (auto-detected)
+scripts/claim.sh   --item PVTI_xxx --agent wave0-w07   # or name it explicitly
+scripts/claims.sh                                  # report: who's working what (+ anomalies)
+scripts/release.sh --item PVTI_xxx --status "In review"  # done — clear Agent, move Status
+```
+
+**Claiming is best-effort, not a lock.** ProjectsV2 has no atomic compare-and-set, so
+`claim.sh` does what it can: it **pre-checks** (refuses if another agent already holds
+the item, unless `--force`), writes `Agent` + `Status=In progress`, then **re-reads**
+after a short delay to catch a lost race (exit 3 = you lost, yield). Two agents can
+still occasionally collide; if you need a hard guarantee, partition the work up front
+or route claims through a single coordinator instead of self-claiming.
+
+`claims.sh` also flags two things worth watching: items **In progress with no Agent**
+(active but unattributed) and items with an **Agent but not In progress** (a likely
+stale claim — `release.sh` it). Treat a claim as stale if its branch is gone or its
+PR merged.
+
+## A local board snapshot for fast lookup
+
+On a board with hundreds of items, paginating the API just to answer "what's the node
+id of W0.7?" is slow. Keep a local snapshot — a TSV of every item — at the project root
+and look items up offline. Columns: `nodeID  band  status  agent  title`.
+
+```bash
+scripts/snapshot.sh                # refresh <git-root>/.board_snapshot.tsv
+scripts/snapshot.sh id   "W0.7"    # → node id (pipe into claim.sh)
+scripts/snapshot.sh find "auth"    # → every row mentioning "auth"
+
+# claim an item by name, no full-board query:
+ID=$(scripts/snapshot.sh id "W0.7"); scripts/claim.sh --item "$ID"
+```
+
+The snapshot is a **cache, not the source of truth** — its one failure mode is
+staleness, so regenerate after bulk changes and treat a missing/odd lookup as "refresh
+first." Generate it cleanly with `snapshot.sh` rather than ad-hoc exports (an appended
+loop can triple the file). It's a generated artifact — add `.board_snapshot.tsv` to
+`.gitignore` so it doesn't clutter a clean `main`.
+
+
+========================================================================
+FILE: .agents/skills/github-projects/references/coordinator.md
+========================================================================
+
+# Running a coordinator over the board
+
+A coordinator agent resolves drafts/issues, drives the kanban, and verifies PRs. The
+trick to doing that without hammering the GitHub API is to keep a **local model of the
+board** and read from it, refreshing only as needed.
+
+## The model: `.board_snapshot.jsonl`
+
+`snapshot.sh` writes one rich JSON object per item to `<git-root>/.board_snapshot.jsonl`
+(plus a flat `.board_snapshot.tsv` view). Each record:
+
+```json
+{ "id":"PVTI_…", "type":"DRAFT_ISSUE|ISSUE|PULL_REQUEST", "title":"…",
+  "number":42, "url":"…", "state":"OPEN|MERGED|CLOSED", "repository":"example-org/generation",
+  "isArchived":false, "createdAt":"…", "updatedAt":"…",
+  "assignees":["…"], "labels":["…"], "milestone":"…",
+  "linkedPRs":[{"url":"…","number":5,"state":"OPEN"}],
+  "fields":{"Status":"Ready","Band":"Wave 0","Effort":"M","Severity":"…","Gate":"…","Repos":"…","Agent":"…"} }
+```
+
+This is the coordinator's source of truth between refreshes — query it with `jq` or
+`coord.sh`, never re-paginate the board just to read.
+
+## Keeping it aligned (the API economy)
+
+- **Your own writes are free.** `set-field.sh` (and thus `claim.sh`/`release.sh`/
+  `new-item.sh`) patch the changed item's line in the JSONL using the value they just
+  wrote — no extra API call. So as the coordinator works, its model stays current.
+- **Outside changes need a refresh.** Edits from other agents or the web UI aren't
+  visible until you run `snapshot.sh` (a full pull: ~⌈items/100⌉ GraphQL calls). Refresh
+  at the top of each coordinator cycle, or after a batch — not per item.
+- **`coord.sh` and lookups cost zero API** — they read the local files.
+- New items appear only after a refresh (auto-align updates existing lines, not new ones).
+- Disable auto-align with `GH_SNAPSHOT=off`; relocate the file with `GH_SNAPSHOT_FILE`.
+
+> The snapshot is a **cache, not the truth**. Before a decision that depends on
+> freshness (e.g. "is this still unclaimed?"), refresh — or rely on `claim.sh`'s own
+> pre-check/verify, which reads the live item.
+
+## Coordinator views (`coord.sh`, all offline)
+
+```bash
+scripts/snapshot.sh            # refresh the model first
+scripts/coord.sh summary       # counts by Status, Band, and who's claiming what
+scripts/coord.sh ready         # claimable: Status=Ready, no Agent   → id  title
+scripts/coord.sh orphans       # Status=In progress but NO Agent (active, unattributed)
+scripts/coord.sh stale         # Agent set but Status≠In progress (dead claim → release)
+scripts/coord.sh mine          # items claimed by the current branch
+scripts/coord.sh prs           # items with linked PRs:  state  url  title
+scripts/coord.sh done-open     # Status=Done but a linked PR isn't MERGED (needs a look)
+```
+
+## A coordinator cycle
+
+```bash
+scripts/snapshot.sh                                   # 1. reconcile the model
+scripts/coord.sh orphans; scripts/coord.sh stale      # 2. heal: attribute/clear bad claims
+for row in $(scripts/coord.sh ready | cut -f1); do    # 3. dispatch ready work
+  scripts/claim.sh --item "$row" --agent dispatcher   #    (or hand the id to a worker)
+done
+scripts/coord.sh prs                                  # 4. verify PRs (state from the snapshot)
+#    deeper check status, per PR:  gh pr checks <url>  /  gh pr view <url> --json reviewDecision,mergeable
+scripts/coord.sh done-open                            # 5. catch Done items whose PR never merged
+```
+
+## Verifying PRs
+
+The snapshot carries each item's `linkedPRs` and their `state` (and for PR-type items,
+`reviewDecision`/`isDraft`). That's enough to triage. For the actual check run — green
+or red — call the CLI on demand (it's authoritative and cheap per PR):
+
+```bash
+gh pr checks <pr-url>                                  # CI status
+gh pr view  <pr-url> --json state,reviewDecision,mergeable,statusCheckRollup
+```
+
+Fold the result back onto the item with `set-field.sh` (e.g. `--set "Status=In review"`
+or `Done`), which keeps the snapshot aligned for free.
+
+## Autonomous mode: spawning micro-agents
+
+Everything above is the coordinator's *senses* (the model) and *hands* (the board
+scripts). To actually resolve work it **spawns cheap headless `claude -p` workers** —
+one per ticket, minimal context, smallest sufficient model — via `spawn.sh`.
+
+### Roles (`assets/roles/<role>.md` = each worker's system prompt)
+
+| Role | Model | Tools | Job |
+|------|-------|-------|-----|
+| **Resolver** | haiku→sonnet | Read/Edit/Write/Bash in a worktree | smallest correct change, build/test, commit+push a branch |
+| **Verifier** | haiku | Read/Bash (no Edit) | independently build/test + read the diff; judge pass/fail |
+| **Triager** | haiku | Read/Bash (board only) | classify To-triage; set Band/Effort/Severity; dedupe |
+
+Each role prompt ends in a required JSON verdict the coordinator parses. `spawn.sh`
+prints the worker's `session=<id>` — capture it to **resume the same worker** with
+failure feedback (`spawn.sh --role resolver --resume <id> --ticket "what was wrong"`):
+that reuses its context and is the send-back-on-incorrect rework loop.
+
+```bash
+scripts/spawn.sh --role resolver --dir "$PROJECT_DIR" --ticket "<assembled ticket>"
+scripts/spawn.sh --role verifier --dir "$PROJECT_DIR" --ticket "verify item X, PR <url>, gate <…>"
+```
+
+### The runner (`coordinator.sh`)
+
+Give it the project dir + board and it drives the loop: refresh → pick Ready →
+hold-guard → claim → spawn Resolver (worktree/branch) → spawn Verifier → green: open PR
++ `gh pr merge --auto` + Status → red: blame to `.coord-log/<id>.log` and resume the
+Resolver, bounded by `--max-retries` → exhausted: return to Ready.
+
+```bash
+scripts/coordinator.sh --queue ready --max-items 3            # DRY RUN — plan only, no spawns
+scripts/coordinator.sh --queue ready --max-items 1 --apply    # do ONE item, supervised
+scripts/coordinator.sh --queue triage --apply --no-merge      # triage only, never merge
+```
+
+**Safety rails:** dry-run by default; bounded by `--max-items`/`--max-retries`; skips
+HELD/blocked items; merges via `--auto` so red/required-pending CI never merges;
+worktrees only (never the main checkout); yields on a lost claim race. The `--apply`
+path makes real, auto-merging changes on the live fleet — **supervise the first runs.**
+
+## Queue mode (the repo map) and merge safety
+
+**Working the queue unattended.** The coordinator no longer needs `--repo`/`--repo-path`.
+`repo-map.sh` builds `<fleet-root>/.repo_map.tsv` (`key → repo_path, owner/name, crate`)
+by scanning each repo's *own* tracked manifests (`git ls-files`, so a parent never
+absorbs a nested repo/submodule's crates). For each Ready item the coordinator resolves
+the board's `Repos` hint through it:
+
+```bash
+scripts/repo-map.sh generate            # (re)scan the fleet; rerun after adding/moving repos
+scripts/repo-map.sh resolve "compute (geometry-runtime)"   # → repo_path  owner/name  crate
+scripts/coordinator.sh --queue ready --max-items 5 --apply # now resolves each item's repo itself
+```
+Genuinely fleet-wide items (`all 39 repos`, `fleet-wide`, `… across all …`) are **skipped**
+as not-single-PR work. An explicit `--repo`/`--repo-path` always overrides the map.
+
+**Auto-merge is gated on real CI.** `--auto` only completes a merge once *required* checks
+pass — but a repo with **no** required checks would merge immediately. So the coordinator
+checks `has_required_checks(repo, base)` first and **withholds** auto-merge where green
+isn't enforced (the PR is left for a human). To opt a repo into safe auto-merge, enable a
+required check:
+
+```bash
+scripts/protect.sh example-org/compute main "build"   # require the "build" CI check (needs repo admin)
+```
+Until you do that, `--apply` (even with merge on) behaves as propose-only for that repo —
+which is the safe default.
+
+
+========================================================================
+FILE: .agents/skills/github-projects/references/gotchas.md
+========================================================================
+
+# Gotchas — why project automation fails
+
+These are the failure modes that turn a five-minute task into an hour. Read this
+before debugging a confusing error.
+
+## 1. ProjectsV2 is GraphQL-only — there is no REST
+The REST `/orgs/{org}/projects` and `/projects/{id}` endpoints are **classic
+Projects**, a separate deprecated product. They return 404/410 for the boards you
+see in the modern UI. Anything you can't do with `gh project …` goes through
+`gh api graphql`, never `gh api /…/projects`.
+
+## 2. The `project` token scope is mandatory
+Every command fails without it. Classic PATs and `GITHUB_TOKEN` often lack it.
+Check `gh auth status` for `project` in the scope list; add with
+`gh auth refresh -s project`. If a `GITHUB_TOKEN` env var is set, *that* token is
+used over the keyring one — verify the right token's scopes.
+
+## 3. Three different IDs, easy to confuse
+- **Project node ID** — `PVT_…` (the board itself)
+- **Field node ID** — `PVTF_…` / `PVTSSF_…` (single-select) / `PVTIF_…` (iteration)
+- **Item node ID** — `PVTI_…` (a row on the board)
+- **Option / iteration ID** — short hex like `47fc9ee4` (a choice *within* a field)
+
+`updateProjectV2ItemFieldValue` and `gh project item-edit` need **project + field +
+item** IDs together, and for single-select/iteration also the **option/iteration**
+ID. The item ID is *not* the issue's node ID — an issue gets a fresh `PVTI_…` per
+project it's added to. `scripts/set-field.sh` resolves all of this from names.
+
+## 4. Single-select wants the option ID, not the label
+`--single-select-option-id 47fc9ee4`, never `--single-select-option-id "In progress"`.
+Map the name to its ID first (`project-ids.sh` lists them). Same for iterations
+(`--iteration-id`, matched by iteration title).
+
+## 5. `item-list` defaults to 30 items
+Real boards have more. Always pass `--limit` (e.g. `--limit 500`) or you'll silently
+process a partial board. GraphQL pages cap at 100 — loop on `pageInfo.endCursor`.
+
+## 6. The CLI item-list keys custom fields by lowercased name
+`gh project item-list --format json` **does** include custom field values (verified) —
+but each is keyed by the field name **lowercased, spaces preserved**: a field named
+"Target date" appears as `."target date"`, "Estimate" as `.estimate`. Single-select
+shows the option name string; iteration shows an object `{title,startDate,duration}`.
+That's fine for quick reads, but it's lossy — two fields differing only in case
+collide, and you don't get node IDs. When you need the field/option **node IDs**, an
+exact name→value mapping, or iteration internals, use the GraphQL `fieldValues` query
+(graphql.md / recipe 5) instead.
+
+## 7. Built-in fields aren't set on the project item
+Assignees, Labels, Milestone, Repository are properties of the underlying issue/PR.
+Setting them means `gh issue edit …`, not `item-edit`. They then appear as board
+columns automatically. Trying to `item-edit` them fails with a data-type error.
+
+## 8. Draft issues are second-class until converted
+A draft (`item-create`) has no number, no repo, no assignees/labels, and can't be
+referenced from code. To make it real, `convertProjectV2DraftIssueItemToIssue`
+(GraphQL, needs a repo node ID). The CLI can't convert.
+
+## 9. Built-in workflows aren't scriptable via the API
+The project's automation ("auto-add items", "when issue closed → Done", auto-archive)
+is configured in the web UI and is **not** exposed for create/edit through the public
+GraphQL schema. If you need that behavior in automation, either configure it once in
+the UI, or replicate it yourself with a scheduled `gh` script / GitHub Action.
+
+## 10. Org vs user owner
+`--owner` is an org login *or* a user login; the GraphQL root differs
+(`organization(login:)` vs `user(login:)`). A query written for one returns `null`
+for the other — that null is not an error, just the wrong root. `project-ids.sh`
+tries both so you don't have to know which it is.
+
+## 11. Eventual consistency on counts
+`item-list`'s `totalCount` and a board's item count can lag a few seconds after a
+create/delete. If a count looks off right after a mutation, re-query before
+concluding something failed.
+
+## 11a. Destructive and silent commands print nothing on success
+`gh project delete`, `item-archive`, and `item-delete` succeed **silently** (exit 0,
+no stdout) — absence of output is not failure; re-query to confirm. More dangerous:
+`updateProjectV2Field` with `singleSelectOptions` **replaces the entire option set**.
+Any existing option you omit is deleted (and its item values lost). Always fetch the
+current options first (`project-ids.sh`) and pass them all back, adding/renaming
+within that full list. The same full-replacement rule applies to `iterationConfiguration`.
+
+## 12. Visibility and permissions
+Private org projects are invisible to tokens without org membership/permission even
+*with* `project` scope. A 404 on a project you can see in the browser usually means
+the token's account lacks access, not that the number is wrong.
+
+## 13. Reserved field names
+You cannot create a custom field named after a built-in or a reserved word —
+`field-create` fails with `GraphQL: Name cannot have a reserved value` (verified).
+Reserved/taken names include every built-in (**Title, Assignees, Status, Labels,
+Linked pull requests, Milestone, Repository, Reviewers, Parent issue, Sub-issues
+progress, Created, Updated, Closed**) **and abbreviations like `Repo`**. Pick a
+distinct name — e.g. `Repos`, `Component`, `Service`, `Workstream`.
+
+## 14. Scripting in a loop? Your shell is the trap, not the API
+The bundled scripts run under `bash` (shebang), but **a loop you type runs in your
+interactive shell, which is often `zsh`** on macOS. Three zsh behaviors silently
+break project-loading loops (each has bitten real runs):
+
+- **Unquoted `$var` does NOT word-split in zsh.** Stashing a command in a variable
+  and calling it (`SF="scripts/set-field.sh --owner …"; $SF`) tries to run one
+  program literally named `scripts/set-field.sh --owner …` → "command not found",
+  often swallowed. Call the script directly with normal arguments; don't build a
+  command string. (In `for x in $list`, words also won't split — use an array or
+  literal words.)
+- **`status`, `path`, `pipestatus` are reserved/read-only in zsh.** `read -r title status …`
+  or `for status in …` fails or silently misbehaves. Name loop variables something
+  else (`st`, `state`).
+- **`printf -v VAR` is a bashism** zsh lacks. Build multi-line strings with `$'…\n…'`.
+
+Two more safety habits, both learned the hard way:
+- **`gh … --format json` is always valid JSON** (newlines in draft bodies are
+  escaped — verified; it is *not* a gh bug). Prefer gh's built-in `--jq '…'` for
+  filtering: it parses internally, with no external pipe or shell-quoting risk.
+  If you do pipe to external `jq`, quote the producer/variable.
+- **Don't suppress `set-field.sh` output.** It prints a confirmation per field on
+  success and a clear error on failure, and now exits non-zero if any field fails —
+  but only if you let those signals through. Hiding stdout/stderr reintroduces the
+  silent-failure trap. When setting many fields, use one `--set "A=x" --set "B=y"`
+  call per item (see recipes.md) so there's less loop to get wrong.
+
+## 15. A live working board should not be marked as a template
+`projectV2.template` is a real flag (shown as a "Private template" badge). A template
+is meant to be **copied** to spawn new projects, not used as your day-to-day board.
+If your live board shows that badge, it was marked by mistake (`gh project mark-template`
+or the UI). Check and unset it — note `updateProjectV2` has **no** `template` field; use
+the dedicated mutation (verified):
+```bash
+# is it a template?
+gh api graphql -f query='query{organization(login:"OWNER"){projectV2(number:N){template}}}'
+# unset it:
+gh api graphql -f query='mutation($p:ID!){unmarkProjectV2AsTemplate(input:{projectId:$p}){projectV2{template}}}' -f p=PVT_xxx
+# (markProjectV2AsTemplate sets it.)
+```
+
+## 16. All-drafts board: the symptom cluster
+If a board's items are all **draft issues**, you'll see empty `Created`/`Updated`
+("None yet"), an empty built-in `Repository` (prompting someone to bolt on a manual
+"Repos" field), no assignees/labels, and no link from code. That's not a bug — it's
+the cost of drafts. Make actionable items **real issues** instead; the built-ins then
+fill themselves. See `references/conventions.md`.
+
+
+========================================================================
+FILE: .agents/skills/github-projects/references/graphql.md
+========================================================================
+
+# ProjectsV2 GraphQL reference
+
+Use GraphQL for everything the `gh project` CLI cannot do: **reading custom field
+values per item, creating/configuring views and iteration fields, editing
+single-select options, converting drafts to issues, bulk updates, and full
+pagination.** Run it through `gh api graphql` so it inherits your auth.
+
+> REST does not exist for ProjectsV2. The REST `/orgs/{org}/projects` and
+> `/projects/*` endpoints are **classic Projects** (a different, deprecated
+> product). Never reach for them — they return 410/404 for new projects.
+
+Pattern for every call:
+```bash
+gh api graphql -f owner=example-org -F number=2 -f query='…'
+```
+`-f` passes a string variable, `-F` a typed (int/bool) variable. Inside the query,
+GraphQL variables are `$owner`, `$number`, etc.
+
+## Contents
+- [Resolve project + field IDs](#resolve-project--field-ids)
+- [Read items with custom field values](#read-items-with-custom-field-values)
+- [Pagination](#pagination)
+- [Set field values (the canonical mutation)](#set-field-values-the-canonical-mutation)
+- [Add / create / archive / delete items](#add--create--archive--delete-items)
+- [Convert a draft into a real issue](#convert-a-draft-into-a-real-issue)
+- [Iteration fields](#iteration-fields)
+- [Single-select option editing](#single-select-option-editing)
+- [Views](#views)
+- [Built-in fields and sub-issues](#built-in-fields-and-sub-issues)
+
+> **Every query below uses the `organization(login:)` root.** For a **user-owned**
+> project, swap it to `user(login:)` — the org root returns `{"organization": null}`
+> with **no `errors` key**, which looks like success but yields nothing. Also note
+> `@me` is a gh-CLI-ism, *not* a valid GraphQL login: resolve it first with
+> `gh api user -q .login`. `scripts/project-ids.sh` handles both for you (tries each
+> root, translates `@me`), so prefer it when you can.
+
+## Resolve project + field IDs
+
+`scripts/project-ids.sh <owner> <number>` wraps this and auto-detects org vs user.
+The raw query (org form):
+```graphql
+query($owner: String!, $number: Int!) {
+  organization(login: $owner) {           # or: user(login: $owner)
+    projectV2(number: $number) {
+      id title
+      fields(first: 50) { nodes {
+        ... on ProjectV2FieldCommon { id name dataType }
+        ... on ProjectV2SingleSelectField { options { id name } }
+        ... on ProjectV2IterationField { configuration { iterations { id title startDate } } }
+      } }
+    }
+  }
+}
+```
+
+## Read items with custom field values
+
+The CLI list already includes custom values (lowercased keys — see cli.md), so reach
+for this query when you need the field/option **node IDs**, an exact case-sensitive
+name mapping, or full iteration internals. `fieldValues` returns the typed value for
+every populated field on each item:
+```bash
+gh api graphql -f owner=example-org -F number=2 -f query='
+query($owner: String!, $number: Int!) {
+  organization(login: $owner) { projectV2(number: $number) {
+    items(first: 50) { nodes {
+      id
+      content { __typename
+        ... on Issue        { number title url state }
+        ... on PullRequest  { number title url state }
+        ... on DraftIssue   { title body }
+      }
+      fieldValues(first: 20) { nodes {
+        __typename
+        ... on ProjectV2ItemFieldTextValue        { text       field { ... on ProjectV2FieldCommon { name } } }
+        ... on ProjectV2ItemFieldNumberValue      { number     field { ... on ProjectV2FieldCommon { name } } }
+        ... on ProjectV2ItemFieldDateValue        { date       field { ... on ProjectV2FieldCommon { name } } }
+        ... on ProjectV2ItemFieldSingleSelectValue{ name       field { ... on ProjectV2FieldCommon { name } } }
+        ... on ProjectV2ItemFieldIterationValue   { title      field { ... on ProjectV2FieldCommon { name } } }
+      } }
+    } }
+  } }
+}'
+```
+
+## Pagination
+
+Both `items` and `fields` cap at 100 per page. Loop on `pageInfo`:
+```graphql
+items(first: 100, after: $cursor) {
+  pageInfo { hasNextPage endCursor }
+  nodes { id }
+}
+```
+Pass `-F cursor=<endCursor>` on each subsequent call until `hasNextPage` is false.
+The CLI's `--limit` does this for you on `item-list`; GraphQL you drive yourself.
+
+## Set field values (the canonical mutation)
+
+`scripts/set-field.sh` wraps this for plain names. The raw mutation:
+```bash
+gh api graphql -f query='
+mutation($project:ID!, $item:ID!, $field:ID!) {
+  updateProjectV2ItemFieldValue(input:{
+    projectId:$project, itemId:$item, fieldId:$field,
+    value:{ singleSelectOptionId: "47fc9ee4" }   # one of the value shapes below
+  }) { projectV2Item { id } }
+}' -f project=PVT_xxx -f item=PVTI_xxx -f field=PVTSSF_xxx
+```
+`value` accepts exactly one of:
+- `text: "…"`
+- `number: 5`
+- `date: "2026-07-01"`
+- `singleSelectOptionId: "<option-id>"`
+- `iterationId: "<iteration-id>"`
+
+To clear a value use `clearProjectV2ItemFieldValue(input:{projectId, itemId, fieldId})`.
+
+## Add / create / archive / delete items
+
+```graphql
+# add existing issue/PR (you need the content's node ID, e.g. from `gh issue view --json id`)
+mutation($p:ID!,$c:ID!){ addProjectV2ItemById(input:{projectId:$p, contentId:$c}){ item{ id } } }
+
+# create a draft
+mutation($p:ID!){ addProjectV2DraftIssue(input:{projectId:$p, title:"…", body:"…"}){ projectItem{ id } } }
+
+# edit a draft's title/body in bulk (CLI does one at a time via item-edit --title/--body).
+# Needs the DRAFT's node ID (the DI_… content id), not the PVTI_ item id.
+mutation($d:ID!){ updateProjectV2DraftIssue(input:{draftIssueId:$d, title:"…", body:"…"}){ draftIssue{ id } } }
+
+mutation($p:ID!,$i:ID!){ archiveProjectV2Item(input:{projectId:$p, itemId:$i}){ item{ id } } }
+mutation($p:ID!,$i:ID!){ unarchiveProjectV2Item(input:{projectId:$p, itemId:$i}){ item{ id } } }
+mutation($p:ID!,$i:ID!){ deleteProjectV2Item(input:{projectId:$p, itemId:$i}){ deletedItemId } }
+```
+
+`gh project item-list` hides archived items, so to **find what's archived** (e.g. to
+restore it) query `isArchived` directly — it's the only way to enumerate them:
+```bash
+gh api graphql -f owner=example-org -F number=2 -f query='
+query($owner:String!,$number:Int!){ organization(login:$owner){ projectV2(number:$number){
+  items(first:100){ nodes { id isArchived content{ ... on Issue { title } ... on DraftIssue { title } } } } } } }' \
+  | jq -r '.data.organization.projectV2.items.nodes[] | select(.isArchived) | "\(.id)\t\(.content.title)"'
+```
+
+## Convert a draft into a real issue
+
+The CLI can't do this. Draft → issue requires the target repository's node ID:
+```graphql
+mutation($item:ID!, $repo:ID!) {
+  convertProjectV2DraftIssueItemToIssue(input:{ itemId:$item, repositoryId:$repo }) {
+    item { id content { ... on Issue { number url } } }
+  }
+}
+```
+Get the repo node ID with `gh repo view OWNER/REPO --json id -q .id`.
+
+## Iteration fields
+
+The CLI cannot create iteration fields. Two things to know, both verified against
+the live API:
+
+- Creating one **without** `iterationConfiguration` succeeds but yields an **empty**
+  field (`iterations: []`) — GitHub does **not** auto-seed a cadence. You then can't
+  assign a sprint until iterations exist (set the cadence in the project UI, or pass
+  a configuration as below).
+- If you pass `iterationConfiguration`, its `iterations` list is **required**
+  (`[ProjectV2Iteration!]!`); each element needs `startDate` (YYYY-MM-DD),
+  `duration` (days), and `title`, all non-null.
+
+Create a *usable* iteration field with two sprints:
+```bash
+gh api graphql -f query='
+mutation($p:ID!){
+  createProjectV2Field(input:{
+    projectId:$p, dataType:ITERATION, name:"Sprint",
+    iterationConfiguration:{ startDate:"2026-06-09", duration:14, iterations:[
+      { startDate:"2026-06-09", duration:14, title:"Sprint 1" },
+      { startDate:"2026-06-23", duration:14, title:"Sprint 2" }
+    ] }
+  }){ projectV2Field { ... on ProjectV2IterationField { id
+        configuration { iterations { id title startDate } } } } }
+}' -f p=PVT_xxx
+```
+After creating, read the iteration IDs back with `scripts/project-ids.sh` before
+assigning them — `scripts/set-field.sh --field Sprint --value "Sprint 2"` matches by
+title and will error clearly if the field has no iterations yet.
+
+**Add/replace iterations on an *existing* field** with the same
+`iterationConfiguration` on `updateProjectV2Field`. Like option editing below, this is
+a **full replacement** — list every iteration you want to keep, or it's dropped:
+```bash
+gh api graphql -f query='
+mutation($f:ID!){
+  updateProjectV2Field(input:{ fieldId:$f, iterationConfiguration:{
+    startDate:"2026-06-09", duration:14,
+    iterations:[ { startDate:"2026-06-09", duration:14, title:"Sprint 1" } ] } }){
+    projectV2Field { ... on ProjectV2IterationField { configuration { iterations { id title } } } } }
+}' -f f=PVTIF_xxx
+```
+
+## Single-select option editing
+
+The CLI can only set options at field-create time. To add/rename/reorder options
+later, `updateProjectV2Field` takes the option list — but this is a **full
+replacement, not a merge**. ⚠️ Any existing option you leave out is **deleted**, and
+every item that held it loses that value. So **always fetch the current options first
+and pass them all back**, editing within the complete list:
+```bash
+# 1. read current options (keep their ids to preserve history)
+scripts/project-ids.sh example-org 2 | jq '.fields[] | select(.name=="Priority").options'
+# 2. send the FULL set — existing entries keep their id; new ones omit id
+gh api graphql -f query='
+mutation($f:ID!){
+  updateProjectV2Field(input:{ fieldId:$f, singleSelectOptions:[
+    { id:"<existing-id>", name:"P0", color:RED,    description:"" }
+    { id:"<existing-id>", name:"P1", color:ORANGE, description:"" }
+    {                     name:"P2", color:GRAY,   description:"" }   # new option
+  ] }){ projectV2Field { ... on ProjectV2SingleSelectField { id options { id name } } } }
+}' -f f=PVTSSF_xxx
+```
+Colors are an enum (RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK, GRAY). `name`,
+`color`, and `description` are all **required** per option (use `""` for no description).
+
+> Build this list as a **GraphQL literal** — unquoted keys, bare enum colors:
+> `{ name:"P0", color:RED, description:"" }`. Do **not** splice `jq` output straight
+> in: JSON's quoted keys (`{"name":"P0","color":"RED"}`) are invalid GraphQL and fail
+> with `Expected NAME, actual: STRING`. To build it programmatically, either emit the
+> literal yourself or pass the options as a typed query **variable**
+> (`$opts:[ProjectV2SingleSelectFieldOptionInput!]!`) rather than interpolating text.
+
+## Views
+
+Views (Board/Table/Roadmap layouts, their grouping/sorting/filters) are read-only
+through the public API for the most part:
+```graphql
+views(first: 20) { nodes { id name layout number } }
+```
+Creating and fully configuring views (`createProjectV2View`, slice/group settings)
+is partially supported and changes between schema versions — confirm against the
+current schema (`gh api graphql -f query='query{__type(name:"Mutation"){fields{name}}}' | jq` )
+before relying on a mutation. For most automation you set filters in the UI once and
+drive items/fields via the API.
+
+## Built-in fields and sub-issues
+
+Assignees, Labels, Milestone, and Repository are **properties of the underlying
+issue/PR**, not project-item field values. Set them on the issue itself:
+```bash
+gh issue edit 42 --repo example-org/systems --add-assignee alice --add-label bug --milestone "v1"
+```
+They then surface as columns on the board automatically. Sub-issue progress and
+Parent issue likewise derive from the issue graph (`gh issue edit --add-sub-issue`).
+
+
+========================================================================
+FILE: .agents/skills/github-projects/references/recipes.md
+========================================================================
+
+# Recipes — end-to-end project workflows
+
+Copy-paste workflows that chain the primitives. They assume `OWNER=example-org`
+and a project `NUM`. Scripts referenced live in `../scripts/`.
+
+## 1. Triage an issue onto the board with a status
+
+The most common operation: take an existing issue, put it on the board, set Status.
+```bash
+ITEM=$(scripts/add-item.sh --owner "$OWNER" --project "$NUM" \
+         --url https://github.com/example-org/systems/issues/42)
+scripts/set-field.sh --owner "$OWNER" --project "$NUM" --item "$ITEM" --field Status --value "To triage"
+```
+
+## 2. Capture a quick idea as a draft, then promote it later
+
+```bash
+# create a draft (no repo needed yet)
+ITEM=$(gh project item-create "$NUM" --owner "$OWNER" --title "Spike: cache layer" --format json | jq -r '.id')
+scripts/set-field.sh --owner "$OWNER" --project "$NUM" --item "$ITEM" --field Status --value Backlog
+
+# later: convert it into a real tracked issue in a repo
+REPO_ID=$(gh repo view example-org/systems --json id -q .id)
+gh api graphql -f query='
+mutation($item:ID!,$repo:ID!){
+  convertProjectV2DraftIssueItemToIssue(input:{itemId:$item, repositoryId:$repo}){
+    item{ content{ ... on Issue { number url } } } } }' \
+  -f item="$ITEM" -f repo="$REPO_ID"
+```
+
+## 3. Bulk-add every open issue with a label
+
+```bash
+gh issue list --repo example-org/systems --label "needs-triage" --state open \
+  --json url -q '.[].url' | while read -r url; do
+  scripts/add-item.sh --owner "$OWNER" --project "$NUM" --url "$url" >/dev/null
+  echo "added $url"
+done
+```
+
+## 4. Move all "In review" items to "Done"
+
+```bash
+PROJECT_ID=$(scripts/project-ids.sh "$OWNER" "$NUM" | jq -r '.projectId')
+gh project item-list "$NUM" --owner "$OWNER" --limit 500 --format json \
+  | jq -r '.items[] | select(.status=="In review") | .id' \
+  | while read -r item; do
+      scripts/set-field.sh --owner "$OWNER" --project "$NUM" --item "$item" --field Status --value Done
+    done
+```
+
+## 5. Snapshot the board as a status report
+
+Reads custom field values with their field node IDs via GraphQL. (The CLI list also
+carries the values as lowercased keys; use GraphQL when you need the IDs or exact
+names.) This assumes an **org** owner — for a user/`@me` project, swap
+`organization(login:)` → `user(login:)` (and `.data.organization` → `.data.user` in
+the jq), resolving `@me` first with `gh api user -q .login`:
+```bash
+gh api graphql -f owner="$OWNER" -F number="$NUM" -f query='
+query($owner:String!,$number:Int!){
+  organization(login:$owner){ projectV2(number:$number){
+    items(first:100){ nodes {
+      content{ __typename
+        ... on Issue { number title url }
+        ... on DraftIssue { title } }
+      fieldValues(first:20){ nodes{
+        ... on ProjectV2ItemFieldSingleSelectValue { name field{ ... on ProjectV2FieldCommon { name } } } } } } } } } }' \
+  | jq -r '.data.organization.projectV2.items.nodes[]
+           | (.content.title) as $t
+           | (.fieldValues.nodes[] | select(.field.name=="Status") | .name) as $s
+           | "\($s // "—")\t\($t)"' | sort
+```
+
+## 6. Set up a fresh project with custom fields
+
+```bash
+gh project create --owner "$OWNER" --title "Refinement Board"      # note the new NUM in output
+gh project field-create "$NUM" --owner "$OWNER" --name "Priority" --data-type SINGLE_SELECT \
+  --single-select-options "P0,P1,P2,P3"
+gh project field-create "$NUM" --owner "$OWNER" --name "Estimate"    --data-type NUMBER
+gh project field-create "$NUM" --owner "$OWNER" --name "Target date" --data-type DATE
+gh project link "$NUM" --owner "$OWNER" --repo systems              # show it on the repo's Projects tab
+```
+
+## 7. Find an item's ID from its issue URL
+
+You often have the issue URL but need the project-item ID to edit fields:
+```bash
+ISSUE_URL="https://github.com/example-org/systems/issues/42"
+ITEM=$(gh project item-list "$NUM" --owner "$OWNER" --limit 500 --format json \
+        | jq -r --arg u "$ISSUE_URL" '.items[] | select(.content.url==$u) | .id')
+```
+(Re-adding via `add-item.sh` is simpler and idempotent — it returns the same ID.)
+
+## 8. Sync Status into a repo label (one-way mirror)
+
+```bash
+# Note: loop var is `st`, NOT `status` — `status` is read-only in zsh (gotchas.md #14).
+gh api graphql -f owner="$OWNER" -F number="$NUM" -f query='…items+Status+content.number…' \
+  | jq -r '… "\(.number) \(.status)"' \
+  | while read -r num st; do
+      gh issue edit "$num" --repo example-org/systems --add-label "status:$st"
+    done
+```
+(Expand the first line with the query from recipe 5; this is a sketch of the join.)
+
+## 9. Bulk-load a backlog of draft items with fields (zsh-safe)
+
+The common "seed N items, each with Status/Effort/Repos" flow. The traps that bite
+here are all shell-level (gotchas.md #14), so this pattern is deliberately defensive:
+loop var names avoid zsh reserved words, the scripts are called directly (never via a
+command-in-a-variable), and each item's fields land in a single `--set` call.
+
+```bash
+OWNER=example-org; NUM=2
+
+# 1. Use the project's REAL Status options (they differ per project). Print them first:
+scripts/project-ids.sh "$OWNER" "$NUM" | jq -r '.fields[] | select(.name=="Status").options[].name'
+
+# 2. Rows are TAB-separated: title <TAB> status <TAB> effort <TAB> repos
+#    (set-field exits non-zero on a bad value, so a typo in a Status name is loud.)
+while IFS=$'\t' read -r title st eff repos; do
+  [ -z "$title" ] && continue
+  item=$(gh project item-create "$NUM" --owner "$OWNER" --title "$title" --format json | jq -r '.id')
+  scripts/set-field.sh --owner "$OWNER" --project "$NUM" --item "$item" \
+    --set "Status=$st" --set "Effort=$eff" --set "Repos=$repos"
+done <<'ROWS'
+W0.1 freeze clean-main	Done	S	generation
+W0.2 build convention	Done	M	compute
+W0.3 retire cloudbuild	Ready	S	brokers
+ROWS
+
+# 3. Verify with gh's built-in --jq (valid JSON, no external pipe):
+gh project item-list "$NUM" --owner "$OWNER" --limit 500 --format json \
+  --jq '.items[] | "\(.title) | \(.status) | \(.effort) | \(.repos)"'
+```
+
+If you're more comfortable in `bash`, wrap the whole loop in `bash -c '…'` to sidestep
+the zsh word-split / reserved-variable quirks entirely.
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/add-item.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# add-item.sh — Add an existing issue or PR to a project and print its item ID.
+#
+# `gh project item-add` adds the content but you usually want the new project
+# *item* node ID immediately so you can set its fields (Status, Sprint, …) in the
+# same breath. This prints just that ID on stdout, ready to feed into set-field.sh.
+#
+# Usage:   add-item.sh --owner <o> --project <n> --url <issue-or-pr-url>
+# Example:
+#   ITEM=$(add-item.sh --owner example-org --project 2 \
+#            --url https://github.com/example-org/systems/issues/42)
+#   set-field.sh --owner example-org --project 2 --item "$ITEM" --field Status --value Ready
+#
+# Note: adding the same content twice is idempotent — GitHub returns the existing
+# item's ID rather than creating a duplicate.
+set -euo pipefail
+
+OWNER="" PROJECT="" URL=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)   OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --url)     URL="$2"; shift 2;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
+gp_resolve; gp_require_target          # --owner/--project optional; fall back to active project
+: "${URL:?--url required}"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+gh project item-add "$PROJECT" --owner "$OWNER" --url "$URL" --format json | jq -r '.id'
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/claim.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# claim.sh — claim a board item for the current agent (self-claim + verify).
+#
+# Identity defaults to the current git branch/worktree name (your fleet runs each
+# agent in its own `.wt/` worktree, so that's unique and links the item to the
+# branch/PR). Override with --agent.
+#
+# Contention is handled best-effort in two steps, because ProjectsV2 has no atomic
+# compare-and-set:
+#   1. pre-check — if the item already shows a *different* agent, refuse (unless --force)
+#   2. claim     — set Agent=<id> and Status=In progress in one call
+#   3. verify    — after a short delay, re-read; if Agent isn't yours, you lost the race
+#
+# Usage:
+#   claim.sh --item <PVTI_…> [--agent <id>] [--status "In progress"] [--force] [--verify-delay 2]
+#   (--owner/--project optional — falls back to the active project; see project.sh)
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+
+OWNER="" PROJECT="" ITEM="" AGENT="" STATUS="$GP_STATUS_ACTIVE" FORCE=0 DELAY=2
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)        OWNER="$2"; shift 2;;
+    --project)      PROJECT="$2"; shift 2;;
+    --item)         ITEM="$2"; shift 2;;
+    --agent)        AGENT="$2"; shift 2;;
+    --status)       STATUS="$2"; shift 2;;
+    --force)        FORCE=1; shift;;
+    --verify-delay) DELAY="$2"; shift 2;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+gp_resolve; gp_require_target
+: "${ITEM:?--item required}"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+# Agent id = git branch/worktree name unless given.
+if [ -z "$AGENT" ]; then
+  AGENT="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)"
+  [ "$AGENT" = "HEAD" ] && AGENT=""    # detached
+fi
+[ -n "$AGENT" ] || { echo "error: no --agent and no git branch detected. Pass --agent <id>." >&2; exit 2; }
+case "$AGENT" in main|master|trunk)
+  echo "warning: agent id is '$AGENT' — that's a shared branch, not a per-agent worktree; claims won't be unique." >&2 ;;
+esac
+
+# Read the item's current Agent (text) + Status (single-select) in one query.
+read_item() {
+  gh api graphql -f id="$ITEM" -f query='query($id:ID!){node(id:$id){... on ProjectV2Item{
+    fieldValues(first:50){nodes{
+      __typename
+      ... on ProjectV2ItemFieldTextValue{text field{... on ProjectV2FieldCommon{name}}}
+      ... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2FieldCommon{name}}}
+    }}}}}' 2>/dev/null \
+  | jq -r '[.data.node.fieldValues.nodes[]?] as $n
+    | (([$n[]|select(.field.name==env.GP_FIELD_AGENT)|.text]|first) // "") as $a
+    | (([$n[]|select(.field.name==env.GP_FIELD_STATUS)|.name]|first) // "") as $s
+    | "\($a)\t\($s)"'
+}
+
+cur="$(read_item)"; cur_agent="${cur%%	*}"; cur_status="${cur#*	}"
+if [ -n "$cur_agent" ] && [ "$cur_agent" != "$AGENT" ] && [ "$FORCE" -ne 1 ]; then
+  echo "refused: '$ITEM' already claimed by '$cur_agent' (status: ${cur_status:-—}). Use --force to steal." >&2
+  exit 3
+fi
+
+"$SCRIPT_DIR/set-field.sh" --owner "$OWNER" --project "$PROJECT" --item "$ITEM" \
+  --set "$GP_FIELD_AGENT=$AGENT" --set "$GP_FIELD_STATUS=$STATUS" >/dev/null
+
+# Verify — a delay lets a competing write land so we can detect a lost race.
+[ "${DELAY:-0}" -gt 0 ] 2>/dev/null && sleep "$DELAY" || true
+after="$(read_item)"; after_agent="${after%%	*}"
+if [ "$after_agent" != "$AGENT" ]; then
+  echo "LOST RACE: '$ITEM' now shows '$after_agent', not '$AGENT'. Yield to them." >&2
+  exit 3
+fi
+echo "claimed $ITEM as '$AGENT' (status: $STATUS)"
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/claims.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# claims.sh — who is working on what. Lists claimed items grouped by agent, and
+# flags two anomalies: items In progress with NO agent (unclaimed-but-active), and
+# items with an agent but NOT In progress (possibly a stale claim to clean up).
+#
+# Usage:  claims.sh [--limit 500]
+#   (--owner/--project optional — falls back to the active project)
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+
+OWNER="" PROJECT="" LIMIT=500
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)   OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --limit)   LIMIT="$2"; shift 2;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+gp_resolve; gp_require_target
+
+# With a gateway configured, read the board through the local snapshot it feeds
+# (snapshot records key fields by their real name, not lowercased).
+if gp_acp_enabled; then
+  "$SCRIPT_DIR/snapshot.sh" --owner "$OWNER" --project "$PROJECT" >/dev/null
+  jq -s -r '
+  (env.GP_FIELD_AGENT) as $ak |
+  (env.GP_FIELD_STATUS) as $sk |
+  (env.GP_STATUS_ACTIVE) as $active |
+  ([.[] | select((.fields[$ak] // "")|length>0)] | sort_by(.fields[$ak])) as $claimed
+  | "CLAIMED  (\($claimed|length)):",
+    ($claimed | group_by(.fields[$ak])[] |
+       "  ▸ \(.[0].fields[$ak])  (\(length))",
+       (.[] | "      [\(.fields[$sk] // "—")] \(.title)")),
+    "",
+    "⚠ \(env.GP_STATUS_ACTIVE) with NO agent:",
+    ([.[] | select((.fields[$sk]//"") == $active and ((.fields[$ak]//"")|length)==0)]
+       | if length==0 then "  none" else (.[] | "  - \(.title)") end),
+    "",
+    "⚠ Agent set but not \(env.GP_STATUS_ACTIVE) (possibly stale):",
+    ([.[] | select(((.fields[$ak]//"")|length)>0 and (.fields[$sk]//"") != $active)]
+       | if length==0 then "  none" else (.[] | "  - [\(.fields[$sk] // "—")] \(.fields[$ak]): \(.title)") end)
+  ' "$(gp_snapshot_jsonl)"
+  exit 0
+fi
+
+# Item-list keys fields by lowercased name, so the configured Agent/Status fields are
+# `.<agent-name-lowercased>` / `.<status-name-lowercased>`. Pipe to EXTERNAL jq (gh's
+# embedded jq doesn't expose env) and bind those keys from the board vocabulary.
+gh project item-list "$PROJECT" --owner "$OWNER" --limit "$LIMIT" --format json \
+| jq -r '
+  (env.GP_FIELD_AGENT  | ascii_downcase) as $ak |
+  (env.GP_FIELD_STATUS | ascii_downcase) as $sk |
+  (env.GP_STATUS_ACTIVE| ascii_downcase) as $active |
+  ([.items[] | select((.[$ak] // "")|length>0)] | sort_by(.[$ak])) as $claimed
+  | "CLAIMED  (\($claimed|length)):",
+    ($claimed | group_by(.[$ak])[] |
+       "  ▸ \(.[0][$ak])  (\(length))",
+       (.[] | "      [\(.[$sk] // "—")] \(.title)")),
+    "",
+    "⚠ \(env.GP_STATUS_ACTIVE) with NO agent:",
+    ([.items[] | select((((.[$sk]//"")|ascii_downcase)==$active) and (((.[$ak]//"")|length)==0))]
+       | if length==0 then "  none" else (.[] | "  - \(.title)") end),
+    "",
+    "⚠ Agent set but not \(env.GP_STATUS_ACTIVE) (possibly stale):",
+    ([.items[] | select((((.[$ak]//"")|length)>0) and (((.[$sk]//"")|ascii_downcase)!=$active))]
+       | if length==0 then "  none" else (.[] | "  - [\(.[$sk] // "—")] \(.[$ak]): \(.title)") end)
+'
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/coord.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# coord.sh — coordinator views over the local snapshot (no API calls; reads the JSONL
+# that snapshot.sh maintains). For an agent that resolves drafts/issues, runs the
+# kanban, and verifies PRs.
+#
+#   coord.sh summary        counts by Status, Band, and who's claiming what
+#   coord.sh ready          claimable work: Status=Ready with no Agent  (id  title)
+#   coord.sh mine [agent]   items claimed by <agent> (default: current git branch)
+#   coord.sh orphans        Status=In progress but NO Agent (active, unattributed)
+#   coord.sh stale          Agent set but Status≠In progress (likely a dead claim)
+#   coord.sh prs            items with linked PRs:  state  url  title  (for verification)
+#   coord.sh done-open      Status=Done but a linked PR isn't MERGED (needs attention)
+#
+# Field/status names come from the board vocabulary (lib.sh: GP_FIELD_*, GP_STATUS_*),
+# so this works on any board's schema — override those env vars for a non-example-org board.
+# Refresh the model first with `snapshot.sh`; coord.sh never hits the API itself.
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+VIEW="${1:-summary}"; [ $# -gt 0 ] && shift || true
+ARG="${1:-}"
+J="$(gp_snapshot_jsonl)"
+[ -f "$J" ] || { echo "no snapshot at $J — run: scripts/snapshot.sh" >&2; exit 1; }
+
+# jq helpers reading the configured vocabulary via env:
+#   S = the item's status   A = the item's agent
+case "$VIEW" in
+  summary)
+    echo "by $GP_FIELD_STATUS:"; jq -r '.fields[env.GP_FIELD_STATUS] // "—"' "$J" | sort | uniq -c | sort -rn | sed 's/^/  /'
+    echo "by $GP_FIELD_BAND:";   jq -r '.fields[env.GP_FIELD_BAND]   // "—"' "$J" | sort | uniq -c | sort -rn | sed 's/^/  /'
+    echo "claimed by:"; c=$(jq -r 'select((.fields[env.GP_FIELD_AGENT]//"")!="")|.fields[env.GP_FIELD_AGENT]' "$J" | sort | uniq -c | sort -rn)
+    [ -n "$c" ] && echo "$c" | sed 's/^/  /' || echo "  (no active claims)"
+    ;;
+  ready)
+    jq -r 'select(((.fields[env.GP_FIELD_STATUS]//"")|ascii_downcase==(env.GP_STATUS_READY|ascii_downcase)) and ((.fields[env.GP_FIELD_AGENT]//"")=="")) | "\(.id)\t\(.title)"' "$J"
+    ;;
+  triage)
+    jq -r 'select(((.fields[env.GP_FIELD_STATUS]//"")|ascii_downcase==(env.GP_STATUS_TRIAGE|ascii_downcase)) and ((.fields[env.GP_FIELD_AGENT]//"")=="")) | "\(.id)\t\(.title)"' "$J"
+    ;;
+  mine)
+    a="${ARG:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || true)}"
+    [ -n "$a" ] || { echo "no agent given and no git branch" >&2; exit 2; }
+    jq -r --arg a "$a" 'select((.fields[env.GP_FIELD_AGENT]//"")==$a) | "[\(.fields[env.GP_FIELD_STATUS]//"—")] \(.title)"' "$J"
+    ;;
+  orphans)
+    jq -r 'select(((.fields[env.GP_FIELD_STATUS]//"")|ascii_downcase==(env.GP_STATUS_ACTIVE|ascii_downcase)) and ((.fields[env.GP_FIELD_AGENT]//"")=="")) | "\(.id)\t\(.title)"' "$J"
+    ;;
+  stale)
+    jq -r 'select(((.fields[env.GP_FIELD_AGENT]//"")!="") and ((.fields[env.GP_FIELD_STATUS]//"")|ascii_downcase!=(env.GP_STATUS_ACTIVE|ascii_downcase))) | "[\(.fields[env.GP_FIELD_STATUS]//"—")] \(.fields[env.GP_FIELD_AGENT]): \(.title)"' "$J"
+    ;;
+  prs)
+    jq -r 'select((.linkedPRs|length)>0) | .title as $t | .linkedPRs[] | "\(.state)\t\(.url)\t\($t)"' "$J"
+    ;;
+  done-open)
+    jq -r 'select((.fields[env.GP_FIELD_STATUS]//"")|ascii_downcase==(env.GP_STATUS_DONE|ascii_downcase))
+           | select((.linkedPRs|length)>0)
+           | select(([.linkedPRs[]|select(.state=="MERGED")]|length)==0)
+           | "\(.title) → PRs: \([.linkedPRs[].state]|join(","))"' "$J"
+    ;;
+  *) echo "usage: coord.sh {summary|ready|triage|mine [agent]|orphans|stale|prs|done-open}" >&2; exit 2;;
+esac
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/coordinator.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# coordinator.sh — autonomously work a project board by spawning cheap micro-agents.
+# The coordinator owns versioning: it pre-creates the worktree, and after the Resolver
+# edits+commits there, it strips lockfile collateral, pushes, opens the PR, runs a
+# Verifier, and (on green) arms an auto-merge. Failures are blamed and the same worker
+# is resumed with feedback, bounded by --max-retries.
+#
+#   coordinator.sh [--project-dir DIR] [--owner O --project N]
+#                  [--queue ready|triage | --item <id>] [--note "<extra ticket context>"]
+#                  [--repo owner/name --repo-path <local repo> [--crate <name>] [--base main]]
+#                  [--max-items N] [--max-retries N] [--model haiku]
+#                  [--apply] [--no-merge] [--allow-lockfile]
+#
+# SAFETY: dry-run by default (refresh + plan only). --apply executes but: processes at
+# most --max-items (default 1); SKIPS items whose title/gate signals a hold; works only
+# in worktrees (never main); strips unintended Cargo.lock churn; merges via
+# `gh pr merge --auto` so GitHub completes the merge only once required CI passes.
+# A single item's failure never aborts the run (no `set -e`); it's logged and skipped.
+set -uo pipefail   # deliberately NOT -e: per-item failures are contained, not fatal.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+OWNER="" PROJECT="" PDIR="" QUEUE="ready" ITEM="" NOTE="" REPO="" REPO_PATH="" CRATE="" BASE="main"
+MAXI=1 MAXR=2 MODEL="haiku" APPLY=0 MERGE=1 ALLOW_LOCK=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --project-dir) PDIR="$2"; shift 2;;
+    --owner) OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --queue) QUEUE="$2"; shift 2;;
+    --item) ITEM="$2"; shift 2;;
+    --note) NOTE="$2"; shift 2;;
+    --repo) REPO="$2"; shift 2;;
+    --repo-path) REPO_PATH="$2"; shift 2;;
+    --crate) CRATE="$2"; shift 2;;
+    --base) BASE="$2"; shift 2;;
+    --max-items) MAXI="$2"; shift 2;;
+    --max-retries) MAXR="$2"; shift 2;;
+    --model) MODEL="$2"; shift 2;;
+    --apply) APPLY=1; shift;;
+    --no-merge) MERGE=0; shift;;
+    --allow-lockfile) ALLOW_LOCK=1; shift;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+gp_resolve; gp_require_target
+PDIR="${PDIR:-$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")}"
+[ -n "$REPO_PATH" ] && [ ! -d "$REPO_PATH" ] && REPO_PATH="$PDIR/$REPO_PATH"
+LOGDIR="$PDIR/.coord-log"; mkdir -p "$LOGDIR"
+AGENT_ID="coord:$(hostname -s 2>/dev/null || echo coord)"
+
+slug() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-//; s/-$//' | cut -c1-40; }
+blame() { printf '%s\t%s\n' "$(date -u +%FT%TZ)" "$2" >> "$LOGDIR/$1.log"; echo "  blame: $2"; }
+# robust: pull the last well-formed JSON object out of a worker's (maybe fenced) output.
+last_json() { grep -oE '\{.*\}' | while IFS= read -r l; do printf '%s' "$l" | jq -ce . 2>/dev/null; done | tail -1; }
+jget() { jq -r "$1 // \"\"" 2>/dev/null; }
+# True only if the repo's base branch has REQUIRED status checks, so "auto-merge on
+# green" actually gates on CI. Without this, `gh pr merge --auto` would merge a PR with
+# no checks immediately — so we withhold auto-merge where green isn't enforced.
+has_required_checks() {
+  local n
+  n="$(gh api "repos/$1/branches/$2/protection/required_status_checks" \
+        --jq '((.contexts // [])|length) + ((.checks // [])|length)' 2>/dev/null)"
+  [ -n "$n" ] && [ "$n" -gt 0 ] 2>/dev/null
+}
+
+echo "coordinator: project=$OWNER #$PROJECT  dir=$PDIR  queue=$QUEUE  apply=$APPLY  merge=$MERGE  max-items=$MAXI"
+echo "refreshing snapshot…"; "$SCRIPT_DIR/snapshot.sh" --owner "$OWNER" --project "$PROJECT" >/dev/null 2>&1
+
+process_item() {
+  local ID="$1" TITLE="$2" REC GATE REPOS CLAIMED BRANCH WT checkcmd ticket rp on cr res
+  REC="$("$SCRIPT_DIR/snapshot.sh" get "$ID" 2>/dev/null)"
+  GATE="$(printf '%s' "$REC" | jget '.fields[env.GP_FIELD_GATE]')"
+  REPOS="$(printf '%s' "$REC" | jget '.fields[env.GP_FIELD_REPOS]')"
+  CLAIMED="$(printf '%s' "$REC" | jget '.fields[env.GP_FIELD_AGENT]')"
+  rp="$REPO_PATH"; on="$REPO"; cr="$CRATE"
+  echo; echo "▸ $ID  $TITLE"
+
+  # Hold guard: match real hold *conventions*, not loose words (e.g. a "Must Never"
+  # doc-section name must NOT trip it). Portable (no \b — BSD grep).
+  if printf '%s %s' "$TITLE" "$GATE" | grep -qiE 'held for|\(held|on hold|do not (proceed|merge|start|auto|touch)|blocked on|\[wip\]|do-not-'; then
+    echo "  SKIP: hold/blocked signal"; return 0; fi
+  if [ -n "$CLAIMED" ] && [ "$CLAIMED" != "$AGENT_ID" ]; then
+    echo "  SKIP: already claimed by '$CLAIMED'"; return 0; fi
+
+  # Genuinely fleet-wide / multi-repo items aren't single-PR work — skip (unless --repo
+  # was given explicitly, which overrides).
+  if [ -z "$REPO" ] && printf '%s' "$REPOS" | grep -qiE 'all [0-9]+|fleet-wide|across all|every (one )?of|[0-9]{2,} repos|polyrepo'; then
+    echo "  SKIP: fleet-wide/multi-repo item (Repos='$REPOS')"; return 0; fi
+  # Resolve the target repo from the item's Repos hint when not given explicitly.
+  if [ -z "$rp" ] || [ -z "$on" ]; then
+    res="$("$SCRIPT_DIR/repo-map.sh" resolve "$REPOS" 2>/dev/null)"
+    [ -n "$res" ] && { [ -z "$rp" ] && rp="$(printf '%s' "$res" | cut -f1)"; [ -z "$on" ] && on="$(printf '%s' "$res" | cut -f2)"; [ -z "$cr" ] && cr="$(printf '%s' "$res" | cut -f3)"; }
+  fi
+  if [ -z "$on" ] || [ -z "$rp" ]; then
+    echo "  SKIP: couldn't resolve a repo from Repos='${REPOS:-—}' (multi-repo or unmapped)"; return 0; fi
+
+  if [ "$APPLY" -ne 1 ]; then
+    echo "  WOULD: claim → worktree in $on → resolver → verify → $([ "$MERGE" = 1 ] && echo 'auto-merge if CI-gated' || echo 'PR only')"; return 0; fi
+  echo "  repo: $on  ($rp)${cr:+  crate=$cr}"
+
+  BRANCH="coord/$(slug "$TITLE")"; WT="$rp/.wt/coord-$(slug "$TITLE")"
+  "$SCRIPT_DIR/claim.sh" --owner "$OWNER" --project "$PROJECT" --item "$ID" --agent "$AGENT_ID" --verify-delay 0 >/dev/null 2>&1 \
+    || { echo "  could not claim — skipping"; return 0; }
+
+  # Coordinator owns the worktree (so it knows repo+branch deterministically).
+  if ! git -C "$rp" worktree list 2>/dev/null | grep -qF "$WT"; then
+    git -C "$rp" worktree add "$WT" -b "$BRANCH" "$BASE" >/dev/null 2>&1 \
+      || git -C "$rp" worktree add "$WT" "$BRANCH" >/dev/null 2>&1 \
+      || { echo "  worktree create failed"; "$SCRIPT_DIR/release.sh" --owner "$OWNER" --project "$PROJECT" --item "$ID" --status "$GP_STATUS_READY" >/dev/null 2>&1; return 0; }
+  fi
+  checkcmd="cargo check${cr:+ -p $cr}"
+  ticket="You are in an isolated git worktree at: $WT  (branch $BRANCH). Work ONLY here.
+Board item: $TITLE
+Gate / acceptance: ${GATE:-<infer from the title>}
+${NOTE}
+
+1. Make the smallest change that satisfies the gate. Match style; no version bumps.
+2. Prove it compiles: run \`$checkcmd\` in the worktree. If that regenerated Cargo.lock and you did not intend a dependency change, restore it (git checkout -- Cargo.lock).
+3. Commit to branch $BRANCH (end the message with a Co-Authored-By: Claude trailer). Do NOT push and do NOT open a PR — the coordinator does that.
+If blocked or ambiguous, STOP and report."
+
+  local SESSION="" FEEDBACK="" ok=0 PR="" attempt OUT V rv VOUT vv
+  for attempt in $(seq 1 "$MAXR"); do
+    echo "  resolver attempt $attempt…"
+    if [ -z "$SESSION" ]; then
+      OUT="$("$SCRIPT_DIR/spawn.sh" --role resolver --model "$MODEL" --dir "$WT" --ticket "$ticket" 2>/dev/null)"
+    else
+      OUT="$("$SCRIPT_DIR/spawn.sh" --role resolver --resume "$SESSION" --dir "$WT" --ticket "$FEEDBACK" 2>/dev/null)"
+    fi
+    SESSION="$(printf '%s' "$OUT" | sed -n 's/.*session=\([0-9a-f-]*\).*/\1/p' | head -1)"
+    V="$(printf '%s' "$OUT" | last_json)"
+    rv="$(printf '%s' "$V" | jget '.verdict')"
+    if [ "$rv" != "done" ]; then
+      blame "$ID" "resolver $attempt: ${rv:-no-verdict} — $(printf '%s' "$V" | jget '.note')"
+      FEEDBACK="Your previous attempt did not complete (verdict=${rv:-none}). Finish it; same rules."
+      continue
+    fi
+
+    # Strip unintended lockfile churn (unless --allow-lockfile).
+    if [ "$ALLOW_LOCK" -ne 1 ]; then
+      git -C "$WT" diff --name-only "$BASE" 2>/dev/null | grep -E '(^|/)Cargo\.lock$' | while IFS= read -r lf; do
+        git -C "$WT" checkout "$BASE" -- "$lf" >/dev/null 2>&1
+      done
+      git -C "$WT" diff --cached --quiet 2>/dev/null || git -C "$WT" commit -aqm "chore: drop unintended Cargo.lock regen (coordinator)" >/dev/null 2>&1
+    fi
+    # Coordinator pushes + opens (or reuses) the PR — it knows REPO and BRANCH for sure.
+    # gh pr create can race a fresh push (GitHub hasn't registered the branch yet), so
+    # retry a few times and reuse an existing PR if there is one. Log the real error.
+    git -C "$WT" push -q -u origin "$BRANCH" >/dev/null 2>&1
+    PR="" pr_err=""
+    for try in 1 2 3 4; do
+      PR="$(gh pr view "$BRANCH" -R "$on" --json url -q .url 2>/dev/null)"; [ -n "$PR" ] && break
+      PR="$(gh pr create -R "$on" --base "$BASE" --head "$BRANCH" --fill 2>/tmp/coord-prerr)"; [ -n "$PR" ] && break
+      pr_err="$(tail -1 /tmp/coord-prerr 2>/dev/null)"; sleep 3
+    done
+    [ -n "$PR" ] || blame "$ID" "pr-create failed after retries: ${pr_err:-unknown}"
+    echo "  PR: ${PR:-<none: $pr_err>}"
+
+    VOUT="$("$SCRIPT_DIR/spawn.sh" --role verifier --dir "$WT" \
+      --ticket "Verify board item: $TITLE. Worktree $WT (branch $BRANCH); PR ${PR:-n/a}. Gate: ${GATE:-infer}. Run \`$checkcmd\` and read \`git diff $BASE\`; judge independently." 2>/dev/null)"
+    vv="$(printf '%s' "$VOUT" | last_json | jget '.verdict')"
+    if [ "$vv" = "pass" ]; then
+      if [ "$MERGE" = 1 ] && [ -n "$PR" ]; then
+        if has_required_checks "$on" "$BASE"; then
+          gh pr merge "$PR" -R "$on" --squash --auto >/dev/null 2>&1 \
+            && echo "  auto-merge armed (GitHub merges once required checks pass)" \
+            || echo "  could not arm auto-merge (permissions?)"
+        else
+          echo "  auto-merge WITHHELD: $on has no required status checks on '$BASE' — 'green' isn't enforced; leaving PR for human merge."
+          blame "$ID" "auto-merge withheld: no required checks on $on/$BASE"
+        fi
+      fi
+      "$SCRIPT_DIR/set-field.sh" --owner "$OWNER" --project "$PROJECT" --item "$ID" --set "$GP_FIELD_STATUS=$GP_STATUS_REVIEW" >/dev/null 2>&1
+      "$SCRIPT_DIR/release.sh" --owner "$OWNER" --project "$PROJECT" --item "$ID" >/dev/null 2>&1
+      echo "  ✓ resolved → ${PR:-(PR pending)}  (verifier passed; $([ "$MERGE" = 1 ] && echo 'auto-merge armed' || echo 'merge held'))"
+      ok=1; break
+    else
+      blame "$ID" "verifier $attempt: FAIL — $(printf '%s' "$VOUT" | last_json | jq -r '.reasons // [] | join("; ")' 2>/dev/null)"
+      FEEDBACK="The verifier rejected your change: $(printf '%s' "$VOUT" | last_json | jq -r '.reasons // [] | join("; ")' 2>/dev/null). Fix and re-verify in the same worktree."
+    fi
+  done
+  if [ "$ok" -ne 1 ]; then
+    echo "  ✗ gave up after $MAXR attempts → back to Ready (worktree kept: $WT; log: $LOGDIR/$ID.log)"
+    "$SCRIPT_DIR/release.sh" --owner "$OWNER" --project "$PROJECT" --item "$ID" --status "$GP_STATUS_READY" >/dev/null 2>&1
+  fi
+}
+
+# Build the work list: one --item, or the queue (bash 3.2 has no mapfile).
+ROWS=()
+if [ -n "$ITEM" ]; then
+  ROWS=("$ITEM"$'\t'"$("$SCRIPT_DIR/snapshot.sh" get "$ITEM" 2>/dev/null | jq -r '.title // ""')")
+else
+  while IFS= read -r line; do [ -n "$line" ] && ROWS+=("$line"); done \
+    < <("$SCRIPT_DIR/coord.sh" "$QUEUE" 2>/dev/null | head -n "$MAXI")
+fi
+[ "${#ROWS[@]}" -gt 0 ] || { echo "queue '$QUEUE' is empty — nothing to do."; exit 0; }
+
+for row in "${ROWS[@]}"; do
+  process_item "${row%%	*}" "${row#*	}" || echo "  (item errored — continuing)"
+done
+echo; echo "coordinator: run complete."
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/lib.sh
+========================================================================
+
+#!/usr/bin/env bash
+# lib.sh — shared helpers, sourced by the github-projects scripts.
+#
+# It lets you pick an "active project" once (with project.sh) and then omit
+# --owner/--project on the other scripts. Resolution precedence, highest first:
+#   1. explicit --owner/--project (or positional args)
+#   2. env GH_PROJECT_OWNER / GH_PROJECT_NUMBER
+#   3. the active project saved by `project.sh use` (a small config file)
+
+GP_CONFIG="${GH_PROJECT_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/github-projects/current}"
+
+# ── Per-repository board profile ────────────────────────────────────────────────
+# <git-root>/.agents/board.env, when present, binds this repository to its board
+# and names that board's field vocabulary. It is committed (unlike .env.local,
+# which carries the gateway secret), so the binding travels with the repo.
+# Parsed, never sourced -- a repo file must not be able to run code here.
+# Only GH_PROJECT_OWNER / GH_PROJECT_NUMBER / GP_* keys are honoured, and the
+# environment still wins: an exported value is never overwritten.
+_gp_profile="$(git rev-parse --show-toplevel 2>/dev/null)/.agents/board.env"
+if [ -f "$_gp_profile" ]; then
+  while IFS='=' read -r _gp_k _gp_v; do
+    _gp_k="${_gp_k#"${_gp_k%%[![:space:]]*}"}"   # trim leading space from the key
+    case "$_gp_k" in
+      \#*|"") continue;;
+      GH_PROJECT_OWNER|GH_PROJECT_NUMBER|GP_*)
+        # Strip an inline `# comment`, surrounding space, and quotes -- a value
+        # like `4   # Infinite Studio` must bind the number, not the comment.
+        _gp_v="$(printf '%s' "$_gp_v" | sed -e 's/[[:space:]][[:space:]]*#.*$//' \
+                                            -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' \
+                                            -e 's/^"//' -e 's/"$//')"
+        [ -n "${!_gp_k:-}" ] || export "$_gp_k=$_gp_v";;
+    esac
+  done < "$_gp_profile"
+  unset _gp_k _gp_v
+fi
+unset _gp_profile
+
+# ── Board field vocabulary ──────────────────────────────────────────────────────
+# The claim/coord/coordinator layer needs to know which fields/values mean what.
+# Defaults match the example-org board; override via env for any other board's schema.
+# Exported so jq filters can read them as `env.GP_FIELD_STATUS`, etc.
+export GP_FIELD_STATUS="${GP_FIELD_STATUS:-Status}"   # the workflow single-select
+export GP_FIELD_AGENT="${GP_FIELD_AGENT:-Agent}"      # text field holding the claiming agent's id
+export GP_FIELD_BAND="${GP_FIELD_BAND:-Band}"         # grouping (wave/epic/phase)
+export GP_FIELD_REPOS="${GP_FIELD_REPOS:-Repos}"      # repo hint the coordinator resolves
+export GP_FIELD_GATE="${GP_FIELD_GATE:-Gate}"         # acceptance/done condition
+export GP_STATUS_READY="${GP_STATUS_READY:-Ready}"        # claimable
+export GP_STATUS_ACTIVE="${GP_STATUS_ACTIVE:-In progress}" # being worked
+export GP_STATUS_REVIEW="${GP_STATUS_REVIEW:-In review}"  # done, PR open
+export GP_STATUS_DONE="${GP_STATUS_DONE:-Done}"          # completed/merged
+export GP_STATUS_TRIAGE="${GP_STATUS_TRIAGE:-To triage}"  # the triage queue
+
+# ── ACP gateway (optional read path) ────────────────────────────────────────────
+# With ACP_GATEWAY_URL set, board READS go through a hosted gateway that holds
+# the GitHub App credentials, so no agent ever holds them. Writes are unaffected:
+# the gateway is pull-only by design, and add-item/set-field/claim/new-item keep
+# using the operator's own `gh` credentials. Everything here is inert when
+# ACP_GATEWAY_URL is unset -- the skill behaves exactly as before.
+#
+# ACP_GATEWAY_URL / ACP_GATEWAY_TOKEN normally live in the repository's
+# .env.local (never committed). Load them from there when not already exported.
+if [ -z "${ACP_GATEWAY_URL:-}" ]; then
+  _gp_env="$(git rev-parse --show-toplevel 2>/dev/null)/.env.local"
+  if [ -f "$_gp_env" ]; then
+    ACP_GATEWAY_URL="$(sed -n 's/^ACP_GATEWAY_URL=//p' "$_gp_env" | tr -d '"' | head -1)"
+    ACP_GATEWAY_TOKEN="${ACP_GATEWAY_TOKEN:-$(sed -n 's/^ACP_GATEWAY_TOKEN=//p' "$_gp_env" | tr -d '"' | head -1)}"
+    export ACP_GATEWAY_URL ACP_GATEWAY_TOKEN
+  fi
+  unset _gp_env
+fi
+
+# ACP is on when a gateway is configured -- unless the operator has explicitly
+# asked for the native fallback. Without that second clause the documented
+# escape hatch did nothing: the read paths short-circuited to the gateway on the
+# URL alone, so a board the gateway cannot serve (an installation without
+# owner-level Projects permission, say) was unreachable even with credentials
+# that could read it perfectly well.
+gp_acp_enabled() {
+  [ -n "${ACP_GATEWAY_URL:-}" ] && [ "${ACP_ALLOW_NATIVE_GITHUB:-0}" != 1 ]
+}
+
+gp_uri() { printf '%s' "$1" | jq -sRr @uri; }
+
+# gp_gateway_get <path> — one authenticated gateway read, body on stdout.
+#
+# The gateway answers a refusal with JSON saying what to do about it: an error
+# code, a detail, a remedy, and the context needed to retry (which owners it can
+# read, the allowlist entry to add, the App install URL). `curl -f` throws that
+# body away and reports only its own exit code, so a fixable misconfiguration
+# reaches the caller as an unexplained failure. Capture body and status instead.
+gp_gateway_get() {
+  [ -n "${ACP_GATEWAY_TOKEN:-}" ] || {
+    echo "error: ACP_GATEWAY_URL is set but ACP_GATEWAY_TOKEN is missing; refusing local GitHub Project fallback" >&2
+    return 78
+  }
+  local response status body
+  response="$(curl -sS --max-time "${ACP_GATEWAY_TIMEOUT:-20}" -w '\n%{http_code}' \
+    -H "Authorization: Bearer ${ACP_GATEWAY_TOKEN}" "${ACP_GATEWAY_URL%/}$1")" || {
+    echo "error: ACP gateway unreachable at ${ACP_GATEWAY_URL%/} (curl exit $?)" >&2
+    return 78
+  }
+  status="${response##*$'\n'}"; body="${response%$'\n'*}"
+  case "$status" in
+    2*) printf '%s\n' "$body"; return 0;;
+  esac
+  gp_gateway_explain "$status" "$1" "$body"
+  return 78
+}
+
+# gp_gateway_explain — print the gateway's own account of the refusal.
+gp_gateway_explain() {
+  {
+    echo "error: ACP gateway refused GET $2 (HTTP $1)"
+    if command -v jq >/dev/null 2>&1 && printf '%s' "$3" | jq -e . >/dev/null 2>&1; then
+      printf '%s' "$3" | jq -r '
+        "  code:   \(.error // "?")",
+        "  detail: \(.detail // .message // "-")",
+        (if .remedy then "  remedy: \(.remedy)" else empty end),
+        (if .owners_available then "  owners available: \(.owners_available | join(", "))" else empty end),
+        (if .allowlist then "  gateway allowlist: \(.allowlist)" else empty end),
+        (if .permissions then "  installation permissions: \(.permissions | to_entries | map("\(.key)=\(.value)") | join(", "))" else empty end)'
+    else
+      printf '  %s\n' "$3"
+    fi
+  } >&2
+}
+
+# gp_acp_context — the live board snapshot for the active project.
+gp_acp_context() {
+  gp_require_target
+  gp_gateway_get "/internal/project-context?owner=$(gp_uri "$OWNER")&project=$(gp_uri "$PROJECT")"
+}
+
+# gp_target_hint — when no board is selected, ask the gateway what it can see
+# rather than leaving the caller to guess an owner or a number. Best effort.
+gp_target_hint() {
+  gp_acp_enabled && [ -n "${ACP_GATEWAY_TOKEN:-}" ] && command -v jq >/dev/null 2>&1 || return 0
+  if [ -n "${OWNER:-}" ]; then
+    gp_gateway_get "/internal/projects?owner=$(gp_uri "$OWNER")" 2>/dev/null | jq -r '
+      "  boards on \(.owner):",
+      (.projects[]? | "    --project \(.number)  \(.title)"
+        + (if .allowed then "" else "   [not in the gateway allowlist]" end))' >&2
+  else
+    gp_gateway_get "/internal/installations" 2>/dev/null | jq -r '
+      "  owners this gateway can read:", (.installations[]? | "    --owner \(.login)")' >&2
+  fi
+  return 0
+}
+
+# gp_config_get <key> — read one value (owner|number|title) from the config file.
+gp_config_get() { [ -f "$GP_CONFIG" ] && sed -n "s/^$1=//p" "$GP_CONFIG" | head -1; }
+
+# gp_resolve — fill the OWNER and PROJECT globals from env/config if still empty.
+gp_resolve() {
+  OWNER="${OWNER:-${GH_PROJECT_OWNER:-$(gp_config_get owner)}}"
+  PROJECT="${PROJECT:-${GH_PROJECT_NUMBER:-$(gp_config_get number)}}"
+}
+
+# gp_require_target — friendly error if no project could be resolved.
+gp_require_target() {
+  if [ -z "${OWNER:-}" ] || [ -z "${PROJECT:-}" ]; then
+    {
+      echo "error: no project selected."
+      echo "  pass --owner/--project, set GH_PROJECT_OWNER/GH_PROJECT_NUMBER,"
+      echo "  or choose a default once:  scripts/project.sh use <owner> <number>"
+    } >&2
+    gp_target_hint
+    exit 2
+  fi
+}
+
+# ── Local board snapshot (the coordinator's cached model of the board) ──────────
+# Canonical = JSONL (one item per line); a flat TSV view is derived alongside it.
+# Base path: $GH_SNAPSHOT_FILE, else <git-root>/.board_snapshot (so .jsonl/.tsv sit
+# at the project root). Resolved lazily so it tracks the caller's repo.
+gp_snapshot_base() {
+  if [ -n "${GH_SNAPSHOT_FILE:-}" ]; then printf '%s' "$GH_SNAPSHOT_FILE";
+  else printf '%s/.board_snapshot' "$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")"; fi
+}
+gp_snapshot_jsonl() { printf '%s.jsonl' "$(gp_snapshot_base)"; }
+gp_snapshot_tsv()   { printf '%s.tsv'   "$(gp_snapshot_base)"; }
+
+# gp_snapshot_set_field <itemId> <fieldName> <value>
+# Keep the local snapshot aligned with a write WE just made — no extra API call.
+# Best-effort: silently no-ops if there's no snapshot or the item isn't in it (new
+# items reconcile on the next full `snapshot.sh`). Atomic (tmp+mv) so concurrent
+# writers can't corrupt the file; a lost concurrent patch reconciles on refresh.
+# Set GH_SNAPSHOT=off to disable.
+gp_snapshot_set_field() {
+  [ "${GH_SNAPSHOT:-on}" = "off" ] && return 0
+  command -v jq >/dev/null 2>&1 || return 0
+  local f; f="$(gp_snapshot_jsonl)"
+  [ -f "$f" ] || return 0
+  jq -c --arg id "$1" --arg n "$2" --arg v "$3" \
+    'if .id==$id then (.fields[$n]=$v) else . end' "$f" > "$f.tmp" 2>/dev/null \
+    && mv "$f.tmp" "$f" || rm -f "$f.tmp" 2>/dev/null
+  return 0
+}
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/new-item.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# new-item.sh — Create a board item the easy way, in one command.
+#
+# Two modes, picked by whether you pass --repo:
+#   * --repo owner/name  → creates a REAL issue, then adds it. The built-in fields
+#     (Repository, Assignees, Labels, Milestone, Created, Updated, Linked PRs) then
+#     populate themselves — nothing to type. This is the recommended path.
+#   * no --repo          → creates a DRAFT issue (for an unscoped idea). Drafts leave
+#     all those built-ins empty ("None yet"), so only use them when there's no repo yet.
+#
+# Either way, --set "Field=Value" (repeatable) fills the project-only fields in the
+# same call. Prints the project item ID (and the issue URL, in --repo mode).
+#
+# Usage:
+#   new-item.sh --owner <o> --project <n> --title "<t>" [--body "<b>"] \
+#     [--repo owner/name] [--label <l> ...] [--set "Field=Value" ...]
+#
+# Examples:
+#   # real issue — Repository/Assignees/Labels auto-fill from the issue:
+#   new-item.sh --owner example-org --project 2 --repo example-org/generation \
+#     --title "SSRF guard on fetch-time URL allowlist" --label security \
+#     --set "Status=To triage" --set "Band=Wave 0" --set "Severity=High" --set "Effort=M"
+#
+#   # draft — only the project fields you set:
+#   new-item.sh --owner example-org --project 2 --title "Spike: cache layer" \
+#     --set "Status=Backlog" --set "Band=Wave 0" --set "Effort=S"
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+OWNER="" PROJECT="" TITLE="" BODY="" REPO=""
+LABELS=() SETS=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)   OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --title)   TITLE="$2"; shift 2;;
+    --body)    BODY="$2"; shift 2;;
+    --repo)    REPO="$2"; shift 2;;
+    --label)   LABELS+=("$2"); shift 2;;
+    --set)     SETS+=("$2"); shift 2;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+. "$SCRIPT_DIR/lib.sh"
+gp_resolve; gp_require_target          # --owner/--project optional; fall back to active project
+: "${TITLE:?--title required}"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+if [ -n "$REPO" ]; then
+  iargs=(gh issue create -R "$REPO" --title "$TITLE" --body "$BODY")
+  if [ "${#LABELS[@]}" -gt 0 ]; then for l in "${LABELS[@]}"; do iargs+=(--label "$l"); done; fi
+  URL="$("${iargs[@]}")"
+  echo "issue: $URL"
+  ITEM="$("$SCRIPT_DIR/add-item.sh" --owner "$OWNER" --project "$PROJECT" --url "$URL")"
+else
+  dargs=(gh project item-create "$PROJECT" --owner "$OWNER" --title "$TITLE")
+  [ -n "$BODY" ] && dargs+=(--body "$BODY")
+  dargs+=(--format json)
+  ITEM="$("${dargs[@]}" | jq -r '.id')"
+fi
+
+if [ "${#SETS[@]}" -gt 0 ]; then
+  sargs=("$SCRIPT_DIR/set-field.sh" --owner "$OWNER" --project "$PROJECT" --item "$ITEM")
+  for s in "${SETS[@]}"; do sargs+=(--set "$s"); done
+  "${sargs[@]}"
+fi
+echo "$ITEM"
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/project-ids.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# project-ids.sh — Resolve a GitHub ProjectV2's opaque node IDs in one call.
+#
+# ProjectsV2 lives entirely in GitHub's GraphQL API; every project, field, and
+# single-select option is addressed by an opaque node ID (PVT_…, PVTF_…, etc.).
+# Setting a field value requires those IDs, so the very first thing any project
+# workflow needs is this "Rosetta stone". Run it once, cache the JSON, reuse it.
+#
+# Usage:   project-ids.sh <owner> <project-number>
+# Example: project-ids.sh example-org 2
+#
+# Works for both organization-owned and user-owned projects (auto-detected).
+# Output: JSON with { projectId, title, number, url, fields:[{name,id,dataType,
+#         options:[{id,name}]|null, iterations:[{id,title,startDate}]|null}] }
+set -euo pipefail
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib.sh"
+
+# Owner/number are positional, but optional: fall back to the active project
+# (env GH_PROJECT_* or `project.sh use`) when omitted.
+OWNER="${1:-}"; PROJECT="${2:-}"
+gp_resolve; gp_require_target
+NUMBER="$PROJECT"
+
+command -v jq >/dev/null || { echo "error: jq not found (brew install jq)" >&2; exit 1; }
+
+# With a gateway configured, the board's IDs come from it -- no gh, no GraphQL.
+if gp_acp_enabled; then
+  gp_acp_context | jq '{
+    projectId: .snapshot.id,
+    title: .snapshot.title,
+    number: .snapshot.number,
+    url: null,
+    fields: [ .snapshot.fields.nodes[] | {
+      name, id, dataType,
+      options: (.options // null),
+      iterations: ((.configuration.iterations // null) | if . then map({id, title, startDate}) else null end)
+    } ]
+  }'
+  exit 0
+fi
+
+command -v gh >/dev/null || { echo "error: gh CLI not found (brew install gh)" >&2; exit 1; }
+
+# `@me` is a gh-CLI convenience, not a valid GraphQL login. Resolve it to the
+# authenticated account's real login so the user/organization queries below work.
+[ "$OWNER" = "@me" ] && OWNER="$(gh api user -q .login)"
+
+# Fetch under either the organization or user root. We try both rather than make
+# the caller know which one the owner is — one will resolve, the other returns null.
+fetch() {
+  local root="$1"
+  gh api graphql -f owner="$OWNER" -F number="$NUMBER" -f query="
+  query(\$owner: String!, \$number: Int!) {
+    ${root}(login: \$owner) {
+      projectV2(number: \$number) {
+        id title number url
+        fields(first: 50) { nodes {
+          __typename
+          ... on ProjectV2FieldCommon { id name dataType }
+          ... on ProjectV2SingleSelectField { options { id name } }
+          ... on ProjectV2IterationField {
+            configuration { iterations { id title startDate duration } }
+          }
+        } }
+      }
+    }
+  }" 2>/dev/null | jq -e ".data.${root}.projectV2 // empty"
+}
+
+RESULT="$(fetch organization || true)"
+[ -z "$RESULT" ] && RESULT="$(fetch user || true)"
+[ -n "$RESULT" ] || { echo "error: project #$NUMBER not found for owner '$OWNER' (checked org and user). Check the number, owner login, and that your token has 'project' scope (gh auth refresh -s project)." >&2; exit 1; }
+
+echo "$RESULT" | jq '{
+  projectId: .id,
+  title, number, url,
+  fields: [ .fields.nodes[] | {
+    name, id, dataType,
+    options:    (.options // null),
+    iterations: (.configuration.iterations // null)
+  } ]
+}'
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/project.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# project.sh — choose which project the other scripts act on by default.
+#
+#   project.sh use <owner> <number>   pick the active project (validated; remembers it)
+#   project.sh current                show the active project
+#   project.sh list [owner]           list projects to switch to (default owner: active, else @me)
+#   project.sh clear                  forget the active project
+#
+# Once set, project-ids.sh / set-field.sh / add-item.sh / new-item.sh may be called
+# WITHOUT --owner/--project — they fall back to this. Env GH_PROJECT_OWNER /
+# GH_PROJECT_NUMBER override it for a one-off; an explicit flag overrides everything.
+# The active project is stored at $GH_PROJECT_CONFIG (default
+# ~/.config/github-projects/current).
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+cmd="${1:-current}"; [ $# -gt 0 ] && shift || true
+
+case "$cmd" in
+  use)
+    owner="${1:?usage: project.sh use <owner> <number>}"
+    number="${2:?usage: project.sh use <owner> <number>}"
+    # Validate it exists (and grab the title) before saving.
+    meta="$("$SCRIPT_DIR/project-ids.sh" "$owner" "$number")" \
+      || { echo "error: no project #$number for owner '$owner' — not saved." >&2; exit 1; }
+    title="$(echo "$meta" | jq -r '.title')"
+    mkdir -p "$(dirname "$GP_CONFIG")"
+    printf 'owner=%s\nnumber=%s\ntitle=%s\n' "$owner" "$number" "$title" > "$GP_CONFIG"
+    echo "active project → $owner #$number — $title"
+    ;;
+  current)
+    if [ -f "$GP_CONFIG" ]; then
+      echo "active project → $(gp_config_get owner) #$(gp_config_get number) — $(gp_config_get title)"
+      echo "  ($GP_CONFIG)"
+    else
+      echo "no active project set. Choose one with:  project.sh use <owner> <number>"
+    fi
+    ;;
+  list)
+    owner="${1:-$(gp_config_get owner)}"; owner="${owner:-@me}"
+    active_owner="$(gp_config_get owner)"; star=""
+    [ "$owner" = "$active_owner" ] && star="$(gp_config_get number)"
+    echo "projects for $owner  (★ = active):"
+    # Listing boards is a read, so it goes through the gateway when one is set;
+    # it also marks the boards that gateway is not allowed to serve.
+    if gp_acp_enabled; then
+      gp_gateway_get "/internal/projects?owner=$(gp_uri "$owner")" \
+        | jq -r --arg a "$star" '.projects[] |
+            "  \(if (.number|tostring)==$a then "★" else " " end) #\(.number)  \(.title)"
+            + (if .allowed then "" else "   [not in the gateway allowlist]" end)'
+      exit 0
+    fi
+    gh project list --owner "$owner" --format json \
+      | jq -r --arg a "$star" '.projects[] |
+          "  \(if (.number|tostring)==$a then "★" else " " end) #\(.number)  \(.title)"'
+    ;;
+  clear)
+    rm -f "$GP_CONFIG" && echo "cleared active project"
+    ;;
+  *)
+    echo "usage: project.sh {use <owner> <number> | current | list [owner] | clear}" >&2
+    exit 2 ;;
+esac
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/protect.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# protect.sh — opt a repo into safe auto-merge by enabling a REQUIRED status check on a
+# branch. The coordinator's auto-merge only arms where required checks exist (so "on
+# green" is enforced by GitHub, not just the agent); this is how you enable that gate.
+#
+#   protect.sh <owner/name> <branch> <check-context> [<check-context> ...]
+#
+# Example:  protect.sh example-org/compute main "build"   # require the "build" check
+#
+# Needs admin on the repo. This is an explicit, deliberate action — review before running;
+# it turns on branch protection (required checks, strict up-to-date, admins enforced).
+set -euo pipefail
+REPO="${1:?usage: protect.sh <owner/name> <branch> <check-context> [...]}"
+BRANCH="${2:?usage: protect.sh <owner/name> <branch> <check-context> [...]}"
+shift 2
+[ $# -gt 0 ] || { echo "error: give at least one required check context (e.g. the CI job name)" >&2; exit 2; }
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+body="$(jq -n --argjson ctx "$(printf '%s\n' "$@" | jq -R . | jq -s .)" '{
+  required_status_checks:        { strict: true, contexts: $ctx },
+  enforce_admins:                true,
+  required_pull_request_reviews: null,
+  restrictions:                  null
+}')"
+
+echo "Enabling branch protection on $REPO @ $BRANCH — required checks: $*"
+printf '%s' "$body" | gh api -X PUT "repos/$REPO/branches/$BRANCH/protection" --input - \
+  --jq '"  protected: required checks = " + ((.required_status_checks.contexts // [])|join(", "))'
+echo "Done. The coordinator will now arm auto-merge for $REPO (merges only once these checks pass)."
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/release.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# release.sh — give up a claim: clear the Agent field, optionally move Status.
+#
+# Usage:
+#   release.sh --item <PVTI_…> [--status "In review"]
+#   (--owner/--project optional — falls back to the active project)
+#
+# Clears Agent so the item shows as unclaimed. Pass --status to record the outcome
+# (e.g. "In review" when handing off to a reviewer, "Done", or "Ready" to requeue).
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+
+OWNER="" PROJECT="" ITEM="" STATUS=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)   OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --item)    ITEM="$2"; shift 2;;
+    --status)  STATUS="$2"; shift 2;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+gp_resolve; gp_require_target
+: "${ITEM:?--item required}"
+
+"$SCRIPT_DIR/set-field.sh" --owner "$OWNER" --project "$PROJECT" --item "$ITEM" --field "$GP_FIELD_AGENT" --clear >/dev/null
+echo "released $ITEM (Agent cleared)"
+[ -n "$STATUS" ] && "$SCRIPT_DIR/set-field.sh" --owner "$OWNER" --project "$PROJECT" --item "$ITEM" --set "$GP_FIELD_STATUS=$STATUS"
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/repo-map.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# repo-map.sh — turn a board "Repos" hint (a category/service/crate name, or a path,
+# or "owner/name") into a concrete target: local repo path + GitHub owner/name + crate.
+# This is what lets the coordinator work the Ready queue WITHOUT being told --repo.
+#
+# Cached at <fleet-root>/.repo_map.tsv:  key <TAB> repo_path <TAB> owner/name <TAB> crate
+#
+#   repo-map.sh generate        scan the fleet and (re)write the map
+#   repo-map.sh resolve <hint>  print  repo_path <TAB> owner/name <TAB> crate  (best match)
+#   repo-map.sh show            print the whole map
+#
+# Regenerate after adding/moving repos. Multi-repo hints ("a, b, c") resolve to the
+# first that maps — the coordinator treats genuinely multi-repo items as out of scope.
+set -uo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")"
+MAP="${GH_REPO_MAP:-$ROOT/.repo_map.tsv}"
+TAB="$(printf '\t')"
+
+owner_name() { git -C "$1" remote get-url origin 2>/dev/null | sed -E 's#^git@github\.com:#https://github.com/#; s#.*github\.com/##; s#\.git$##'; }
+pkg_name() {
+  if [ -f "$1/Cargo.toml" ]; then
+    awk -F= '/^\[package\]/{p=1;next} p&&/^[[:space:]]*name[[:space:]]*=/{gsub(/[ "]/,"",$2);print $2;exit}' "$1/Cargo.toml"
+  elif [ -f "$1/package.json" ] && command -v jq >/dev/null; then
+    jq -r '.name // empty' "$1/package.json" 2>/dev/null
+  fi
+}
+
+generate() {
+  : > "$MAP.tmp"
+  find "$ROOT" \( -name target -o -name node_modules -o -name .wt \) -prune -o -name .git -print 2>/dev/null \
+  | while IFS= read -r gitpath; do
+      repo="$(dirname "$gitpath")"; own="$(owner_name "$repo")"; [ -n "$own" ] || continue
+      printf '%s\t%s\t%s\t%s\n' "$(basename "$repo")" "$repo" "$own" "" >> "$MAP.tmp"
+      # Only THIS repo's own tracked manifests — ls-files stops at nested repo/submodule
+      # boundaries, so a parent never absorbs a child repo's crates.
+      git -C "$repo" ls-files 2>/dev/null | grep -E '(^|/)(Cargo\.toml|package\.json)$' \
+      | while IFS= read -r rel; do
+          sub="$(dirname "$rel")"; [ "$sub" = "." ] && continue   # repo-root manifest already keyed
+          d="$repo/$sub"
+          printf '%s\t%s\t%s\t%s\n' "$(basename "$sub")" "$repo" "$own" "$(pkg_name "$d")" >> "$MAP.tmp"
+        done
+    done
+  # one row per key; prefer the row carrying a crate (more specific) via reverse sort on col4
+  sort -t"$TAB" -k1,1 -k4,4r "$MAP.tmp" | awk -F"$TAB" '!seen[$1]++' > "$MAP"
+  rm -f "$MAP.tmp"
+  echo "wrote $(grep -c . "$MAP" 2>/dev/null || echo 0) keys → $MAP"
+}
+
+resolve() {
+  local hint="$1" cand row best=""
+  [ -f "$MAP" ] || generate >/dev/null 2>&1
+  # 1) an explicit path inside the hint
+  for cand in $(printf '%s' "$hint" | tr ',()' '   '); do
+    [ -n "$cand" ] && [ -d "$ROOT/$cand" ] || continue
+    rp="$(git -C "$ROOT/$cand" rev-parse --show-toplevel 2>/dev/null)"
+    [ -n "$rp" ] && { printf '%s\t%s\t%s\n' "$rp" "$(owner_name "$rp")" ""; return 0; }
+  done
+  # 2) token match; prefer a key whose row carries a crate (more specific)
+  for cand in $(printf '%s' "$hint" | tr ',()/ ' '\n' | grep -v '^$' | sort -u); do
+    row="$(awk -F"$TAB" -v k="$cand" '$1==k{print;exit}' "$MAP" 2>/dev/null)"
+    [ -n "$row" ] || continue
+    [ -n "$(printf '%s' "$row" | cut -f4)" ] && { printf '%s' "$row" | cut -f2-4; return 0; }
+    [ -z "$best" ] && best="$row"
+  done
+  [ -n "$best" ] && { printf '%s' "$best" | cut -f2-4; return 0; }
+  return 1
+}
+
+case "${1:-}" in
+  generate) generate ;;
+  resolve)  shift; resolve "${1:?usage: repo-map.sh resolve <hint>}" || { echo "no repo match for: ${1:-}" >&2; exit 1; } ;;
+  show)     cat "$MAP" 2>/dev/null || echo "no map yet — run: repo-map.sh generate" ;;
+  *) echo "usage: repo-map.sh {generate|resolve <hint>|show}" >&2; exit 2 ;;
+esac
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/set-field.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# set-field.sh — Set a project item's field value(s) by human-readable name.
+#
+# The raw `gh project item-edit` call needs the project node ID, the field node
+# ID, and (for single-select / iteration fields) the *option* or *iteration*
+# node ID — none of which you carry in your head. This wrapper resolves all of
+# them from plain names, picks the right typed value flag for the field's data
+# type, and makes the edit. It is the single most-reused project operation.
+#
+# Usage:
+#   # one field
+#   set-field.sh --owner <o> --project <n> --item <itemID> --field <name> --value <value>
+#   set-field.sh --owner <o> --project <n> --item <itemID> --field <name> --clear
+#   # many fields in ONE call (resolves the project once) — repeat --set:
+#   set-field.sh --owner <o> --project <n> --item <itemID> \
+#     --set "Status=In progress" --set "Effort=M" --set "Repos=generation"
+#
+# Examples:
+#   set-field.sh --owner example-org --project 2 --item PVTI_xxx --field Status --value "In progress"
+#   set-field.sh --owner example-org --project 2 --item PVTI_xxx --set "Status=Done" --set "Effort=L"
+#
+# `--set` splits on the FIRST `=`, so values may contain `=`. Single-select and
+# iteration matching is case-insensitive by name. Prefer `--set` in bulk loops:
+# fewer invocations means fewer shell-quoting mistakes (see references/gotchas.md).
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+OWNER="" PROJECT="" ITEM="" FIELD_NAME="" VALUE="" CLEAR=0
+PAIRS=()   # each entry: "FieldName=Value"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)   OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --item)    ITEM="$2"; shift 2;;
+    --field)   FIELD_NAME="$2"; shift 2;;
+    --value)   VALUE="$2"; shift 2;;
+    --set)     PAIRS+=("$2"); shift 2;;
+    --clear)   CLEAR=1; shift;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+. "$SCRIPT_DIR/lib.sh"
+gp_resolve; gp_require_target          # --owner/--project optional; fall back to active project
+: "${ITEM:?--item required}"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+# Resolve the project + all field metadata ONCE, reused for every field below.
+META="$("$SCRIPT_DIR/project-ids.sh" "$OWNER" "$PROJECT")"
+PROJECT_ID="$(echo "$META" | jq -r '.projectId')"
+
+# apply_one <field-name> <value>  — resolve the field's id/type and set the value.
+apply_one() {
+  local name="$1" value="$2" field id dtype opt iter
+  field="$(echo "$META" | jq -c --arg n "$name" '.fields[] | select(.name == $n)')"
+  if [ -z "$field" ]; then
+    echo "error: field '$name' not found. Available: $(echo "$META" | jq -r '[.fields[].name] | join(", ")')" >&2
+    return 1
+  fi
+  id="$(echo "$field" | jq -r '.id')"
+  dtype="$(echo "$field" | jq -r '.dataType')"
+  local base=(gh project item-edit --id "$ITEM" --project-id "$PROJECT_ID" --field-id "$id")
+  # apply_one is always called under `|| rc=1`, which switches `set -e` off for
+  # the whole call -- so a failed item-edit used to fall through to the snapshot
+  # patch and the "set ..." line, reporting a write that never landed.
+  local edit=0
+  case "$dtype" in
+    TEXT)   "${base[@]}" --text "$value" >/dev/null || edit=$? ;;
+    NUMBER) "${base[@]}" --number "$value" >/dev/null || edit=$? ;;
+    DATE)   "${base[@]}" --date "$value" >/dev/null || edit=$? ;;
+    SINGLE_SELECT)
+      opt="$(echo "$field" | jq -r --arg v "$value" '.options[]? | select((.name|ascii_downcase) == ($v|ascii_downcase)) | .id' | head -1)"
+      [ -n "$opt" ] || { echo "error: option '$value' not found for '$name'. Options: $(echo "$field" | jq -r '[.options[].name] | join(", ")')" >&2; return 1; }
+      "${base[@]}" --single-select-option-id "$opt" >/dev/null || edit=$? ;;
+    ITERATION)
+      iter="$(echo "$field" | jq -r --arg v "$value" '.iterations[]? | select((.title|ascii_downcase) == ($v|ascii_downcase)) | .id' | head -1)"
+      [ -n "$iter" ] || { echo "error: iteration '$value' not found for '$name'. Iterations: $(echo "$field" | jq -r '[.iterations[]?.title] | join(", ")')" >&2; return 1; }
+      "${base[@]}" --iteration-id "$iter" >/dev/null || edit=$? ;;
+    *)
+      echo "error: field '$name' has data type $dtype, which item-edit cannot set directly." >&2
+      echo "       Editable types: TEXT, NUMBER, DATE, SINGLE_SELECT, ITERATION. Built-in fields" >&2
+      echo "       (Assignees, Labels, Milestone, Repository) are set on the issue/PR — see references/graphql.md." >&2
+      return 1 ;;
+  esac
+  [ "$edit" -eq 0 ] || {
+    echo "error: gh project item-edit failed for '$name' on $ITEM (exit $edit); the board was not changed" >&2
+    return 1
+  }
+  gp_snapshot_set_field "$ITEM" "$name" "$value"   # keep local snapshot aligned (free, best-effort)
+  echo "set '$name' = '$value' on $ITEM"
+}
+
+# --clear targets a single --field.
+if [ "$CLEAR" -eq 1 ]; then
+  : "${FIELD_NAME:?--clear requires --field <name>}"
+  fid="$(echo "$META" | jq -r --arg n "$FIELD_NAME" '.fields[] | select(.name==$n) | .id')"
+  [ -n "$fid" ] || { echo "error: field '$FIELD_NAME' not found." >&2; exit 1; }
+  gh project item-edit --id "$ITEM" --project-id "$PROJECT_ID" --field-id "$fid" --clear >/dev/null
+  gp_snapshot_set_field "$ITEM" "$FIELD_NAME" ""   # keep local snapshot aligned with the clear
+  echo "cleared '$FIELD_NAME' on $ITEM"
+  exit 0
+fi
+
+# Need at least one thing to do.
+if [ -z "$FIELD_NAME" ] && [ "${#PAIRS[@]}" -eq 0 ]; then
+  echo "error: nothing to set — pass --field/--value, --set \"Name=Value\", or --clear." >&2
+  exit 2
+fi
+
+# A single --field/--value, plus any --set pairs. Apply every field even if one
+# fails (so the valid ones still land), but remember the failure and exit non-zero
+# so callers — and `set -e` loops — can't mistake a partial apply for success.
+rc=0
+[ -n "$FIELD_NAME" ] && { apply_one "$FIELD_NAME" "$VALUE" || rc=1; }
+if [ "${#PAIRS[@]}" -gt 0 ]; then
+  for pair in "${PAIRS[@]}"; do
+    apply_one "${pair%%=*}" "${pair#*=}" || rc=1
+  done
+fi
+exit "$rc"
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/snapshot.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# snapshot.sh — maintain a local model of the board so agents (especially a
+# coordinator) don't hammer the API. Canonical output is JSONL — one rich object per
+# item — at <git-root>/.board_snapshot.jsonl, with a flat TSV view derived alongside
+# (.board_snapshot.tsv: nodeID  band  status  agent  title).
+#
+# Each JSONL record:
+#   { id, type, title, number, url, state, repository, isArchived, createdAt,
+#     updatedAt, assignees[], labels[], milestone, linkedPRs[{url,number,state}],
+#     fields{Status,Band,Effort,Severity,Gate,Repos,Agent,…} }
+#
+#   snapshot.sh                 regenerate JSONL + TSV (full pull — the reconcile)
+#   snapshot.sh find <query>    rows matching <query> (id status agent title)
+#   snapshot.sh id   <query>    just the node id(s) matching <query>
+#   snapshot.sh get  <id>       the full JSON record for one item
+#
+# --owner/--project optional (active project). Our own writes patch the JSONL for free
+# (see lib.sh gp_snapshot_set_field); run a full regen to pick up outside changes.
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/lib.sh"
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+SUB="generate"; case "${1:-}" in find|id|get) SUB="$1"; shift;; generate) shift;; esac
+OWNER="" PROJECT="" BASE="" QUERY=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --owner)   OWNER="$2"; shift 2;;
+    --project) PROJECT="$2"; shift 2;;
+    --out)     BASE="$2"; shift 2;;          # base path; .jsonl/.tsv appended
+    -*) echo "error: unknown flag '$1'" >&2; exit 2;;
+    *)  QUERY="$1"; shift;;
+  esac
+done
+gp_resolve; gp_require_target
+[ "$OWNER" = "@me" ] && OWNER="$(gh api user -q .login)"
+[ -n "$BASE" ] && { GH_SNAPSHOT_FILE="$BASE"; }
+JSONL="$(gp_snapshot_jsonl)"; TSV="$(gp_snapshot_tsv)"
+
+# Per-item → one JSON record. Shared by every page.
+JQ_RECORD='.[] | . as $n | ($n.content // {}) as $c | {
+  id: $n.id, type: $n.type, title: ($c.title // "—"),
+  number: ($c.number // null), url: ($c.url // null), state: ($c.state // null),
+  repository: ($c.repository.nameWithOwner // null),
+  isArchived: $n.isArchived, createdAt: $n.createdAt, updatedAt: $n.updatedAt,
+  assignees: [ $c.assignees.nodes[]?.login ],
+  labels: [ $c.labels.nodes[]?.name ],
+  milestone: ($c.milestone.title // null),
+  linkedPRs: ( [ $c.closedByPullRequestsReferences.nodes[]? | {url,number,state} ]
+    + (if $n.type=="PULL_REQUEST" then [{url:$c.url, number:$c.number, state:$c.state, isDraft:$c.isDraft, reviewDecision:$c.reviewDecision}] else [] end) ),
+  fields: ( [ $n.fieldValues.nodes[]? | select(.field.name!=null)
+              | {(.field.name): (.name // .text // .date // .title // .number)} ] | add // {} )
+}'
+
+content_frag='content{ __typename
+  ... on DraftIssue{ title }
+  ... on Issue{ title number url state repository{nameWithOwner}
+    assignees(first:10){nodes{login}} labels(first:20){nodes{name}} milestone{title}
+    closedByPullRequestsReferences(first:10){nodes{url number state}} }
+  ... on PullRequest{ title number url state isDraft reviewDecision repository{nameWithOwner}
+    assignees(first:10){nodes{login}} labels(first:20){nodes{name}} milestone{title} } }'
+fv_frag='fieldValues(first:50){nodes{ __typename
+  ... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2FieldCommon{name}}}
+  ... on ProjectV2ItemFieldTextValue{text field{... on ProjectV2FieldCommon{name}}}
+  ... on ProjectV2ItemFieldNumberValue{number field{... on ProjectV2FieldCommon{name}}}
+  ... on ProjectV2ItemFieldDateValue{date field{... on ProjectV2FieldCommon{name}}}
+  ... on ProjectV2ItemFieldIterationValue{title field{... on ProjectV2FieldCommon{name}}} }}'
+
+# Org or user root? probe once.
+# Native path only: the gateway resolves the owner root itself, and that mode
+# must not need gh auth.
+ROOT="organization"
+if ! gp_acp_enabled && [ -z "$(gh api graphql -f query="query{organization(login:\"$OWNER\"){projectV2(number:$PROJECT){id}}}" 2>/dev/null | jq -r '.data.organization.projectV2.id // empty')" ]; then
+  ROOT="user"
+fi
+
+regen() {
+  : > "$JSONL.tmp"
+  if gp_acp_enabled; then
+    gp_acp_context | jq -c '.snapshot.items.nodes' | jq -c "$JQ_RECORD" > "$JSONL.tmp"
+    mv "$JSONL.tmp" "$JSONL"
+    jq -r '[.id, (.fields[env.GP_FIELD_BAND]//""), (.fields[env.GP_FIELD_STATUS]//""), (.fields[env.GP_FIELD_AGENT]//""), .title] | @tsv' "$JSONL" > "$TSV"
+    return 0
+  fi
+  local cursor="" A r
+  while :; do
+    if [ -z "$cursor" ]; then A="null"; else A="\"$cursor\""; fi
+    r=$(gh api graphql -f query="query{${ROOT}(login:\"$OWNER\"){projectV2(number:$PROJECT){items(first:100,after:$A){
+      pageInfo{hasNextPage endCursor}
+      nodes{ id type isArchived createdAt updatedAt $content_frag $fv_frag } }}}}" 2>/dev/null)
+    echo "$r" | jq -c ".data.${ROOT}.projectV2.items.nodes | $JQ_RECORD" >> "$JSONL.tmp"
+    [ "$(echo "$r" | jq -r ".data.${ROOT}.projectV2.items.pageInfo.hasNextPage")" = "true" ] || break
+    cursor="$(echo "$r" | jq -r ".data.${ROOT}.projectV2.items.pageInfo.endCursor")"
+  done
+  mv "$JSONL.tmp" "$JSONL"
+  # derive the flat TSV view
+  jq -r '[.id, (.fields[env.GP_FIELD_BAND]//""), (.fields[env.GP_FIELD_STATUS]//""), (.fields[env.GP_FIELD_AGENT]//""), .title] | @tsv' "$JSONL" > "$TSV"
+}
+
+if [ "$SUB" = "generate" ]; then
+  regen
+  echo "wrote $(grep -c . "$JSONL" 2>/dev/null || echo 0) items → $JSONL (+ .tsv view)"
+  exit 0
+fi
+
+# Lookups read the JSONL (fall back to the TSV if that's all there is).
+: "${QUERY:?usage: snapshot.sh $SUB <query>}"
+if [ -f "$JSONL" ]; then
+  case "$SUB" in
+    get)  jq -c --arg id "$QUERY" 'select(.id==$id)' "$JSONL" | jq . ;;
+    find) grep -i -- "$QUERY" "$JSONL" | jq -r '[.id,(.fields[env.GP_FIELD_STATUS]//"—"),(.fields[env.GP_FIELD_AGENT]//"-"),.title]|@tsv' ;;
+    id)   grep -i -- "$QUERY" "$JSONL" | jq -r '.id' ;;
+  esac
+elif [ -f "$TSV" ]; then
+  m="$(grep -i -- "$QUERY" "$TSV" || true)"
+  [ -n "$m" ] || { echo "no match for '$QUERY'" >&2; exit 1; }
+  case "$SUB" in find) printf '%s\n' "$m";; id) printf '%s\n' "$m"|cut -f1;; get) printf '%s\n' "$m";; esac
+else
+  echo "no snapshot yet — run: snapshot.sh" >&2; exit 1
+fi
+
+
+========================================================================
+FILE: .agents/skills/github-projects/scripts/spawn.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# spawn.sh — spawn a cheap headless micro-agent (a worker) for one ticket, via
+# `claude -p`. This is the coordinator's mechanism for delegating work with minimal
+# context and the smallest sufficient model, to save tokens.
+#
+#   spawn.sh --role <resolver|verifier|triager> --ticket "<text>" \
+#            [--dir <worktree>] [--model haiku] [--max-turns N] \
+#            [--permission-mode <m>] [--allow "<tools>"] [--disallow "<tools>"] \
+#            [--resume <session-id>] [--out <file>] [--dry-run]
+#
+# Role files (assets/roles/<role>.md) are injected as the worker's system prompt; the
+# --ticket carries the item-specific instructions the coordinator assembles (item id,
+# worktree path, build/test commands, gate condition, board-script invocations).
+#
+# Prints a one-line header (ok / turns / cost / SESSION-ID) then the worker's final
+# result. Capture the SESSION-ID to RESUME the same worker with failure feedback
+# (`spawn.sh --role … --resume <id> --ticket "<what was wrong; fix it>"`) — that's the
+# send-back-on-incorrect rework loop, and it reuses the worker's existing context.
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROLES_DIR="$(cd "$SCRIPT_DIR/.." && pwd)/assets/roles"
+command -v claude >/dev/null || { echo "error: claude CLI not found" >&2; exit 1; }
+command -v jq >/dev/null || { echo "error: jq not found" >&2; exit 1; }
+
+ROLE="" TICKET="" DIR="" MODEL="" MAXT="" PERM="" ALLOW="" DISALLOW="" RESUME="" OUT="" DRY=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --role)            ROLE="$2"; shift 2;;
+    --ticket)          TICKET="$2"; shift 2;;
+    --dir)             DIR="$2"; shift 2;;
+    --model)           MODEL="$2"; shift 2;;
+    --max-turns)       MAXT="$2"; shift 2;;
+    --permission-mode) PERM="$2"; shift 2;;
+    --allow)           ALLOW="$2"; shift 2;;
+    --disallow)        DISALLOW="$2"; shift 2;;
+    --resume)          RESUME="$2"; shift 2;;
+    --out)             OUT="$2"; shift 2;;
+    --dry-run)         DRY=1; shift;;
+    *) echo "error: unknown argument '$1'" >&2; exit 2;;
+  esac
+done
+: "${ROLE:?--role required}" "${TICKET:?--ticket required}"
+
+# Per-role defaults (overridable by flags). Workers default to the cheapest model.
+case "$ROLE" in
+  resolver) : "${MODEL:=haiku}"; : "${MAXT:=30}"; : "${PERM:=acceptEdits}"; : "${ALLOW:=Read,Edit,Write,Grep,Glob,Bash}";;
+  verifier) : "${MODEL:=haiku}"; : "${MAXT:=12}"; : "${PERM:=acceptEdits}"; : "${ALLOW:=Read,Grep,Glob,Bash}"; : "${DISALLOW:=Edit,Write}";;
+  triager)  : "${MODEL:=haiku}"; : "${MAXT:=8}";  : "${PERM:=acceptEdits}"; : "${ALLOW:=Read,Grep,Glob,Bash}";;
+  *)        : "${MODEL:=haiku}"; : "${MAXT:=10}"; : "${PERM:=acceptEdits}"; : "${ALLOW:=Read,Grep,Glob,Bash}";;
+esac
+
+cmd=(claude -p "$TICKET" --model "$MODEL" --max-turns "$MAXT" --permission-mode "$PERM" --output-format json)
+[ -f "$ROLES_DIR/$ROLE.md" ] && cmd+=(--append-system-prompt "$(cat "$ROLES_DIR/$ROLE.md")")
+[ -n "$ALLOW" ]    && cmd+=(--allowedTools "$ALLOW")
+[ -n "$DISALLOW" ] && cmd+=(--disallowedTools "$DISALLOW")
+[ -n "$DIR" ]      && cmd+=(--add-dir "$DIR")
+[ -n "$RESUME" ]   && cmd+=(--resume "$RESUME")
+
+if [ "$DRY" -eq 1 ]; then printf 'WOULD RUN: '; printf '%q ' "${cmd[@]}"; echo; exit 0; fi
+
+OUT="${OUT:-$(mktemp -t spawn)}"
+# Run in the worktree if given, so relative paths resolve there.
+( [ -n "$DIR" ] && cd "$DIR"; "${cmd[@]}" ) > "$OUT" 2>"$OUT.err" || true
+res="$(jq -c '.[-1] // {}' "$OUT" 2>/dev/null || echo '{}')"
+if [ -z "$res" ] || [ "$res" = "{}" ]; then
+  echo "spawn produced no result (role=$ROLE). stderr:" >&2; head -3 "$OUT.err" >&2; exit 1
+fi
+echo "$res" | jq -r '"role='"$ROLE"' ok=\(.is_error|not) turns=\(.num_turns) cost=$\(.total_cost_usd) session=\(.session_id)"'
+echo "--- result ---"
+echo "$res" | jq -r '.result'
+
+
+========================================================================
+FILE: .agents/skills/github-projects/tests/test_acp_context.sh
+========================================================================
+
+#!/usr/bin/env bash
+#
+# test_acp_context.sh — the gateway's advice must reach the caller.
+#
+# A refusal from the ACP gateway carries the fix (error code, remedy, the
+# owners it can read, the allowlist entry to add). `curl -f` discarded that
+# body, so the agent saw only a failed command. These cover both halves: a good
+# read still passes through untouched, and a refusal is explained and fatal.
+set -uo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+STUB="$(mktemp -d)"; trap 'rm -rf "$STUB"' EXIT
+PATH="$STUB:$PATH"
+fails=0
+
+# A stub curl: prints the canned body, then the status, matching -w '\n%{http_code}'.
+stub_curl() {
+  cat > "$STUB/curl" <<STUBEOF
+#!/usr/bin/env bash
+cat <<'BODY'
+$1
+BODY
+printf '%s' '$2'
+STUBEOF
+  chmod +x "$STUB/curl"
+}
+
+check() { # <name> <condition-description> <actual> <expected-substring>
+  case "$3" in *"$4"*) echo "  ok $1";; *) echo "  FAIL $1: expected $2 in: $3"; fails=$((fails+1));; esac
+}
+
+export ACP_GATEWAY_URL="https://gateway.invalid" ACP_GATEWAY_TOKEN="t"
+export GH_PROJECT_OWNER=testowner GH_PROJECT_NUMBER=7
+. scripts/lib.sh
+gp_resolve
+
+# 1. a good read passes the body through unchanged
+stub_curl '{"snapshot":{"number":7},"allowed":true}' 200
+out="$(gp_acp_context)"; code=$?
+check "success returns the body" "the snapshot" "$out" '"number":7'
+[ "$code" = 0 ] && echo "  ok success exits 0" || { echo "  FAIL success exit $code"; fails=$((fails+1)); }
+
+# 2. a refusal is explained on stderr, not swallowed
+stub_curl '{"error":"PROJECT_NOT_ALLOWED","detail":"Board #7 of '"'"'testowner'"'"' is outside this gateway'"'"'s allowlist.","remedy":"Add it to ACP_PROJECT_ALLOWLIST on the deployment.","allowlist":"2-9,11"}' 403
+err="$(gp_acp_context 2>&1 >/dev/null)"; code=$?
+check "refusal names the code"    "PROJECT_NOT_ALLOWED" "$err" "PROJECT_NOT_ALLOWED"
+check "refusal carries the remedy" "the remedy"          "$err" "ACP_PROJECT_ALLOWLIST"
+check "refusal shows the allowlist" "the current value"  "$err" "2-9,11"
+check "refusal names the status"   "HTTP 403"            "$err" "HTTP 403"
+[ "$code" = 78 ] && echo "  ok refusal exits 78" || { echo "  FAIL refusal exit $code (must be non-zero)"; fails=$((fails+1)); }
+
+# 3. an uninstalled owner is told where to install the App
+stub_curl '{"error":"OWNER_NOT_INSTALLED","detail":"not installed on '"'"'testowner'"'"'.","remedy":"Install it on that account with Projects: read — https://github.com/apps/acp/installations/new","owners_available":["testorg"]}' 404
+err="$(gp_acp_context 2>&1 >/dev/null)"
+check "install URL is surfaced"   "the install URL"      "$err" "github.com/apps/acp/installations/new"
+check "available owners listed"   "testorg"       "$err" "testorg"
+
+# 4. a non-JSON body (a proxy error page) is still shown rather than dropped
+stub_curl '<html>502 Bad Gateway</html>' 502
+err="$(gp_acp_context 2>&1 >/dev/null)"
+check "non-JSON body is shown"    "the raw body"         "$err" "502 Bad Gateway"
+
+# 5. no board selected: the gateway is asked what exists
+stub_curl '{"installations":[{"login":"testorg"},{"login":"testowner"}]}' 200
+err="$(OWNER="" PROJECT="" GH_PROJECT_OWNER="" GH_PROJECT_NUMBER="" GH_PROJECT_CONFIG=/nonexistent bash -c '. scripts/lib.sh; gp_resolve; gp_require_target' 2>&1)"
+check "missing target lists owners" "the owner hint"     "$err" "--owner testowner"
+
+[ "$fails" = 0 ] && echo "acp context tests passed" || { echo "$fails failing"; exit 1; }
 
 
 ========================================================================
@@ -904,6 +4074,9 @@ Procedure: `.agents/skills/authorize-protected-effect/SKILL.md`. Binding: `docs/
 ## 18. Specialized engineering rules
 
 - `.agents/rules/standards.md`: Core doctrine, Four-Tier Claim Taxonomy, authority hierarchy, layer independence.
+- `.agents/rules/workflow.md`: Professional engineering persona, attribution, git hygiene, zero-noise issue timeline, PR standards.
+- `.agents/rules/codestyle.md`: Toolchain standards, never-crash lints, compiler warning zero-tolerance, unsafe boundaries.
+- `.agents/rules/types.md`: Non-panicking return types, domain-specific error enums, hostile numerical inputs, safe arithmetic.
 - `.agents/rules/ci.md`: Verification craft, failure capability proofs, assertion counts, deterministic toolchains.
 - `.agents/rules/governance.md`: Change classes, anti-bloat test, evidence requirements, human authority.
 - `.agents/rules/security.md`: Tool capability vs permission, credential containment, fail-closed policy.
@@ -3683,6 +6856,7 @@ This file is navigational only. Each skill's own `SKILL.md` is authoritative for
 | `coordinate-workers` | Coordinate disjoint concurrent workers with evidence-bearing messages and explicit handoffs. |
 | `compile-context` | Regenerate and verify deterministic non-normative project context. |
 | `authorize-protected-effect` | Obtain the ACP decision before a governed effect; perform only what it authorizes; dispose of every other decision. |
+| `github-projects` | Manage GitHub Projects (ProjectsV2), backlogs, iteration/status fields, claims, and worker agent coordination. |
 
 Do not copy skill bodies into this index or into other doctrine merely to make them easier to find.
 
@@ -10254,7 +13428,11 @@ COMMON = [
     "schemas/semantic-surface.schema.json",
     "contracts/acp-protected-effects.yaml",
     ".agents/skills/authorize-protected-effect/SKILL.md",
+    ".agents/skills/github-projects/SKILL.md",
     ".agents/rules/standards.md",
+    ".agents/rules/workflow.md",
+    ".agents/rules/codestyle.md",
+    ".agents/rules/types.md",
     ".agents/rules/ci.md",
     ".agents/rules/governance.md",
     ".agents/rules/security.md",

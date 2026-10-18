@@ -5,10 +5,10 @@
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
-    "includedCount": 114,
-    "includedBytes": 425878,
+    "includedCount": 143,
+    "includedBytes": 579368,
     "excludedCounts": {
-      "excluded-directory": 3,
+      "excluded-directory": 10,
       "extension": 6
     }
   },
@@ -18,19 +18,24 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "21998cbdca281aecaaf41d310932009fd10c76f5",
+        "commit": "f5797681d01a4fee0c62f4f2446e3f8769077053",
         "branch": "feat/agent-rules-architecture",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "2dfced1d2612052fa1e25ba1c72782b7f8ffacf97ac8a0c441f163b2471c3c10",
+  "aggregateSourceDigest": "1754ccd5159a810cc0b105c80e8fd3456db20454996b80c121388bdfccc3f38a",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
       "bytes": 1139,
       "sha256": "04f63a639bb87b537b2d059b6f252cfef0e648d392ec105e091e86ee2af3a2df"
+    },
+    {
+      "path": ".agents/rules/codestyle.md",
+      "bytes": 3139,
+      "sha256": "62923830e444431d07e29e990168c4dba13026ed0ef6c530ed783daf500d720e"
     },
     {
       "path": ".agents/rules/governance.md",
@@ -48,6 +53,16 @@
       "sha256": "2dbf08cffb7497e349c61917f8620caab78a48773149cbc3204f3146b5f35a00"
     },
     {
+      "path": ".agents/rules/types.md",
+      "bytes": 3209,
+      "sha256": "15ebec204bb08ff126397aa0b5fdd5f941f88143efb07ebfd187a9e8405203d5"
+    },
+    {
+      "path": ".agents/rules/workflow.md",
+      "bytes": 7678,
+      "sha256": "ea83934293589cdcee7e720e83b6b2d14814636c5bb264ba948bec8f9f6dafc7"
+    },
+    {
       "path": ".agents/skills/authorize-protected-effect/SKILL.md",
       "bytes": 2758,
       "sha256": "480ffefc42bc4d9d744484149f26a86ddb9b19a8d6adb63053720f5fc0c7865f"
@@ -61,6 +76,136 @@
       "path": ".agents/skills/coordinate-workers/SKILL.md",
       "bytes": 593,
       "sha256": "6be105841accc1f67dc11e12541b3b343fa2029a0ff6e5085c907b36381ba57b"
+    },
+    {
+      "path": ".agents/skills/github-projects/SKILL.md",
+      "bytes": 18597,
+      "sha256": "89dedcca97249f7a089851ac542328fabc18f5c2d5da2a87aab3e6ce9c916fa5"
+    },
+    {
+      "path": ".agents/skills/github-projects/assets/roles/resolver.md",
+      "bytes": 1524,
+      "sha256": "5997cbcc50c7825f46e686b0f60c3d0d91ef38076c348132d33d9ebadda0c21f"
+    },
+    {
+      "path": ".agents/skills/github-projects/assets/roles/triager.md",
+      "bytes": 813,
+      "sha256": "436a8fc2ddcf90131d846e186fd7567f1d84e03592682cfd8297ad9d244051c4"
+    },
+    {
+      "path": ".agents/skills/github-projects/assets/roles/verifier.md",
+      "bytes": 710,
+      "sha256": "7a4e1145f353d8e6707070db23b19e4f5e695eaa4e1d92d38d4f43e7c99fce6a"
+    },
+    {
+      "path": ".agents/skills/github-projects/references/cli.md",
+      "bytes": 7339,
+      "sha256": "5e7ff18948919caf0161638f990eb28f8a48b8f500afcfa88b840b14be49751b"
+    },
+    {
+      "path": ".agents/skills/github-projects/references/conventions.md",
+      "bytes": 6734,
+      "sha256": "7eccf778c74e7075a280b946ba9967fd0e297f785f08a1728c1afb2f88f7d083"
+    },
+    {
+      "path": ".agents/skills/github-projects/references/coordinator.md",
+      "bytes": 7854,
+      "sha256": "ec44682ed3a71873a5575d73d10a44136c2f71274a708ed904712ff9b8edc3dc"
+    },
+    {
+      "path": ".agents/skills/github-projects/references/gotchas.md",
+      "bytes": 8489,
+      "sha256": "80f04b7a0258b08530dc2b766bdfc882c5699367f4a9eec5a5023b3fdf5b53cd"
+    },
+    {
+      "path": ".agents/skills/github-projects/references/graphql.md",
+      "bytes": 11606,
+      "sha256": "ed8864ffa957aa6c3a519c0abbccf9e7a0c3a1440e9ba9fd0b1026a63693abb4"
+    },
+    {
+      "path": ".agents/skills/github-projects/references/recipes.md",
+      "bytes": 6158,
+      "sha256": "28f30cb4e79f3b915a2c98ea6cc0c9ddd5b77d78d6f186fd098ecfae592a5e22"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/add-item.sh",
+      "bytes": 1396,
+      "sha256": "43d55a90f1aef4364811ba14fb569eb290983dea2ee37c74cca49cbb8a458f86"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/claim.sh",
+      "bytes": 3534,
+      "sha256": "4d2715aff9f8d11bcd7526980655b17afc1d9097bed945e7eb8271426fb6c156"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/claims.sh",
+      "bytes": 3189,
+      "sha256": "adc007c8479e8a802e90bf5690bd878d3fc10a1f12d2b467c984d852d04de911"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/coord.sh",
+      "bytes": 3741,
+      "sha256": "d467b230831ee2b64a50e9ec9a448c6d3ccce50d5df18bb7379845bd8d8b70cf"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/coordinator.sh",
+      "bytes": 11844,
+      "sha256": "9cb6815731dad06f33156d629456a695e171cae7503bc7ff528968b3b370c3b6"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/lib.sh",
+      "bytes": 10177,
+      "sha256": "2872ad22f8492acc694c684cc76e2164ef9d7489abcd405857f72eb7d0b7ae0d"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/new-item.sh",
+      "bytes": 2876,
+      "sha256": "2f51893ffbfe6409085b207ce7b182f2c64df905398ffdd6f0501169f51ee692"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/project-ids.sh",
+      "bytes": 3253,
+      "sha256": "377059b5ccee0da7946d24b85a97acaeb43b7e9d89518649a694a9bf5678f74b"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/project.sh",
+      "bytes": 2976,
+      "sha256": "1b4fabefb57e05251f63656e08cbe8d6bf58aa86c3285816bb60233b4cb517e4"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/protect.sh",
+      "bytes": 1624,
+      "sha256": "6dadbc8f6a460619419a4bdc62e794155669ed01d0b9088571550f7b0027ff04"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/release.sh",
+      "bytes": 1161,
+      "sha256": "1b31ae119f85717b3c4b8d61cf736e8bc6fa3c4f0e8c1cf02dbd87c4629873fd"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/repo-map.sh",
+      "bytes": 3814,
+      "sha256": "73238acc3510cfeb3c8601132c0b9a949d377723a7f97bc02165f58b40d39677"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/set-field.sh",
+      "bytes": 6016,
+      "sha256": "515b4cf985c2014d6de2cbeb0d590a0628827be195021f6cde9ec58ffbadc62a"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/snapshot.sh",
+      "bytes": 6161,
+      "sha256": "28f82ef1bba6e62dd6652d5e2f857907cc1d9daed1260a72808b66c920cba029"
+    },
+    {
+      "path": ".agents/skills/github-projects/scripts/spawn.sh",
+      "bytes": 3809,
+      "sha256": "fdcdfc51393912c85b554834e35eddcacbec64020847520c6432446714a38271"
+    },
+    {
+      "path": ".agents/skills/github-projects/tests/test_acp_context.sh",
+      "bytes": 3406,
+      "sha256": "f0fcc64c52fc6090823f2828febc78929302f531d20e83543f4b0739a935e850"
     },
     {
       "path": ".agents/skills/operate-frontier/SKILL.md",
@@ -124,8 +269,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 10611,
-      "sha256": "9ccb7c144fbb9d26ccd74c0b5cb015b90de9cbe404fef95d20a2d941005a2469"
+      "bytes": 10995,
+      "sha256": "134cf2cc35624445e99d7a800073579c50c6476de94ab9ab85cd4bf2955c1293"
     },
     {
       "path": "AUTHORITY.md",
@@ -319,8 +464,8 @@
     },
     {
       "path": "docs/SKILLS_INDEX.md",
-      "bytes": 914,
-      "sha256": "2c763122a98e23607adf52f4029b3559b779bf2d3bb3a575b7a11f1ebf1f7874"
+      "bytes": 1049,
+      "sha256": "fff86a343840e9a401ffc2bc6c5ddaed9d9e4cb570efd07af50790b3d70f887c"
     },
     {
       "path": "docs/STATUS.md",
@@ -549,8 +694,8 @@
     },
     {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 10636,
-      "sha256": "377ee4ba3f343373db6c4a6f12f04bd2176995b3b2df2dde7966020f78338f76"
+      "bytes": 10780,
+      "sha256": "0d1815d48fc7d82c818c3c4727d9f3d027803a99e6b924d562a5f3e3e4e9a1c4"
     },
     {
       "path": "scripts/validate-formal-files.py",

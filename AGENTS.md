@@ -303,6 +303,9 @@ Procedure: `.agents/skills/authorize-protected-effect/SKILL.md`. Binding: `docs/
 ## 18. Specialized engineering rules
 
 - `.agents/rules/standards.md`: Core doctrine, Four-Tier Claim Taxonomy, authority hierarchy, layer independence.
+- `.agents/rules/workflow.md`: Professional engineering persona, attribution, git hygiene, zero-noise issue timeline, PR standards.
+- `.agents/rules/codestyle.md`: Toolchain standards, never-crash lints, compiler warning zero-tolerance, unsafe boundaries.
+- `.agents/rules/types.md`: Non-panicking return types, domain-specific error enums, hostile numerical inputs, safe arithmetic.
 - `.agents/rules/ci.md`: Verification craft, failure capability proofs, assertion counts, deterministic toolchains.
 - `.agents/rules/governance.md`: Change classes, anti-bloat test, evidence requirements, human authority.
 - `.agents/rules/security.md`: Tool capability vs permission, credential containment, fail-closed policy.

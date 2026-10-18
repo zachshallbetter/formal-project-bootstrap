@@ -1,16 +1,45 @@
 # Project Context Index
 > Generator: 0.6.0
-> Source digest: `2dfced1d2612052fa1e25ba1c72782b7f8ffacf97ac8a0c441f163b2471c3c10`
+> Source digest: `1754ccd5159a810cc0b105c80e8fd3456db20454996b80c121388bdfccc3f38a`
 
 > Generated projection. Canonical sources remain authoritative.
 
 - `.agents/rules/ci.md` | 1139 bytes | `04f63a639bb87b537b2d059b6f252cfef0e648d392ec105e091e86ee2af3a2df`
+- `.agents/rules/codestyle.md` | 3139 bytes | `62923830e444431d07e29e990168c4dba13026ed0ef6c530ed783daf500d720e`
 - `.agents/rules/governance.md` | 1181 bytes | `43ad0bca0a6b0533b075cf8d6057a9a10b31cfd45daf9fd185ba457040790143`
 - `.agents/rules/security.md` | 934 bytes | `fbc0c29f0c286a5f216bdc66d8d13a5c91dca8de12311806960d56669e7085ab`
 - `.agents/rules/standards.md` | 3223 bytes | `2dbf08cffb7497e349c61917f8620caab78a48773149cbc3204f3146b5f35a00`
+- `.agents/rules/types.md` | 3209 bytes | `15ebec204bb08ff126397aa0b5fdd5f941f88143efb07ebfd187a9e8405203d5`
+- `.agents/rules/workflow.md` | 7678 bytes | `ea83934293589cdcee7e720e83b6b2d14814636c5bb264ba948bec8f9f6dafc7`
 - `.agents/skills/authorize-protected-effect/SKILL.md` | 2758 bytes | `480ffefc42bc4d9d744484149f26a86ddb9b19a8d6adb63053720f5fc0c7865f`
 - `.agents/skills/compile-context/SKILL.md` | 561 bytes | `10c8156d05da083eddb606769183d8cabf4f924c241a3e3b462ef76f7aecf28d`
 - `.agents/skills/coordinate-workers/SKILL.md` | 593 bytes | `6be105841accc1f67dc11e12541b3b343fa2029a0ff6e5085c907b36381ba57b`
+- `.agents/skills/github-projects/SKILL.md` | 18597 bytes | `89dedcca97249f7a089851ac542328fabc18f5c2d5da2a87aab3e6ce9c916fa5`
+- `.agents/skills/github-projects/assets/roles/resolver.md` | 1524 bytes | `5997cbcc50c7825f46e686b0f60c3d0d91ef38076c348132d33d9ebadda0c21f`
+- `.agents/skills/github-projects/assets/roles/triager.md` | 813 bytes | `436a8fc2ddcf90131d846e186fd7567f1d84e03592682cfd8297ad9d244051c4`
+- `.agents/skills/github-projects/assets/roles/verifier.md` | 710 bytes | `7a4e1145f353d8e6707070db23b19e4f5e695eaa4e1d92d38d4f43e7c99fce6a`
+- `.agents/skills/github-projects/references/cli.md` | 7339 bytes | `5e7ff18948919caf0161638f990eb28f8a48b8f500afcfa88b840b14be49751b`
+- `.agents/skills/github-projects/references/conventions.md` | 6734 bytes | `7eccf778c74e7075a280b946ba9967fd0e297f785f08a1728c1afb2f88f7d083`
+- `.agents/skills/github-projects/references/coordinator.md` | 7854 bytes | `ec44682ed3a71873a5575d73d10a44136c2f71274a708ed904712ff9b8edc3dc`
+- `.agents/skills/github-projects/references/gotchas.md` | 8489 bytes | `80f04b7a0258b08530dc2b766bdfc882c5699367f4a9eec5a5023b3fdf5b53cd`
+- `.agents/skills/github-projects/references/graphql.md` | 11606 bytes | `ed8864ffa957aa6c3a519c0abbccf9e7a0c3a1440e9ba9fd0b1026a63693abb4`
+- `.agents/skills/github-projects/references/recipes.md` | 6158 bytes | `28f30cb4e79f3b915a2c98ea6cc0c9ddd5b77d78d6f186fd098ecfae592a5e22`
+- `.agents/skills/github-projects/scripts/add-item.sh` | 1396 bytes | `43d55a90f1aef4364811ba14fb569eb290983dea2ee37c74cca49cbb8a458f86`
+- `.agents/skills/github-projects/scripts/claim.sh` | 3534 bytes | `4d2715aff9f8d11bcd7526980655b17afc1d9097bed945e7eb8271426fb6c156`
+- `.agents/skills/github-projects/scripts/claims.sh` | 3189 bytes | `adc007c8479e8a802e90bf5690bd878d3fc10a1f12d2b467c984d852d04de911`
+- `.agents/skills/github-projects/scripts/coord.sh` | 3741 bytes | `d467b230831ee2b64a50e9ec9a448c6d3ccce50d5df18bb7379845bd8d8b70cf`
+- `.agents/skills/github-projects/scripts/coordinator.sh` | 11844 bytes | `9cb6815731dad06f33156d629456a695e171cae7503bc7ff528968b3b370c3b6`
+- `.agents/skills/github-projects/scripts/lib.sh` | 10177 bytes | `2872ad22f8492acc694c684cc76e2164ef9d7489abcd405857f72eb7d0b7ae0d`
+- `.agents/skills/github-projects/scripts/new-item.sh` | 2876 bytes | `2f51893ffbfe6409085b207ce7b182f2c64df905398ffdd6f0501169f51ee692`
+- `.agents/skills/github-projects/scripts/project-ids.sh` | 3253 bytes | `377059b5ccee0da7946d24b85a97acaeb43b7e9d89518649a694a9bf5678f74b`
+- `.agents/skills/github-projects/scripts/project.sh` | 2976 bytes | `1b4fabefb57e05251f63656e08cbe8d6bf58aa86c3285816bb60233b4cb517e4`
+- `.agents/skills/github-projects/scripts/protect.sh` | 1624 bytes | `6dadbc8f6a460619419a4bdc62e794155669ed01d0b9088571550f7b0027ff04`
+- `.agents/skills/github-projects/scripts/release.sh` | 1161 bytes | `1b31ae119f85717b3c4b8d61cf736e8bc6fa3c4f0e8c1cf02dbd87c4629873fd`
+- `.agents/skills/github-projects/scripts/repo-map.sh` | 3814 bytes | `73238acc3510cfeb3c8601132c0b9a949d377723a7f97bc02165f58b40d39677`
+- `.agents/skills/github-projects/scripts/set-field.sh` | 6016 bytes | `515b4cf985c2014d6de2cbeb0d590a0628827be195021f6cde9ec58ffbadc62a`
+- `.agents/skills/github-projects/scripts/snapshot.sh` | 6161 bytes | `28f82ef1bba6e62dd6652d5e2f857907cc1d9daed1260a72808b66c920cba029`
+- `.agents/skills/github-projects/scripts/spawn.sh` | 3809 bytes | `fdcdfc51393912c85b554834e35eddcacbec64020847520c6432446714a38271`
+- `.agents/skills/github-projects/tests/test_acp_context.sh` | 3406 bytes | `f0fcc64c52fc6090823f2828febc78929302f531d20e83543f4b0739a935e850`
 - `.agents/skills/operate-frontier/SKILL.md` | 1006 bytes | `96cb68e6961b5b043603ff3c08f3984f504d5075a6b7db64dfbaee6b0fd96c71`
 - `.agents/skills/reconcile-project/SKILL.md` | 1161 bytes | `59f47ea393b477949a5e046a021e95032c3e3bf395842f82388c05ddde6d5c66`
 - `.agents/skills/verify-outcome/SKILL.md` | 599 bytes | `331bcc9c5179eef021d9edf48e76bedcaaef6fed17f97e91c6d20a20f1199117`
@@ -23,7 +52,7 @@
 - `.github/workflows/ci.yml` | 1867 bytes | `8e10ce7fd5075f32fdc2593543e8dc5c1bfd0e516fe36a37880ff11b7a4010cf`
 - `.github/workflows/release.yml` | 869 bytes | `96eaf5e9ec3973911e6cf012fe93c1d9ffb801adda8d23cba9cf2acdff22b644`
 - `.zenodo.json` | 738 bytes | `4306d6bf69e452583b97f520e0a0ed5e097a92a71a5bc49151b9409a2528aa76`
-- `AGENTS.md` | 10611 bytes | `9ccb7c144fbb9d26ccd74c0b5cb015b90de9cbe404fef95d20a2d941005a2469`
+- `AGENTS.md` | 10995 bytes | `134cf2cc35624445e99d7a800073579c50c6476de94ab9ab85cd4bf2955c1293`
 - `AUTHORITY.md` | 1436 bytes | `9eea975db6eef64d533531c240f9f1a50d8c9951e2b9cfc362b3c18e9bdfdbcb`
 - `CHANGELOG.md` | 9269 bytes | `0b87eeb9ab512c7780840bf002bacb03fd7a68d22ce45491c960863cc21a0f1d`
 - `CODE_OF_CONDUCT.md` | 404 bytes | `7592f346c7f6aaa166bc865c2ff6e1c7b06bdac73440947471f19bd140755649`
@@ -62,7 +91,7 @@
 - `docs/NEGATIVE_RESULTS.md` | 2132 bytes | `8bc6f6625735e60d062e08c32f834252a3ae4e05307f855d6810a3f1372c8a4c`
 - `docs/PROTOCOL_ADAPTERS.md` | 2229 bytes | `1b546812abd66d29217fb8b11370201760ad43769f5e9c1f5e685625a7bb40aa`
 - `docs/RECOVERY.md` | 1115 bytes | `b084f0a4bbad4012bd9d2525a07239e38ff4f563bbdefbd8491518fec14882e9`
-- `docs/SKILLS_INDEX.md` | 914 bytes | `2c763122a98e23607adf52f4029b3559b779bf2d3bb3a575b7a11f1ebf1f7874`
+- `docs/SKILLS_INDEX.md` | 1049 bytes | `fff86a343840e9a401ffc2bc6c5ddaed9d9e4cb570efd07af50790b3d70f887c`
 - `docs/STATUS.md` | 858 bytes | `3ac8c85292d0725b95bb10ce58e007e5dff47c70d1850aa6c48e2a6532832e4c`
 - `docs/UPGRADING.md` | 1998 bytes | `123cf17c5ac29a5530da30388d1342a200b1c09b7543523862c5eeef03627a06`
 - `docs/WORK_GRAPH.md` | 1790 bytes | `427012a108e0b551cf656690da51c74675d0aa99cb138b8d4cf61bfa32691a22`
@@ -108,7 +137,7 @@
 - `scripts/recipient-status.py` | 1417 bytes | `1c513611c928a6a4b7a8c16ae071172fd434a9e8c4675a7fb91089f469a26e78`
 - `scripts/reconcile-project.py` | 11596 bytes | `a9d4002736f1fef51ba2c124f4abb2414e67fd131016b42604bd57c633facedd`
 - `scripts/upgrade-project.py` | 14138 bytes | `e0ac6478ec44fee27f8ead869ebaae80952a817203d253e1556701b6d522e346`
-- `scripts/validate-bootstrap.py` | 10636 bytes | `377ee4ba3f343373db6c4a6f12f04bd2176995b3b2df2dde7966020f78338f76`
+- `scripts/validate-bootstrap.py` | 10780 bytes | `0d1815d48fc7d82c818c3c4727d9f3d027803a99e6b924d562a5f3e3e4e9a1c4`
 - `scripts/validate-formal-files.py` | 1603 bytes | `fb340a2f8361dd55e5ef0668f3e978d35fdbba19e5905024c034feee70c9b1d7`
 - `scripts/validate-interaction-contract.py` | 2441 bytes | `74de7cf8d3efa6cca102e2982377d9829f35218632dbea1eb0f6ab7d39706b2a`
 - `scripts/validate-protocol-adapters.py` | 2670 bytes | `ac74eb0216a520051b10bf86c31c078b4b7a5723fd0e8862bc30a4590114ec95`
