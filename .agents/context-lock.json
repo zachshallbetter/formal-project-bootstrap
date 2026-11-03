@@ -1,12 +1,12 @@
 {
   "format": "2",
-  "generatorVersion": "0.7.1",
+  "generatorVersion": "0.7.2",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 155,
-    "includedBytes": 945033,
+    "includedBytes": 947756,
     "excludedCounts": {
       "extension": 22
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "7faf16b49d891498171877f7a6bacb724963aa1c",
-        "branch": "fix/records-are-history",
+        "commit": "95965b017fece3d5afd131eeb301c2ed984d411b",
+        "branch": "fix/context-counts-tracked-only",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "18de70ffd1dd31e370344a731465f630f97d204927c53135177c09ae5d8f9f82",
+  "aggregateSourceDigest": "095c9317449bb376ea008d3d48b8353dfc6c024e83e4553ba5ac345dfc5327aa",
   "sources": [
     {
       "path": ".agents/acp/README.md",
@@ -79,7 +79,7 @@
     {
       "path": ".agents/bootstrap/RELEASE.json",
       "bytes": 15368,
-      "sha256": "8709d2b41bf16b47939e34d7b264c9ff7a968e220b2a6b57c3b96510ccbebcd1"
+      "sha256": "0ffbb755ac528fa205966b73492001d1ec9c168efc72000887f31e0c86d7ab36"
     },
     {
       "path": ".agents/bootstrap/docs/AGENT_CAPABILITIES.md",
@@ -323,8 +323,8 @@
     },
     {
       "path": ".agents/bootstrap/scripts/gen-context.py",
-      "bytes": 21041,
-      "sha256": "1c3be8d94744d193cd898a861c928e8e21269c4bdf5eed5601be5a32987738c5"
+      "bytes": 21873,
+      "sha256": "95279321b5dacd60cfcdb7398574b375ea65bf60dd4bc528487340af3e69f7c0"
     },
     {
       "path": ".agents/bootstrap/scripts/iepe-adopt.py",
@@ -693,8 +693,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 14750,
-      "sha256": "9e174cb1cac88d350e8b7fbe3a97e196fd0aef89295b5296139f32962a045370"
+      "bytes": 15224,
+      "sha256": "d9105924ade24d895c4ccc43798fdd8eb07714fb6947fa6b47e63e3c0ad08e24"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -719,7 +719,7 @@
     {
       "path": "README.md",
       "bytes": 11837,
-      "sha256": "4ae08cd0c7902412bc0d50ca0e080ca0d2a959b5357c7cd6f6806e235ad87a65"
+      "sha256": "7d1dad96ac5b1163c9feb1b79de96ac1a9b74b8868dd997132abd81f1c38da5a"
     },
     {
       "path": "SECURITY.md",
@@ -744,7 +744,7 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "64f0848b1c00d4b0c3867114266beededc85b1137b25e195b75dc5f5a104f53a"
+      "sha256": "d3a1172016b1a6b45c17e65339967cbd6850c4b4ed0916e14ebe69ce04693c37"
     },
     {
       "path": "docs/pin-digest-procedure/PROPOSAL.md",
@@ -769,7 +769,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "527fa2ca36fb68f200d22433cb0dccbae0f73df7a12e7d7efc469b0909a4c02a"
+      "sha256": "bbec429d29f0e89edc445bb64f83932989982f620b7262ccf8b4133e5fa5ef5d"
     },
     {
       "path": "requirements-dev.txt",
@@ -783,8 +783,8 @@
     },
     {
       "path": "tests/test_contained_layout.py",
-      "bytes": 19643,
-      "sha256": "8f94729fc61925261b5c069f9c5fae6854f7b56524bf111389a3595d2e82e26c"
+      "bytes": 21060,
+      "sha256": "fcc131244b8f9122efe9ad0a41b80eb3d8f96b7dcccfa54d7d7128155eec693b"
     },
     {
       "path": "tests/test_protocol_adapters.py",

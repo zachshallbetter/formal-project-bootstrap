@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.2 — Locks that match every checkout
+
+- `gen-context.py` counts exclusions only among tracked files, so an untracked
+  cache or scratch file no longer changes the recorded selection. A lock
+  compiled on one machine failed `--check` in CI when that machine's global
+  gitignore hid a file the runner saw.
+- `gen-context.py` no longer writes bytecode when it imports its layout module.
+- `--staged` counts tracked symlinks the way the working-tree compilation does.
+
 ## 0.7.1 — Records are history
 
 - The 0.7 migration rewrote quoted legacy paths inside the bootstrap ledgers

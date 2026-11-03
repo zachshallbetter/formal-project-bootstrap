@@ -14,6 +14,9 @@ import sys
 import tempfile
 from pathlib import Path
 
+# Compiling context must not leave files behind (an untracked __pycache__ here
+# would change the selection a clean checkout computes).
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from layout import Layout, TEMPLATES, find_project_root  # noqa: E402
 
@@ -192,9 +195,19 @@ def candidate_paths() -> list[Path]:
     return [ROOT / name for name in sorted(names)]
 
 
+def tracked_paths() -> set[str] | None:
+    """What Git tracks, or None outside a work tree. Exclusions are counted only among these,
+    so an untracked local file (a cache, a scratch note) never changes the recorded selection."""
+    listed = subprocess.run(["git", "-C", str(ROOT), "ls-files", "-z", "--cached"], capture_output=True)
+    if listed.returncode != 0:
+        return None
+    return {name for name in listed.stdout.decode("utf-8", "surrogateescape").split("\0") if name}
+
+
 # Index entry modes that carry file text. Symlinks (120000) and submodule
 # gitlinks (160000) are not file contents.
 BLOB_MODES = {"100644", "100755"}
+STAGED_SYMLINKS: list[str] = []      # filled by staged_entries(); counted like working-tree symlinks
 
 
 def git_bytes(args: list[str], data: bytes | None = None) -> bytes:
@@ -222,6 +235,8 @@ def staged_entries() -> dict[str, str]:
             raise ContextError(f"the index has unresolved conflicts at {rel}; resolve them before --staged")
         if mode in BLOB_MODES:
             entries[rel] = blob
+        elif mode == "120000":
+            STAGED_SYMLINKS.append(rel)
     return entries
 
 
@@ -275,12 +290,20 @@ def source_files(
     skipped: dict[str, int] = {}
     total_bytes = 0
 
+    tracked = None if staged else tracked_paths()
+
+    def skip(reason: str, rel: str) -> None:
+        if tracked is None or rel in tracked:
+            skipped[reason] = skipped.get(reason, 0) + 1
+
     index = staged_entries() if staged else {}
+    for rel in STAGED_SYMLINKS if staged else ():
+        skip("symlink", rel)
     sizes = dict(zip(index, blob_sizes(list(index.values())))) if staged else {}
     pending: list[tuple[str, str]] = []
     for path in ([ROOT / rel for rel in sorted(index)] if staged else candidate_paths()):
         if not staged and path.is_symlink():
-            skipped["symlink"] = skipped.get("symlink", 0) + 1
+            skip("symlink", path.relative_to(ROOT).as_posix())
             continue
         if not staged and not path.is_file():
             continue
@@ -291,28 +314,28 @@ def source_files(
         if path_filters and not any(
             rel == selected or rel.startswith(selected + "/") for selected in path_filters
         ):
-            skipped["path-filter"] = skipped.get("path-filter", 0) + 1
+            skip("path-filter", rel)
             continue
         if any(part in ex_dirs for part in parts[:-1]):
-            skipped["excluded-directory"] = skipped.get("excluded-directory", 0) + 1
+            skip("excluded-directory", rel)
             continue
         if not include_vendor and parts[0] == "vendor":
-            skipped["vendor"] = skipped.get("vendor", 0) + 1
+            skip("vendor", rel)
             continue
         if rel in ex_paths or rel.startswith(LOCAL_STATE_PREFIXES):
             continue
         if any(fnmatch.fnmatch(path.name, pattern) for pattern in DEFAULT_GENERATED_FILE_PATTERNS):
-            skipped["generated-or-transient-file"] = skipped.get("generated-or-transient-file", 0) + 1
+            skip("generated-or-transient-file", rel)
             continue
         if any(fnmatch.fnmatch(rel, pattern) for pattern in sensitive_patterns):
-            skipped["excluded-path"] = skipped.get("excluded-path", 0) + 1
+            skip("excluded-path", rel)
             continue
         if rel not in include_files and path.suffix.lower() not in exts:
-            skipped["extension"] = skipped.get("extension", 0) + 1
+            skip("extension", rel)
             continue
         if staged:
             if sizes[rel] > max_bytes:
-                skipped["size"] = skipped.get("size", 0) + 1
+                skip("size", rel)
             else:
                 pending.append((rel, index[rel]))
             continue
@@ -321,7 +344,7 @@ def source_files(
         except OSError as exc:
             raise ContextError(f"cannot stat eligible source {rel}: {exc}") from exc
         if before.st_size > max_bytes:
-            skipped["size"] = skipped.get("size", 0) + 1
+            skip("size", rel)
             continue
         try:
             data = path.read_bytes()

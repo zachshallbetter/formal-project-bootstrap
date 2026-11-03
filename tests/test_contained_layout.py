@@ -99,6 +99,30 @@ class LayoutTests(unittest.TestCase):
             self.assertIn(".agents is a symbolic link", cp.stderr)
 
 
+class ContextSelectionTests(unittest.TestCase):
+    def test_the_lock_does_not_depend_on_untracked_files_or_how_it_was_compiled(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = new_project(tmp)
+            (project / "linked.md").symlink_to(project / "README.md")
+            commit_all(project, "a tracked symlink")
+            tool = project / ".agents/bootstrap/scripts/gen-context.py"
+            run(sys.executable, tool, cwd=project)
+            clean = json.loads((project / ".agents/context-lock.json").read_text())["sourceSelection"]
+            cache = project / ".agents/bootstrap/scripts/__pycache__"
+            self.assertFalse(cache.exists(), "compiling context leaves no bytecode behind")
+            cache.mkdir()
+            (cache / "stray.cpython-313.pyc").write_bytes(b"x")
+            (project / "node_modules").mkdir()
+            (project / "node_modules/pkg.js").write_text("x")
+            run(sys.executable, tool, cwd=project)
+            noisy = json.loads((project / ".agents/context-lock.json").read_text())["sourceSelection"]
+            run(sys.executable, tool, "--staged", cwd=project)
+            staged = json.loads((project / ".agents/context-lock.json").read_text())["sourceSelection"]
+            self.assertEqual(clean, noisy)
+            self.assertEqual(clean, staged)
+            self.assertEqual(clean["excludedCounts"].get("symlink"), 1)
+
+
 @unittest.skipUnless(HAS_LEGACY_TAG, "needs the v0.6.3 tag (fetch tags: git fetch --tags)")
 class MigrationTests(unittest.TestCase):
     def test_a_legacy_project_moves_under_agents_reports_references_and_rolls_back(self):
