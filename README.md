@@ -83,14 +83,14 @@ Context validity is source-digest based. Git branch/commit/submodule state is re
 Validate this repository:
 
 ```bash
-python3 scripts/gen-context.py
-python3 scripts/check-all.py
+python3 .agents/bootstrap/scripts/gen-context.py
+python3 .agents/bootstrap/scripts/check-all.py
 ```
 
 Initialize a new project:
 
 ```bash
-python3 scripts/init-project.py \
+python3 .agents/bootstrap/scripts/init-project.py \
   --name "My Project" \
   --id my-project \
   --mode new \
@@ -100,7 +100,7 @@ python3 scripts/init-project.py \
 Add an optional profile only when it is actually required:
 
 ```bash
-python3 scripts/init-project.py \
+python3 .agents/bootstrap/scripts/init-project.py \
   --name "Commercial Project" \
   --id commercial-project \
   --mode new \
@@ -108,10 +108,10 @@ python3 scripts/init-project.py \
   --output ../commercial-project
 ```
 
-Bind the ACP authorization gateway at initialization (the bearer token is never written; the generated proposal is reviewed and activated through the currently configured gateway operator flow — see `docs/ACP_INTEGRATION.md` § Onboarding):
+Bind the ACP authorization gateway at initialization (the bearer token is never written; the generated proposal is reviewed and activated through the currently configured gateway operator flow — see `.agents/acp/README.md` § Onboarding):
 
 ```bash
-python3 scripts/init-project.py \
+python3 .agents/bootstrap/scripts/init-project.py \
   --name "My Project" \
   --id my-project \
   --mode new \
@@ -121,21 +121,21 @@ python3 scripts/init-project.py \
   --output ../my-project
 ```
 
-With a repository identity supplied, initialization can write a boardless `.formal-bootstrap/acp-policy-proposal.json` before an endpoint set or board exists. This lets a new project establish its local policy proposal and continue bounded E0/E1 work without ACP credentials. The proposal is unregistered and grants no authority. When available, the named endpoint set and board identity can be added separately; the gateway operator must still review, sign, activate, and allowlist policy before protected effects are governed. Bearer values stay in the machine-local secret store and are never written to project files.
+With a repository identity supplied, initialization can write a boardless `.agents/records/local/acp-policy-proposal.json` before an endpoint set or board exists. This lets a new project establish its local policy proposal and continue bounded E0/E1 work without ACP credentials. The proposal is unregistered and grants no authority. When available, the named endpoint set and board identity can be added separately; the gateway operator must still review, sign, activate, and allowlist policy before protected effects are governed. Bearer values stay in the machine-local secret store and are never written to project files.
 
-The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and the required source-bound context lock; then it runs the project validator. It also creates a standardized entry README while preserving any existing README. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
+The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and the required source-bound context lock; then it runs the project validator. It also creates a standardized entry README while preserving any existing README. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `.agents/bootstrap/docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
 
-Installed projects can be upgraded with the non-destructive `scripts/upgrade-project.py` workflow described in `docs/UPGRADING.md`. It plans three-way changes, stages conflicts, applies only safe updates, regenerates context, validates the result, and retains a rollback backup.
+Installed projects can be upgraded with the non-destructive `.agents/bootstrap/scripts/upgrade-project.py` workflow described in `.agents/bootstrap/docs/UPGRADING.md`. It plans three-way changes, stages conflicts, applies only safe updates, regenerates context, validates the result, and retains a rollback backup.
 
-Existing projects can be inspected before adoption with the read-only `scripts/reconcile-project.py` inventory; it reports repository identity, bootstrap metadata, expected artifacts, and conflicts without modifying the project.
+Existing projects can be inspected before adoption with the read-only `.agents/bootstrap/scripts/reconcile-project.py` inventory; it reports repository identity, bootstrap metadata, expected artifacts, and conflicts without modifying the project.
 
 ## Authorization provider
 
-Every project binds `acp-gateway` as its protection/authorization provider (`docs/ACP_INTEGRATION.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
+Every project binds `acp-gateway` as its protection/authorization provider (`.agents/acp/README.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
 
-`scripts/acp.py` is the client (`authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`, `board`, `policy`); `scripts/acp-check.py` verifies the wiring, including that an ACP policy actually governs the repository — binding the provider in the profile is not enough on its own.
+`.agents/acp/lib/acp.py` is the client (`authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`, `board`, `policy`); `.agents/acp/lib/acp-check.py` verifies the wiring, including that an ACP policy actually governs the repository — binding the provider in the profile is not enough on its own.
 
-New profiles select a named machine-local endpoint set. Each endpoint uses its own bearer credential; the client selects only a PostgreSQL-ready endpoint. Reads may fail over on typed transient errors, while state-changing requests retry only when `/ready` advertises the shared PostgreSQL idempotency contract for that exact route. Valid denials and control/integrity failures never trigger failover. See `docs/ACP_INTEGRATION.md` for setup.
+New profiles select a named machine-local endpoint set. Each endpoint uses its own bearer credential; the client selects only a PostgreSQL-ready endpoint. Reads may fail over on typed transient errors, while state-changing requests retry only when `/ready` advertises the shared PostgreSQL idempotency contract for that exact route. Valid denials and control/integrity failures never trigger failover. See `.agents/acp/README.md` for setup.
 
 ## Core invariants
 
@@ -159,7 +159,7 @@ New profiles select a named machine-local endpoint set. Each endpoint uses its o
 
 Normal initialization proves B0–B4. B5–B8 are conditional operational observations and must not be manufactured merely to make a report green. If no legitimate blocker, landing, concurrent worker, or recovery event occurs, record `NOT OBSERVED` / `NOT EXECUTED`.
 
-The bootstrap may define the operating rule being tested. A transfer experiment seeking behavioral evidence should not restate that rule again in the worker prompt. See `docs/BOOTSTRAP_SEQUENCE.md` and `docs/CONFORMANCE.md`.
+The bootstrap may define the operating rule being tested. A transfer experiment seeking behavioral evidence should not restate that rule again in the worker prompt. See `.agents/bootstrap/docs/BOOTSTRAP_SEQUENCE.md` and `.agents/bootstrap/docs/CONFORMANCE.md`.
 
 ## Repository structure
 
@@ -170,9 +170,9 @@ GOVERNANCE.md                      normative-change and anti-bloat rules
 VERSION / VERSIONING.md            release identity and compatibility policy
 PROJECT_INTENT_TEMPLATE.md         originating intent template
 PROJECT_PROFILE_TEMPLATE.json      runtime/project bindings template
-FORMAL_RESOURCE_MANIFEST.json    pinned formal dependencies
+.agents/project/formal-resources.json    pinned formal dependencies
 CONTEXT_SOURCES_TEMPLATE.json      deterministic context-source policy
-NEW_AGENT_PROMPT.md                thin worker entry prompt
+.agents/bootstrap/NEW_AGENT_PROMPT.md                thin worker entry prompt
 bindings/                          semantic and authority bindings
 contracts/                         project contracts; acp-protected-effects.yaml projects effects onto ACP actions
 docs/                              operating definitions, conformance, and retained negative results
@@ -198,14 +198,14 @@ C4b Behavioral transfer
 C5 Comparative empirical
 ```
 
-See `docs/CONFORMANCE.md` for the exact boundaries.
+See `.agents/bootstrap/docs/CONFORMANCE.md` for the exact boundaries.
 
 ## Verification
 
 The complete repository gate is:
 
 ```bash
-python3 scripts/check-all.py
+python3 .agents/bootstrap/scripts/check-all.py
 ```
 
 For full YAML/JSON-Schema verification install the optional verification dependencies first:
@@ -217,7 +217,7 @@ python3 -m pip install -r requirements-dev.txt
 Release artifacts are deterministic:
 
 ```bash
-python3 scripts/package-release.py --output dist --verify-reproducible
+python3 .agents/bootstrap/scripts/package-release.py --output dist --verify-reproducible
 ```
 
 A tag `vX.Y.Z` is releasable only when it equals `VERSION`; the release workflow verifies, packages, and publishes the resulting archive, manifest, and SHA-256 file.

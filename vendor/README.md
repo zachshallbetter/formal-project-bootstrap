@@ -2,6 +2,6 @@
 
 Materialize protocol/specification dependencies here or bind another locally addressable immutable location.
 
-Every external dependency must be represented in `FORMAL_RESOURCE_MANIFEST.json`.
+Every external dependency must be represented in `.agents/project/formal-resources.json`.
 
 Do not vendor generated summaries as normative resources.

@@ -21,15 +21,15 @@ jobs:
       - name: Install verification dependencies
         run: python -m pip install -r requirements-dev.txt
       - name: Regenerate context
-        run: python scripts/gen-context.py
+        run: python .agents/bootstrap/scripts/gen-context.py
       - name: Verify repository
-        run: python scripts/check-all.py
+        run: python .agents/bootstrap/scripts/check-all.py
       - name: Ensure generation is clean
         # The lock's validity basis is the aggregate source digest; its
         # repositoryState is provenance (the commit it was generated at), which a
         # committed lock can never match. Compare the corpora and the digest.
         run: |
-          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt VERSION PROJECT_PROFILE_TEMPLATE.json CONTEXT_SOURCES_TEMPLATE.json
+          git diff --exit-code -- .agents/llms.txt .agents/llms-full.txt .agents/bootstrap/VERSION .agents/acp/VERSION .agents/bootstrap/templates
           python - <<'PY'
           import json, subprocess
           committed = json.loads(subprocess.check_output(["git", "show", "HEAD:.agents/context-lock.json"]))

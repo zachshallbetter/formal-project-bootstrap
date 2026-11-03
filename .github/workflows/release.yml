@@ -23,11 +23,11 @@ jobs:
       - name: Verify tag matches VERSION
         shell: bash
         run: |
-          test "${GITHUB_REF_NAME}" = "v$(cat VERSION)"
+          test "${GITHUB_REF_NAME}" = "v$(cat .agents/bootstrap/VERSION)"
       - name: Build and verify
         run: |
-          python scripts/gen-context.py
-          python scripts/check-all.py
+          python .agents/bootstrap/scripts/gen-context.py
+          python .agents/bootstrap/scripts/check-all.py
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}

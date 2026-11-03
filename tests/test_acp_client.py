@@ -1,4 +1,4 @@
-"""scripts/acp.py and scripts/acp-check.py against a stub gateway.
+""".agents/acp/lib/acp.py and .agents/acp/lib/acp-check.py against a stub gateway.
 
 The stub answers with whatever each test scripts, so the fail-closed rules are
 tested on the client alone: nothing here needs acp-gateway, GitHub or a network.
@@ -108,7 +108,7 @@ class AcpClientTests(unittest.TestCase):
         cls.url = f"http://127.0.0.1:{cls.server.server_address[1]}"
         cls.tmp = tempfile.mkdtemp()
         cls.project = Path(cls.tmp) / "project"
-        subprocess.run([sys.executable, "scripts/init-project.py", "--name", "Client", "--id", "client",
+        subprocess.run([sys.executable, ".agents/bootstrap/scripts/init-project.py", "--name", "Client", "--id", "client",
                         "--output", str(cls.project), "--acp-endpoint-set", "production",
                         "--acp-owner", OWNER, "--acp-project", str(BOARD),
                         "--acp-repository", f"{OWNER}/{NAME}"],
@@ -118,8 +118,8 @@ class AcpClientTests(unittest.TestCase):
             subprocess.run(["git", *args], cwd=cls.project, check=True)
         (cls.project / ".env.local").write_text(f"ACP_GATEWAY_TOKEN={TOKEN}\n", encoding="utf-8")
         cls.registry = Path(cls.tmp) / "acp-endpoints.json"
-        cls.profile_bytes = (cls.project / "PROJECT_PROFILE.json").read_bytes()
-        cls.schema = json.loads((ROOT / "schemas/acp-decision.schema.json").read_text(encoding="utf-8"))
+        cls.profile_bytes = (cls.project / ".agents/project/profile.json").read_bytes()
+        cls.schema = json.loads((ROOT / ".agents/acp/schemas/acp-decision.schema.json").read_text(encoding="utf-8"))
 
     @classmethod
     def tearDownClass(cls):
@@ -127,7 +127,7 @@ class AcpClientTests(unittest.TestCase):
         shutil.rmtree(cls.tmp, ignore_errors=True)
 
     def setUp(self):
-        (self.project / "PROJECT_PROFILE.json").write_bytes(self.profile_bytes)
+        (self.project / ".agents/project/profile.json").write_bytes(self.profile_bytes)
         self.write_endpoint_sets({"production": [
             {"name": "vercel", "url": self.url, "keychainAccount": "ACP_GATEWAY_TOKEN", "localOnly": True},
         ]})
@@ -164,7 +164,7 @@ class AcpClientTests(unittest.TestCase):
         registry["endpointSets"][set_name] = endpoints
         self.write_endpoint_sets(registry["endpointSets"])
         if select:
-            path = self.project / "PROJECT_PROFILE.json"
+            path = self.project / ".agents/project/profile.json"
             profile = json.loads(path.read_text(encoding="utf-8"))
             profile["authorizationProvider"]["gatewayEndpointSet"] = set_name
             path.write_text(json.dumps(profile, indent=2) + "\n", encoding="utf-8")
@@ -177,7 +177,7 @@ class AcpClientTests(unittest.TestCase):
              "keychainAccount": "ACP_GATEWAY_TOKEN_FALLBACK", "localOnly": True},
         ], select=select)
 
-    def acp(self, *args, env=None, script="scripts/acp.py", cwd=None):
+    def acp(self, *args, env=None, script=".agents/acp/lib/acp.py", cwd=None):
         environment = {k: v for k, v in os.environ.items() if not k.startswith("ACP_")}
         environment["ACP_KEYCHAIN_LOOKUP"] = "0"
         environment["ACP_ENDPOINT_REGISTRY"] = str(self.registry)
@@ -197,7 +197,7 @@ class AcpClientTests(unittest.TestCase):
         return cp.returncode, out
 
     def declare_auto_deploy(self, **rule):
-        path = self.project / "PROJECT_PROFILE.json"
+        path = self.project / ".agents/project/profile.json"
         profile = json.loads(path.read_text(encoding="utf-8"))
         profile["authorizationProvider"]["autoDeploy"] = [{"ref": MAIN, "environment": "production", **rule}]
         path.write_text(json.dumps(profile, indent=2) + "\n", encoding="utf-8")
@@ -343,7 +343,7 @@ class AcpClientTests(unittest.TestCase):
         sent = Stub.seen[-1]["body"]
         self.assertEqual(sent["repository_claim"]["owner"], OWNER)
         self.assertEqual(sent["context"], {"ref": MAIN, "old_sha": OLD, "new_sha": NEW})
-        record = json.loads((self.project / "records/evidence.jsonl").read_text().splitlines()[-1])
+        record = json.loads((self.project / ".agents/records/evidence.jsonl").read_text().splitlines()[-1])
         self.assertEqual((record["gate"], record["decision"], record["workItem"]), ("acp-decision", "ALLOW", "7"))
         self.assertNotIn("cap.token.value", json.dumps(record))
 
@@ -402,7 +402,7 @@ class AcpClientTests(unittest.TestCase):
         self.assertEqual(out["gateway_decision"]["reason"], "OUT_OF_POLICY_SCOPE")
 
     def test_not_governed_passes_only_when_the_profile_is_not_fail_closed(self):
-        profile_path = self.project / "PROJECT_PROFILE.json"
+        profile_path = self.project / ".agents/project/profile.json"
         original = profile_path.read_text(encoding="utf-8")
         profile = json.loads(original)
         profile["authorizationProvider"]["failClosed"] = False
@@ -483,7 +483,7 @@ class AcpClientTests(unittest.TestCase):
     def test_missing_gateway_url_names_the_setting_to_add(self):
         profile = json.loads(self.profile_bytes)
         profile["authorizationProvider"].pop("gatewayEndpointSet", None)
-        (self.project / "PROJECT_PROFILE.json").write_text(json.dumps(profile), encoding="utf-8")
+        (self.project / ".agents/project/profile.json").write_text(json.dumps(profile), encoding="utf-8")
         cp = self.acp("authorize", "--action", "git.remote.update")
         out = json.loads(cp.stdout)
         self.assertEqual((cp.returncode, out["reason"]), (2, "GATEWAY_UNAVAILABLE"))
@@ -573,7 +573,7 @@ class AcpClientTests(unittest.TestCase):
         self.assertEqual(sent["evidence"], {"checkpoint": "PRE_PUSH", "action": "git.protected_ref.update"})
         self.assertEqual(sent["resource"]["ref"], MAIN)
         self.assertEqual(sent["principal"]["client_type"], "formal-project-bootstrap")
-        contract = yaml.safe_load((ROOT / "contracts/acp-protected-effects.yaml").read_text(encoding="utf-8"))
+        contract = yaml.safe_load((ROOT / ".agents/bootstrap/templates/contracts/acp-protected-effects.yaml").read_text(encoding="utf-8"))
         named = set()
         for entry in contract["reports"]:
             named.update(entry["event"] if isinstance(entry["event"], list) else [entry["event"]])
@@ -595,7 +595,7 @@ class AcpClientTests(unittest.TestCase):
                                                 "canonical_remote": f"https://github.com/{OWNER}/{NAME}.git"})
         self.assertEqual(policy["boards"], [{"owner": OWNER, "number": BOARD}])
         paths = {a["path"] for a in policy["artifact_manifest"]["artifacts"]}
-        self.assertTrue({"AGENTS.md", "PROJECT_PROFILE.json", "contracts/acp-protected-effects.yaml"} <= paths)
+        self.assertTrue({"AGENTS.md", ".agents/project/profile.json", ".agents/project/contracts/acp-protected-effects.yaml"} <= paths)
         self.assertNotIn("signature", policy, "a candidate is never signed by the project")
 
     def test_an_inline_comment_in_board_env_is_not_part_of_the_value(self):
@@ -605,7 +605,7 @@ class AcpClientTests(unittest.TestCase):
                                               f"ACP_BOARD_NUMBER={BOARD}        # Example — Board"),
                              encoding="utf-8")
         try:
-            cp = self.acp("--json", script="scripts/acp-check.py")
+            cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
             self.assertEqual(cp.returncode, 0, cp.stderr)
             self.assertEqual(json.loads(cp.stdout)["checks"]["board"], "OK")
         finally:
@@ -614,7 +614,7 @@ class AcpClientTests(unittest.TestCase):
     def test_acp_check_uses_configured_canonical_remote_without_git_origin(self):
         subprocess.run(["git", "remote", "remove", "origin"], cwd=self.project, check=True)
         try:
-            cp = self.acp("--json", script="scripts/acp-check.py")
+            cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
             self.assertEqual(cp.returncode, 0, cp.stderr)
             self.assertTrue(json.loads(cp.stdout)["checks"]["notice"] == "OK")
             notice = next(s for s in Stub.seen if s["path"] == "/notice")
@@ -628,7 +628,7 @@ class AcpClientTests(unittest.TestCase):
         cp = self.acp("policy", env={"ACP_REPOSITORY_NAME": "other-repository"})
         self.assertEqual(cp.returncode, 2)
         self.assertIn("conflicts with ACP_REMOTE_URL or origin", cp.stderr)
-        cp = self.acp("--json", script="scripts/acp-check.py",
+        cp = self.acp("--json", script=".agents/acp/lib/acp-check.py",
                       env={"ACP_REPOSITORY_NAME": "other-repository"})
         self.assertEqual(cp.returncode, 2)
         self.assertIn("conflicts with ACP_REMOTE_URL or origin", cp.stderr)
@@ -1030,7 +1030,7 @@ class AcpClientTests(unittest.TestCase):
             "local": [{"name": "loopback", "url": self.url,
                        "keychainAccount": "ACP_GATEWAY_TOKEN_LOCAL", "localOnly": True}],
         })
-        profile_path = self.project / "PROJECT_PROFILE.json"
+        profile_path = self.project / ".agents/project/profile.json"
         profile = json.loads(profile_path.read_text(encoding="utf-8"))
         profile["authorizationProvider"]["gatewayEndpointSet"] = "local"
         profile_path.write_text(json.dumps(profile, indent=2) + "\n", encoding="utf-8")
@@ -1050,35 +1050,35 @@ class AcpClientTests(unittest.TestCase):
     def test_policy_manifest_covers_the_client_and_the_skill_tree(self):
         manifest = json.loads(self.acp("policy").stdout)["artifact_manifest"]
         artifacts = {a["path"]: a for a in manifest["artifacts"]}
-        self.assertIn("scripts/acp.py", artifacts)
-        self.assertIn("scripts/acp_endpoint_registry.py", artifacts)
-        self.assertIn("schemas/acp-endpoint-registry.schema.json", artifacts)
-        self.assertIn("PROJECT_INTENT.md", artifacts)
+        self.assertIn(".agents/acp/lib/acp.py", artifacts)
+        self.assertIn(".agents/acp/lib/acp_endpoint_registry.py", artifacts)
+        self.assertIn(".agents/acp/schemas/acp-endpoint-registry.schema.json", artifacts)
+        self.assertIn(".agents/project/intent.md", artifacts)
         self.assertEqual({a["change_policy"] for a in artifacts.values()}, {"authorize_and_report"})
-        self.assertFalse(artifacts["NEW_AGENT_PROMPT.md"]["required"])
+        self.assertFalse(artifacts[".agents/bootstrap/NEW_AGENT_PROMPT.md"]["required"])
         patterns = {p["pattern"]: p["change_policy"] for p in manifest["patterns"]}
         self.assertEqual(patterns, {".agents/skills/**": "authorize_and_report",
-                                    "records/deviations.jsonl": "report_only"})
+                                    ".agents/records/deviations.jsonl": "report_only"})
         strict = json.loads(self.acp("policy", "--strict").stdout)["artifact_manifest"]["artifacts"]
         self.assertEqual({a["change_policy"] for a in strict}, {"admin_exact_transition"})
 
     def test_acp_check_requires_a_governing_policy(self):
-        cp = self.acp(script="scripts/acp-check.py")
+        cp = self.acp(script=".agents/acp/lib/acp-check.py")
         self.assertEqual(cp.returncode, 0, cp.stderr)
         notice = next(s for s in Stub.seen if s["path"] == "/notice")
         self.assertIsNone(notice["authorization"], "the notice is read unauthenticated")
         Stub.routes["/notice"] = (200, {"governed": False})
-        cp = self.acp(script="scripts/acp-check.py")
+        cp = self.acp(script=".agents/acp/lib/acp-check.py")
         self.assertEqual(cp.returncode, 5, "not governed has its own exit code")
         self.assertIn("no ACP policy governs example-org/example-repo", cp.stderr)
-        cp = self.acp("--allow-ungoverned", script="scripts/acp-check.py")
+        cp = self.acp("--allow-ungoverned", script=".agents/acp/lib/acp-check.py")
         self.assertEqual(cp.returncode, 0)
         self.assertIn("WARNING", cp.stderr)
 
     def test_acp_check_reports_policy_and_board_setup_when_gateway_rejects_token(self):
         Stub.routes["/internal/app-status"] = (401, {"error": "UNAUTHORIZED", "detail": "bad token"})
         Stub.routes["/notice"] = (200, {"governed": True, "authorization_state": "NORMAL", "policy_id": "p"})
-        cp = self.acp("--json", script="scripts/acp-check.py")
+        cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
         self.assertEqual(cp.returncode, 3)
         summary = json.loads(cp.stderr)
         notice = next(item for item in Stub.seen if item["path"] == "/notice")
@@ -1099,7 +1099,7 @@ class AcpClientTests(unittest.TestCase):
     def test_acp_check_reports_policy_credential_and_board_blockers_together(self):
         Stub.routes["/internal/app-status"] = (401, {"error": "UNAUTHORIZED", "detail": "bad token"})
         Stub.routes["/notice"] = (200, {"governed": False})
-        cp = self.acp("--json", script="scripts/acp-check.py")
+        cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
         self.assertEqual(cp.returncode, 3)
         summary = json.loads(cp.stderr)
         states = summary["onboarding"]["states"]
@@ -1125,7 +1125,7 @@ class AcpClientTests(unittest.TestCase):
                     "controlled_operations": "DISABLED",
                     "incident_id": "incident-test" if authorization_state in ("QUARANTINED", "LOCKED") else None,
                 })
-                cp = self.acp("--json", script="scripts/acp-check.py")
+                cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
                 self.assertEqual(cp.returncode, 0, cp.stderr)
                 summary = json.loads(cp.stdout)
                 self.assertEqual(summary["onboarding"]["states"]["resource_authorization"], expected_state)
@@ -1138,12 +1138,12 @@ class AcpClientTests(unittest.TestCase):
         board_file = self.project / ".agents/board.env"
         original_board_env = board_file.read_text(encoding="utf-8")
         board_file.write_text("", encoding="utf-8")
-        profile_path = self.project / "PROJECT_PROFILE.json"
+        profile_path = self.project / ".agents/project/profile.json"
         profile = json.loads(profile_path.read_text(encoding="utf-8"))
         profile["authorizationProvider"]["board"] = {}
         profile_path.write_text(json.dumps(profile), encoding="utf-8")
         try:
-            cp = self.acp("--json", script="scripts/acp-check.py")
+            cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
             self.assertEqual(cp.returncode, 0, cp.stderr)
             summary = json.loads(cp.stdout)
             self.assertEqual(summary["onboarding"]["states"]["board_binding"], "MISSING")
@@ -1155,7 +1155,7 @@ class AcpClientTests(unittest.TestCase):
 
     def test_acp_check_uses_fallback_endpoint_and_credential(self):
         self.configure_loopback_fallback()
-        cp = self.acp("--json", script="scripts/acp-check.py",
+        cp = self.acp("--json", script=".agents/acp/lib/acp-check.py",
                       env={"ACP_GATEWAY_TOKEN_FALLBACK": FALLBACK_TOKEN})
         self.assertEqual(cp.returncode, 0, cp.stderr)
         summary = json.loads(cp.stdout)
@@ -1172,7 +1172,7 @@ class AcpClientTests(unittest.TestCase):
                          ("main", "local", ["*"]))
 
         Stub.seen.clear()
-        cp = self.acp("--json", script="scripts/acp-check.py")
+        cp = self.acp("--json", script=".agents/acp/lib/acp-check.py")
         self.assertEqual(cp.returncode, 0, cp.stderr)
         self.assertEqual(json.loads(cp.stdout)["checks"]["owner_override"], "ACTIVE")
         self.assertEqual(Stub.seen, [], "the local override must work without a gateway call")
@@ -1198,7 +1198,7 @@ class AcpClientTests(unittest.TestCase):
             {"name": "vercel", "url": "http://127.0.0.1:9",
              "keychainAccount": "ACP_GATEWAY_TOKEN", "localOnly": True},
         ])
-        inactive = self.acp("--json", script="scripts/acp-check.py")
+        inactive = self.acp("--json", script=".agents/acp/lib/acp-check.py")
         self.assertNotEqual(inactive.returncode, 0)
 
     def test_shared_owner_override_uses_admin_credential_and_exact_context(self):
