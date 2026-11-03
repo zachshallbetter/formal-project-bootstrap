@@ -1,12 +1,12 @@
 {
   "format": "2",
-  "generatorVersion": "0.7.2",
+  "generatorVersion": "0.7.3",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 155,
-    "includedBytes": 948397,
+    "includedBytes": 957348,
     "excludedCounts": {
       "extension": 22
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "2c5fa083ce5b122564d9d08f68487ba07424a8cc",
-        "branch": "fix/context-counts-tracked-only",
+        "commit": "c43c689b5de09b1e1963a0d6f0d11ef45ccc91e9",
+        "branch": "fix/0.7.3-migration",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "ee86dfaff1d411c60d1510570eee4f048707ea47a71e37b80cc3dd4d1ea1cc26",
+  "aggregateSourceDigest": "7da82ea383783ff30e2d6d4ea5624359ca8271a1a8ca52e9e978fb338fe41b30",
   "sources": [
     {
       "path": ".agents/acp/README.md",
@@ -43,8 +43,8 @@
     },
     {
       "path": ".agents/acp/lib/acp_commands.py",
-      "bytes": 36693,
-      "sha256": "36220f99c00c74435bdf2ad9b20f40fe3295703b818aee7dc92a12b0cb9a4df2"
+      "bytes": 37660,
+      "sha256": "b203a79cacddcac4caac948bcc9950a8323585e0356f15e748c87b84f4499739"
     },
     {
       "path": ".agents/acp/lib/acp_endpoint_registry.py",
@@ -79,7 +79,7 @@
     {
       "path": ".agents/bootstrap/RELEASE.json",
       "bytes": 15368,
-      "sha256": "3a46f1b04a6cc6155d75596467b1747a05efe54dce5c9730011211cb7c792e5a"
+      "sha256": "408a1b489a03be0380c72ec52d144def28515d1064dce5140dc6a76b8ce3d315"
     },
     {
       "path": ".agents/bootstrap/docs/AGENT_CAPABILITIES.md",
@@ -323,8 +323,8 @@
     },
     {
       "path": ".agents/bootstrap/scripts/gen-context.py",
-      "bytes": 22049,
-      "sha256": "06d7b44469116af4a8589e07031cab56190d2bc2ba3623358f168e11b4023388"
+      "bytes": 22621,
+      "sha256": "a10d0f824e7e4c110c48540f586afcd337399d76a45d1434c7a150bb7cbe32be"
     },
     {
       "path": ".agents/bootstrap/scripts/iepe-adopt.py",
@@ -338,8 +338,8 @@
     },
     {
       "path": ".agents/bootstrap/scripts/layout.py",
-      "bytes": 15303,
-      "sha256": "6a7d25d61942f5533bb3a8d9259241dfaaef29c37fa65e1fd8eb04a78219fe2e"
+      "bytes": 17130,
+      "sha256": "879f3684449338142a778946c8488e4cdfde377f175dd0470f369853d28c251e"
     },
     {
       "path": ".agents/bootstrap/scripts/package-release.py",
@@ -363,8 +363,8 @@
     },
     {
       "path": ".agents/bootstrap/scripts/upgrade-project.py",
-      "bytes": 30539,
-      "sha256": "594a43c8298941f6e67c2d4023d2a14ba2088eae91186418d7c970bf934cdeed"
+      "bytes": 30704,
+      "sha256": "de17326fa8875824e4eee9a22b6f7629d240b72f9fd62e299f08a50f974883f1"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-bootstrap.py",
@@ -693,8 +693,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 15224,
-      "sha256": "d9105924ade24d895c4ccc43798fdd8eb07714fb6947fa6b47e63e3c0ad08e24"
+      "bytes": 16391,
+      "sha256": "50b7b7c96b3f21087572a2003c46e9a1e8877eefcaf54a67ca3fde0ebc7b26df"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -719,7 +719,7 @@
     {
       "path": "README.md",
       "bytes": 11837,
-      "sha256": "7d1dad96ac5b1163c9feb1b79de96ac1a9b74b8868dd997132abd81f1c38da5a"
+      "sha256": "1f4dfeb21e327bd7f7725da466ce6255b6febfb61e85335086583f881bd6de61"
     },
     {
       "path": "SECURITY.md",
@@ -744,7 +744,7 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "d3a1172016b1a6b45c17e65339967cbd6850c4b4ed0916e14ebe69ce04693c37"
+      "sha256": "9d7242f50217a90f66f11fa0b7688caf29c556b8ae6e66e056e5470c21700b27"
     },
     {
       "path": "docs/pin-digest-procedure/PROPOSAL.md",
@@ -769,7 +769,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "bbec429d29f0e89edc445bb64f83932989982f620b7262ccf8b4133e5fa5ef5d"
+      "sha256": "b88ae142cf1843d0ef59fb290fe6bb4d1ef4450ec0eff6cd4aa057c61c13ff8b"
     },
     {
       "path": "requirements-dev.txt",
@@ -783,8 +783,8 @@
     },
     {
       "path": "tests/test_contained_layout.py",
-      "bytes": 21060,
-      "sha256": "fcc131244b8f9122efe9ad0a41b80eb3d8f96b7dcccfa54d7d7128155eec693b"
+      "bytes": 25313,
+      "sha256": "f637e496a66276d7d5f5c34f73eca26e38884ae8ac49ad384837425d017fabbd"
     },
     {
       "path": "tests/test_protocol_adapters.py",
