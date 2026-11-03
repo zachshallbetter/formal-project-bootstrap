@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.3 — Staged context and auto-deploy awareness
 
 - `gen-context.py --staged` compiles the commit being made from the Git index,
   so uncommitted edits to tracked files never reach a committed lock.
