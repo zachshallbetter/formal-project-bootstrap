@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `gen-context.py --staged` compiles the commit being made from the Git index,
+  so uncommitted edits to tracked files never reach a committed lock.
+  `--install-hook` installs an opt-in pre-commit hook that runs it and stages
+  the lock (#18).
+
 ## 0.6.2 — Upgrades that keep project work and clean-checkout context
 
 - `gen-context.py` reads only files Git tracks or would add, so git-ignored

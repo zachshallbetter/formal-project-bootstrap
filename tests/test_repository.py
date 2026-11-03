@@ -211,6 +211,80 @@ class RepositoryTests(unittest.TestCase):
             (project / "local-notes.md").unlink()
             self.run_ok(sys.executable, "scripts/gen-context.py", "--check", cwd=project)
 
+    def git_fixture(self, tmp: str, name: str) -> tuple[Path, list[str]]:
+        project = Path(tmp) / "project"
+        self.run_ok(sys.executable, "scripts/init-project.py", "--name", name,
+                    "--id", name.lower().replace(" ", "-"), "--mode", "new", "--output", str(project))
+        git = ["git", "-C", str(project), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+               "-c", "commit.gpgSign=false"]
+        self.run_ok("git", "init", "-q", str(project))
+        self.run_ok(sys.executable, "scripts/gen-context.py", cwd=project)
+        self.run_ok(*git, "add", "-A")
+        self.run_ok(*git, "commit", "-q", "-m", "fixture")
+        return project, git
+
+    def clean_checkout_check(self, project: Path, tmp: str) -> subprocess.CompletedProcess:
+        clean = Path(tmp) / "clean"
+        self.run_ok("git", "-C", str(project), "worktree", "add", "-q", "--detach", str(clean), "HEAD")
+        return subprocess.run([sys.executable, "scripts/gen-context.py", "--check"], cwd=clean,
+                              text=True, capture_output=True)
+
+    def test_staged_context_ignores_uncommitted_edits_to_tracked_files(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project, git = self.git_fixture(tmp, "Staged Fixture")
+            (project / "docs/committed.md").write_text("# Committed\n", encoding="utf-8")
+            self.run_ok(*git, "add", "docs/committed.md")
+            with (project / "docs/committed.md").open("a", encoding="utf-8") as handle:
+                handle.write("\nNot staged.\n")
+            (project / "docs/untracked.md").write_text("# Not added\n", encoding="utf-8")
+            self.run_ok(sys.executable, "scripts/gen-context.py", "--staged", cwd=project)
+            lock = json.loads((project / ".agents/context-lock.json").read_text(encoding="utf-8"))
+            sources = {item["path"]: item["sha256"] for item in lock["sources"]}
+            self.assertEqual(sources["docs/committed.md"], hashlib.sha256(b"# Committed\n").hexdigest())
+            self.assertNotIn("docs/untracked.md", sources)
+            self.run_ok(*git, "add", ".agents/context-lock.json")
+            self.run_ok(*git, "commit", "-q", "-m", "staged")
+            cp = self.clean_checkout_check(project, tmp)
+            self.assertEqual(cp.returncode, 0, cp.stdout + cp.stderr)
+
+    def test_installed_hook_commits_a_lock_that_matches_a_clean_checkout(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project, git = self.git_fixture(tmp, "Hook Fixture")
+            self.run_ok(sys.executable, "scripts/gen-context.py", "--install-hook", cwd=project)
+            self.assertEqual(subprocess.run([sys.executable, "scripts/gen-context.py", "--install-hook"],
+                                            cwd=project, capture_output=True).returncode, 0)
+            (project / "docs/new.md").write_text("# New page\n", encoding="utf-8")
+            (project / "README.md").write_text((project / "README.md").read_text(encoding="utf-8")
+                                               + "\nUncommitted line.\n", encoding="utf-8")
+            self.run_ok(*git, "add", "docs/new.md")
+            self.run_ok(*git, "commit", "-q", "-m", "through the hook")
+            committed = self.run_ok("git", "-C", str(project), "show", "--name-only", "--format=", "HEAD").stdout
+            self.assertIn(".agents/context-lock.json", committed)
+            cp = self.clean_checkout_check(project, tmp)
+            self.assertEqual(cp.returncode, 0, cp.stdout + cp.stderr)
+
+    def test_install_hook_leaves_a_foreign_pre_commit_hook_alone(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project, _ = self.git_fixture(tmp, "Foreign Hook Fixture")
+            hook = project / ".git/hooks/pre-commit"
+            hook.write_text("#!/bin/sh\necho mine\n", encoding="utf-8")
+            cp = subprocess.run([sys.executable, "scripts/gen-context.py", "--install-hook"], cwd=project,
+                                text=True, capture_output=True)
+            self.assertEqual(cp.returncode, 2)
+            self.assertIn("--staged", cp.stderr)
+            self.assertEqual(hook.read_text(encoding="utf-8"), "#!/bin/sh\necho mine\n")
+
+    def test_install_hook_refuses_a_hooks_path_shared_outside_the_repository(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project, _ = self.git_fixture(tmp, "Shared Hooks Fixture")
+            shared = Path(tmp) / "shared-hooks"
+            self.run_ok("git", "-C", str(project), "config", "core.hooksPath", str(shared))
+            cp = subprocess.run([sys.executable, "scripts/gen-context.py", "--install-hook"], cwd=project,
+                                text=True, capture_output=True)
+            self.assertEqual(cp.returncode, 2)
+            self.assertIn("outside this repository", cp.stderr)
+            self.assertFalse((shared / "pre-commit").exists())
+
     def test_context_check_accepts_sources_with_crlf_line_endings(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp) / "project"

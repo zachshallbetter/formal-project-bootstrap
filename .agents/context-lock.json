@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 787056,
+    "includedBytes": 799327,
     "excludedCounts": {
       "extension": 17
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "858d9f82a166756f5c36e34a778fc3c9003cf20c",
-        "branch": "main",
+        "commit": "923ec4096c0df94f7f426d8c7b78710707fcb280",
+        "branch": "feat/staged-context",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "ea257e3af3ca518b2580371441910408dfcad786f060b8d26a3ed89adb4b6824",
+  "aggregateSourceDigest": "569ed4947cc6cf6e820de5ff3f58d3567558057d7eed04f546161811bab44e3b",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -283,8 +283,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 11793,
-      "sha256": "9d6be12f3a8d5bfa50296ad76c36e6fdbb98afaa0fa1ac685523007d426bc91e"
+      "bytes": 12054,
+      "sha256": "7a9c26cbcb210accbca56599f821c69836b2ad3e2553bd97b35baa29344b323c"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -403,8 +403,8 @@
     },
     {
       "path": "docs/CONTEXT_COMPILATION.md",
-      "bytes": 2906,
-      "sha256": "f4340c5afdba5aacf3d912af1ff9edcef21a1caf5bc4256975d23bf603740ed6"
+      "bytes": 3821,
+      "sha256": "0309f7f0e4ed9f4bc0fc8624a25197503a793e3e769c559c4e5f2f5a5651cbe8"
     },
     {
       "path": "docs/EVIDENCE_METHOD.md",
@@ -683,8 +683,8 @@
     },
     {
       "path": "scripts/gen-context.py",
-      "bytes": 14390,
-      "sha256": "1cecc3bc593ef0c89cc24692db223c5a29a5e434561e0ebf4c36bf9464799c1b"
+      "bytes": 20568,
+      "sha256": "a0fcab49f586f036d70c8d572f1f031054750ea9bb51a28fb94c80e5fc0e99f2"
     },
     {
       "path": "scripts/iepe-adopt.py",
@@ -763,8 +763,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 35819,
-      "sha256": "7555c081619001dfa2384bb9cdf6461bb814703b17f9ef3d399724ae2d031375"
+      "bytes": 40736,
+      "sha256": "d0ef5c5ff7814cd9d490171a283087fe1a0822efac45ec34ed9150f687e5da64"
     },
     {
       "path": "vendor/README.md",
