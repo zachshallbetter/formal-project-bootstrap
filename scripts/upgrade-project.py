@@ -106,6 +106,11 @@ def source_map(
         result[f"docs/{name}"] = (release / "docs" / name).read_bytes()
     for name in initializer.SCRIPT_FILES:
         result[f"scripts/{name}"] = (release / "scripts" / name).read_bytes()
+    # Records belong to the project: a new release may require one, but never
+    # rewrites one that exists.
+    for name in getattr(initializer, "RECORD_FILES", ()):
+        rel = f"records/{name}"
+        result[rel] = read(project / rel) or b""
 
     result["VERSION"] = (release / "VERSION").read_bytes()
     result["PROJECT_INTENT.md"] = (release / "PROJECT_INTENT_TEMPLATE.md").read_text(

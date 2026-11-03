@@ -127,9 +127,10 @@ def readme_findings(path: Path) -> list[str]:
 
     labels = {re.sub(r"[^a-z0-9]+", " ", title.lower()).strip() for _, title in headings}
     groups = {
-        "quick start": {"quick start", "getting started", "quickstart", "usage"},
-        "repository map": {"repository structure", "project structure", "repository map", "contents"},
-        "verification": {"verification", "validation", "tests", "testing"},
+        "quick start": {"quick start", "getting started", "quickstart", "usage", "install", "installation"},
+        "repository map": {"repository structure", "project structure", "repository map", "project map",
+                           "repository layout", "project layout", "contents"},
+        "verification": {"verification", "validation", "tests", "testing", "development"},
         "status and limits": {"status and limitations", "status and limits", "status honesty", "current status", "maturity"},
     }
     for label, alternatives in groups.items():

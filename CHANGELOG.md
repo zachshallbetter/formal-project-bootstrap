@@ -13,6 +13,13 @@
   with any local edit kept in the backup and named in the plan. The base
   release is found from the release checkout's version tag when `--base` is
   omitted.
+- Upgrades add record files a release newly requires, such as
+  `records/local-work-items.jsonl`, and never rewrite existing records.
+- `gen-context.py --check` compares generated context as bytes, so a source
+  with CRLF line endings no longer reports `llms-full.txt` as stale straight
+  after generation.
+- The README standard accepts common equivalent headings: Install, Project
+  map, Repository layout and Development.
 
 ## 0.6.0 — Comprehensive bootstrap and ACP hardening
 

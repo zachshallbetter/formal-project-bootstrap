@@ -162,6 +162,8 @@ class RepositoryTests(unittest.TestCase):
             agents.write_text(agents.read_text(encoding="utf-8") + "\n## Project rule\n", encoding="utf-8")
             client = project / "scripts/acp.py"
             client.write_text(client.read_text(encoding="utf-8") + "\n# stray local edit\n", encoding="utf-8")
+            (project / "records/local-work-items.jsonl").unlink()
+            (project / "records/evidence.jsonl").write_text('{"kept": true}\n', encoding="utf-8")
 
             upgrade = ROOT / "scripts/upgrade-project.py"
             cp = subprocess.run([sys.executable, str(upgrade), "--project", str(project), "--from", str(release),
@@ -172,6 +174,8 @@ class RepositoryTests(unittest.TestCase):
             self.assertEqual(planned["classification"]["conflicts"], ["AGENTS.md"])
             self.assertEqual(planned["classification"]["replacedLocalEdits"], ["scripts/acp.py"])
             self.assertIn("docs/ALIGNMENT.md", planned["classification"]["unchanged"])
+            self.assertIn("records/local-work-items.jsonl", planned["classification"]["additions"])
+            self.assertEqual((project / "records/evidence.jsonl").read_text(encoding="utf-8"), '{"kept": true}\n')
 
             self.assertIn("## Project rule", agents.read_text(encoding="utf-8"))
             self.assertNotIn("# release change", agents.read_text(encoding="utf-8"))
@@ -184,6 +188,27 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn("project-owned files kept as they are", cp.stderr)
             self.assertIn("scripts/acp.py", cp.stderr)
             self.assertEqual((project / ".formal-bootstrap/upgrades/.gitignore").read_text(encoding="utf-8").splitlines()[-1], "*")
+
+    def test_context_check_accepts_sources_with_crlf_line_endings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            self.run_ok(sys.executable, "scripts/init-project.py", "--name", "CRLF Fixture",
+                        "--id", "crlf-fixture", "--mode", "new", "--output", str(project))
+            (project / "docs/windows-notes.md").write_bytes(b"# Notes\r\n\r\nWritten on Windows.\r\n")
+            self.run_ok(sys.executable, "scripts/gen-context.py", cwd=project)
+            self.assertIn(b"\r\n", (project / ".agents/llms-full.txt").read_bytes())
+            self.run_ok(sys.executable, "scripts/gen-context.py", "--check", cwd=project)
+
+    def test_readme_standard_accepts_equivalent_section_names(self):
+        spec = importlib.util.spec_from_file_location("validate_bootstrap", ROOT / "scripts/validate-bootstrap.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            readme = Path(tmp) / "README.md"
+            readme.write_text("# Fixture\n\nA small fixture project used to check README section names.\n\n"
+                              "## Install\n\nx\n\n## Project map\n\nx\n\n## Development\n\nx\n\n"
+                              "## Current status\n\nx\n", encoding="utf-8")
+            self.assertEqual(module.readme_findings(readme), [])
 
     def test_upgrade_replaces_legacy_gateway_env_binding_with_endpoint_set(self):
         with tempfile.TemporaryDirectory() as tmp:

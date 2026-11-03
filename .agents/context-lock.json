@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 777952,
+    "includedBytes": 780562,
     "excludedCounts": {
       "excluded-directory": 1178,
       "excluded-path": 4,
@@ -20,14 +20,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "20b58c785008e553e0c55caa7e8615676e3d556d",
+        "commit": "ba6c39e9c71378e7fda7676caea2625d448a0362",
         "branch": "fix/effortless-upgrade",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "0345b72e27414bf10c75960b971434c7feb935689827100bbb0082511550f647",
+  "aggregateSourceDigest": "4c75d82e0ec47e5fda8aefdf33c5e7b73e90198508f5a55686208510b1ea355e",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -286,8 +286,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 10605,
-      "sha256": "a823ef7a2db7dde6e718d67e8499bc8095081c43dbdcf35334fb5f3c37a4d275"
+      "bytes": 11029,
+      "sha256": "73d830961c5ed79bc3c94042fdc7f611bcd363f1bbe2617469988475813370f3"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -687,7 +687,7 @@
     {
       "path": "scripts/gen-context.py",
       "bytes": 13729,
-      "sha256": "2cfe60a42f25ec0f20b89838eeaad25f677f102af2c6a285eb88c49f057730f3"
+      "sha256": "0c951731c9b7596de1eb2241a31cbb84723ece20ed830db3af76aa929a112627"
     },
     {
       "path": "scripts/iepe-adopt.py",
@@ -716,13 +716,13 @@
     },
     {
       "path": "scripts/upgrade-project.py",
-      "bytes": 17720,
-      "sha256": "f66be3d6b70898faf80d39cbff632e2044c26408cd4480309c6163c6bfd779b9"
+      "bytes": 17969,
+      "sha256": "889b6acc24bedffc25c3012692e872c253202df5aebd37538a3cfebb04f572e4"
     },
     {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 14712,
-      "sha256": "52c7b5eef56020d2ef426221017a9446c66afa7ef43262788201aface05c624d"
+      "bytes": 14835,
+      "sha256": "603ea01fa371d42b7ea90119c8b118f28aa330ab5c7a116edc998c5cc6f4e5fd"
     },
     {
       "path": "scripts/validate-formal-files.py",
@@ -766,8 +766,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 30229,
-      "sha256": "3947a1cedbfccf7433ebcc81fa3a8a29ceb2ff503a5c3f1e11322aa0f01ef82a"
+      "bytes": 32043,
+      "sha256": "0893c4e9e8b7dc03d33b409959fb1d834d845f9cdcf6f565507d67d236273cd5"
     },
     {
       "path": "vendor/README.md",

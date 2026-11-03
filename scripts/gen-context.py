@@ -344,7 +344,7 @@ def main() -> int:
                 return 2
         for name, expected in (("llms.txt", index), ("llms-full.txt", full)):
             output = AGENTS / name
-            if output.exists() and output.read_text(encoding="utf-8") != expected:
+            if output.exists() and output.read_bytes() != expected.encode("utf-8"):
                 print(f"STALE: {name} differs", file=sys.stderr)
                 return 2
         print(f"OK {lock['aggregateSourceDigest']} (generated exports absent or current)")
@@ -361,7 +361,7 @@ def main() -> int:
             temp_root = Path(tmp)
             for name, content in outputs.items():
                 temp_path = temp_root / name
-                temp_path.write_text(content, encoding="utf-8")
+                temp_path.write_bytes(content.encode("utf-8"))
             for name in outputs:
                 os.replace(temp_root / name, AGENTS / name)
     except OSError as exc:
