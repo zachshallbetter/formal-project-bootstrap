@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 784581,
+    "includedBytes": 784597,
     "excludedCounts": {
       "excluded-directory": 1178,
       "excluded-path": 4,
@@ -20,14 +20,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "4090a5223a8f75281c3b33ce2b8cb4fd9aa2b86a",
+        "commit": "dd2dbac46572bd8daf32d76504f82dc86502e630",
         "branch": "feat/upgrade-overrides",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "288ddf7bb9994d342801634b2ec3024a6244ca49c4bf7087f0522e52cde7f4d8",
+  "aggregateSourceDigest": "2c2a80ef0b5c9f9f3faa421e2d16c7d9fffbbdbb2b795bb49f7043e0ab2da686",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -286,8 +286,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 11478,
-      "sha256": "11618220297e8563652f0ac6b5c53846a16280688911cb4d8b41ea81d7dd3647"
+      "bytes": 11494,
+      "sha256": "28381c85e7af17ae4657ccb0757bc4710d8f6d4f42a17c7ad3df26ad3b0e501f"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
