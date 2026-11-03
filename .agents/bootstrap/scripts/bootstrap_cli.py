@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from layout import (
-    RELEASE_MANIFEST, SHIPPED_SKILLS, Layout, find_project_root, release_machinery,
+    RELEASE_MANIFEST, SHIPPED_SKILLS, Layout, contained_path, find_project_root, release_machinery,
 )
 
 HERE = Path(__file__).resolve().parent
@@ -114,24 +114,34 @@ def cmd_version(args) -> int:
 
 def cmd_upgrade(args) -> int:
     project = project_root(args)
+    dirty = [line[3:] for line in git(project, "status", "--porcelain").stdout.splitlines()
+             if line[3:].startswith((".agents/acp/", ".agents/bootstrap/")) or contained_path(line[3:])]
+    if dirty and not args.force:
+        print("refusing: these bootstrap files have uncommitted changes, which the upgrade would move or replace "
+              "and so carry into its commit:\n  " + "\n  ".join(dirty[:20])
+              + "\ncommit or discard them first, upgrade in a clean worktree "
+              "(git worktree add ../upgrade origin/main), or pass --force", file=sys.stderr)
+        return 2
+    base = args.base
     if args.release:
         release = Path(args.release).expanduser().resolve()
     else:
-        source = installation(project).get("source") or DEFAULT_SOURCE
+        marker = installation(project)
+        source = marker.get("source") or DEFAULT_SOURCE
         tag = args.to if args.to else latest_tag(source)
         if not tag.startswith("v"):
             tag = f"v{tag}"
         release = fetch_release(source, tag, args.allow_unverified)
-    dirty = [line[3:] for line in git(project, "status", "--porcelain").stdout.splitlines()
-             if line[3:].startswith((".agents/acp/", ".agents/bootstrap/"))]
-    if dirty and not args.force:
-        print("refusing: bootstrap machinery has uncommitted changes, which the upgrade would replace:\n  "
-              + "\n  ".join(dirty[:20]) + "\ncommit or discard them first, or pass --force", file=sys.stderr)
-        return 2
+        installed = marker.get("bootstrapVersion")
+        if not base and installed and f"v{installed}" != tag:
+            try:
+                base = str(fetch_release(source, f"v{installed}", allow_unverified=True))
+            except SystemExit as exc:
+                print(f"note: no base for three-way comparison ({exc}); differing project files are kept")
     before = set(git(project, "status", "--porcelain", "-uall").stdout.splitlines())
     argv = ["--project", str(project), "--from", str(release)]
-    if args.base:
-        argv += ["--base", args.base]
+    if base:
+        argv += ["--base", str(base)]
     argv.append("--apply" if (args.apply or args.commit) else "--check")
     code = script("upgrade-project.py", *argv, cwd=project)
     if code or not args.commit:

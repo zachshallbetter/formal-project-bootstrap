@@ -32,6 +32,12 @@ ROOT = find_project_root(Path(__file__).resolve().parent)
 CONTAINED = Layout(Path("."), contained=True)
 # Project-owned outside the project directories: the root contract.
 PROJECT_OWNED_FILES = frozenset({"AGENTS.md"})
+# Where the migration rewrites quoted legacy paths. Records are history and are never rewritten.
+REWRITE_SCOPE = ("AGENTS.md", ".agents/project/")
+
+
+def rewritable(rel: str) -> bool:
+    return rel == "AGENTS.md" or rel.startswith(REWRITE_SCOPE[1])
 TEXT_SUFFIXES = (".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".sh", ".py", ".mjs", ".js", ".ts", ".cfg",
                  ".ini", ".env", "")
 
@@ -189,7 +195,7 @@ def legacy_target_map(release: Path, project: Path, project_id: str, project_nam
     for rel, content in legacy.items():
         moved = contained_path(rel) or rel
         # Text the migration rewrites compares in its rewritten form.
-        if moved == "AGENTS.md" or moved.startswith(PROJECT_OWNED_DIRS):
+        if rewritable(moved):
             text, count = rewrite_paths(content.decode("utf-8", "surrogateescape"))
             content = text.encode("utf-8", "surrogateescape") if count else content
         result[moved] = content
@@ -279,7 +285,7 @@ def classify(project: Path, target: dict[str, bytes], base: dict[str, bytes] | N
     def current_of(rel: str) -> bytes | None:
         source = moved_from.get(rel, rel)
         content = read(project / source)
-        if content is not None and source != rel and (rel == "AGENTS.md" or rel.startswith(PROJECT_OWNED_DIRS)):
+        if content is not None and source != rel and rewritable(rel):
             text, count = rewrite_paths(content.decode("utf-8", "surrogateescape"))
             content = text.encode("utf-8", "surrogateescape") if count else content
         return content
@@ -435,7 +441,7 @@ def apply_plan(project: Path, release: Path, plan_data: dict) -> None:
             tx.move(move["from"], move["to"])
         for move in plan_data["layoutMigration"]:
             rel = move["to"]
-            if rel == "AGENTS.md" or rel.startswith(PROJECT_OWNED_DIRS):
+            if rewritable(rel):
                 content = (project / rel).read_bytes()
                 text, count = rewrite_paths(content.decode("utf-8", "surrogateescape"))
                 if count:

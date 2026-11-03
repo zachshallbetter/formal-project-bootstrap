@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.7.1 — Records are history
+
+- The 0.7 migration rewrote quoted legacy paths inside the bootstrap ledgers
+  (`.agents/records/`). Records are history: they are now moved byte for byte, and
+  only `AGENTS.md` and `.agents/project/` are rewritten.
+- `bootstrap upgrade` fetches the installed release as its base, so unmodified
+  templates update instead of being kept as if the project had edited them.
+- `bootstrap upgrade` refuses when a file it would move or replace has
+  uncommitted edits, and suggests a clean worktree, so someone else's work in
+  progress is never swept into the upgrade's commit.
+
 ## 0.7.0 — Contained layout and one command each for ACP and the bootstrap
 
 - **Everything under `.agents/`.** A project keeps only `AGENTS.md` at its root:

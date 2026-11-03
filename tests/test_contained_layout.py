@@ -108,6 +108,8 @@ class MigrationTests(unittest.TestCase):
             run(sys.executable, release / "scripts/init-project.py", "--name", "Legacy", "--id", "legacy",
                 "--mode", "new", "--output", project, cwd=release)
             (project / "records/benchmarks.jsonl").write_text('{"own": true}\n')
+            history = '{"note": "checked PROJECT_PROFILE.json with scripts/acp.py"}\n'
+            (project / "records/evidence.jsonl").write_text(history)
             (project / "scripts/check.sh").write_text("python3 scripts/gen-context.py --check\n")
             agents = (project / "AGENTS.md").read_text()
             (project / "AGENTS.md").write_text(agents + "\nSee PROJECT_INTENT.md and records/evidence.jsonl.\n")
@@ -127,6 +129,8 @@ class MigrationTests(unittest.TestCase):
             text = (project / "AGENTS.md").read_text()
             self.assertIn("See .agents/project/intent.md and .agents/records/evidence.jsonl.", text)
             self.assertNotIn("profileVersion", json.loads((project / ".agents/project/profile.json").read_text()))
+            self.assertEqual((project / ".agents/records/evidence.jsonl").read_text(), history,
+                             "records are history: the migration moves them and never rewrites them")
             self.assertIn("scripts/check.sh", cp.stderr)
             self.assertIn(".agents/bootstrap/scripts/gen-context.py --check", cp.stderr)
             self.assertEqual((project / "scripts/check.sh").read_text(), "python3 scripts/gen-context.py --check\n")
@@ -166,6 +170,26 @@ class MigrationTests(unittest.TestCase):
             git(project, "worktree", "add", "-q", "--detach", clean, "HEAD")
             run(sys.executable, clean / ".agents/bootstrap/scripts/validate-bootstrap.py", "--check-context",
                 cwd=clean)
+
+
+class UpgradeGuardTests(unittest.TestCase):
+    @unittest.skipUnless(HAS_LEGACY_TAG, "needs the v0.6.3 tag")
+    def test_upgrade_refuses_when_a_file_it_would_move_has_uncommitted_edits(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            release = legacy_release(tmp)
+            project = Path(tmp) / "dirty"
+            run(sys.executable, release / "scripts/init-project.py", "--name", "Dirty", "--id", "dirty",
+                "--mode", "new", "--output", project, cwd=release)
+            run("git", "init", "-q", "-b", "main", project)
+            commit_all(project)
+            with (project / "records/evidence.jsonl").open("a") as handle:
+                handle.write('{"someone": "else"}\n')
+            cp = run(sys.executable, ROOT / ".agents/bootstrap/bootstrap", "--project", project, "upgrade",
+                     "--from", ROOT, "--commit", cwd=project, check=False)
+            self.assertEqual(cp.returncode, 2)
+            self.assertIn("records/evidence.jsonl", cp.stderr)
+            self.assertIn("clean worktree", cp.stderr)
+            self.assertTrue((project / "records/evidence.jsonl").exists())
 
 
 class AcpCommandTests(unittest.TestCase):
