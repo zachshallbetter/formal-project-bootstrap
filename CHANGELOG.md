@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.7.3 — Migrations that leave a project's own files alone
+
+- The 0.7 migration moved every file under a legacy `profiles/` directory into
+  `.agents/bootstrap/profiles/`, including a project's own target or build
+  profiles. Only the protocol profiles bootstrap ships (`SHIPPED_PROFILES`) move now.
+- The upgrade's reference report reads every tracked text file, not a fixed list
+  of suffixes, so Rust, Go, Makefiles and extensionless scripts are included. It
+  also finds legacy paths built from parts:
+  - `ROOT / "records" / "evidence.jsonl"`;
+  - `os.path.join(ROOT, "scripts", "gen-context.py")`;
+  - `root.join("records").join("evidence.jsonl")`.
+- Path rewriting recognises a path still rooted at the project after `../`,
+  `$(VAR)/`, `${VAR}/` or an upper-case `VAR/`, so relative links and make or
+  shell variables are rewritten (in `AGENTS.md` and `.agents/project/`) and
+  reported (everywhere else).
+- `gen-context.py --check --staged` compares against the staged lock and exports,
+  the ones the commit would carry. `acp status` (S013) runs it whenever something
+  is staged, so a commit that would carry a stale lock is named before it is made.
+
 ## 0.7.2 — Locks that match every checkout
 
 - `gen-context.py` counts exclusions only among tracked files, so an untracked

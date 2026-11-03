@@ -87,6 +87,26 @@ class LayoutTests(unittest.TestCase):
             (bare / ".agents/bootstrap/scripts").mkdir(parents=True)
             self.assertEqual(layout.find_project_root(bare / ".agents/bootstrap/scripts"), bare.resolve())
 
+    def test_only_shipped_protocol_profiles_move_and_split_paths_are_found_once(self):
+        spec = importlib.util.spec_from_file_location("layout", ROOT / ".agents/bootstrap/scripts/layout.py")
+        layout = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(layout)
+        shipped = sorted(p.name for p in (ROOT / ".agents/bootstrap/profiles").iterdir() if p.is_dir())
+        self.assertEqual(sorted(layout.SHIPPED_PROFILES), shipped)
+        self.assertEqual(layout.contained_path("profiles/eqp/adapter.json"), ".agents/bootstrap/profiles/eqp/adapter.json")
+        self.assertIsNone(layout.contained_path("profiles/pytorch-2.14-cu130.json"))
+        self.assertIsNone(layout.contained_path("profiles/own/target.json"))
+        for line, expected in (
+            ('ROOT / "records" / "evidence.jsonl"', 'ROOT / ".agents" / "records" / "evidence.jsonl"'),
+            ("os.path.join(R, 'scripts', 'gen-context.py')",
+             "os.path.join(R, '.agents', 'bootstrap', 'scripts', 'gen-context.py')"),
+            ('root.join("records").join("negative-results.jsonl")',
+             'root.join(".agents").join("records").join("negative-results.jsonl")'),
+        ):
+            self.assertEqual(layout.rewrite_split_paths(line), (expected, 1))
+            self.assertEqual(layout.rewrite_split_paths(expected), (expected, 0))
+        self.assertEqual(layout.rewrite_split_paths('ROOT / "records" / "benchmarks.jsonl"')[1], 0)
+
     def test_a_symlinked_agents_directory_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "linked"
@@ -135,6 +155,13 @@ class MigrationTests(unittest.TestCase):
             history = '{"note": "checked PROJECT_PROFILE.json with scripts/acp.py"}\n'
             (project / "records/evidence.jsonl").write_text(history)
             (project / "scripts/check.sh").write_text("python3 scripts/gen-context.py --check\n")
+            (project / "profiles").mkdir(exist_ok=True)
+            (project / "profiles/target-a.json").write_text('{"own": "a build target, not a protocol"}\n')
+            (project / "src").mkdir()
+            (project / "src/ledger.rs").write_text('let p = root.join("records").join("evidence.jsonl");\n')
+            (project / "Makefile").write_text("check:\n\tpython3 $(ROOT)/scripts/validate-bootstrap.py\n")
+            (project / "notes").mkdir()
+            (project / "notes/README").write_text("Intent: [here](../PROJECT_INTENT.md)\n")
             agents = (project / "AGENTS.md").read_text()
             (project / "AGENTS.md").write_text(agents + "\nSee PROJECT_INTENT.md and records/evidence.jsonl.\n")
             run("git", "init", "-q", "-b", "main", project)
@@ -145,7 +172,11 @@ class MigrationTests(unittest.TestCase):
             cp = run(sys.executable, upgrade, "--project", project, "--from", ROOT, "--apply", check=False)
             self.assertEqual(cp.returncode, 0, cp.stdout[-2000:] + cp.stderr[-2000:])
             root = sorted(p.name for p in project.iterdir() if p.name != ".git")
-            self.assertEqual(root, [".agents", ".gitignore", "AGENTS.md", "README.md", "records", "scripts"])
+            self.assertEqual(root, [".agents", ".gitignore", "AGENTS.md", "Makefile", "README.md", "notes",
+                                    "profiles", "records", "scripts", "src"])
+            self.assertEqual(sorted(p.name for p in (project / "profiles").iterdir()), ["target-a.json"],
+                             "a project's own profiles stay; only the shipped protocol profiles move")
+            self.assertFalse((project / ".agents/bootstrap/profiles/target-a.json").exists())
             self.assertEqual(sorted(p.name for p in (project / "records").iterdir()), ["benchmarks.jsonl"])
             self.assertEqual(sorted(p.name for p in (project / "scripts").iterdir()), ["check.sh"])
             self.assertTrue((project / ".agents/project/profile.json").is_file())
@@ -157,6 +188,10 @@ class MigrationTests(unittest.TestCase):
                              "records are history: the migration moves them and never rewrites them")
             self.assertIn("scripts/check.sh", cp.stderr)
             self.assertIn(".agents/bootstrap/scripts/gen-context.py --check", cp.stderr)
+            # Any text file, split joins, make variables and relative links are all reported.
+            self.assertIn('root.join(".agents").join("records").join("evidence.jsonl")', cp.stderr)
+            self.assertIn("$(ROOT)/.agents/bootstrap/scripts/validate-bootstrap.py", cp.stderr)
+            self.assertIn("../.agents/project/intent.md", cp.stderr)
             self.assertEqual((project / "scripts/check.sh").read_text(), "python3 scripts/gen-context.py --check\n")
             run(sys.executable, project / ".agents/bootstrap/scripts/validate-bootstrap.py", "--check-context",
                 cwd=project)
@@ -231,6 +266,27 @@ class AcpCommandTests(unittest.TestCase):
             self.assertEqual(online.returncode, 2)
             self.assertIn("S005", online.stdout)
             self.assertIn("fix:", online.stdout)
+
+    def test_status_and_context_check_see_a_stale_staged_lock(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = new_project(tmp)
+            tool = project / ".agents/bootstrap/scripts/gen-context.py"
+            run(sys.executable, tool, cwd=project)
+            commit_all(project, "context")
+            (project / "README.md").write_text("changed\n")
+            run(sys.executable, tool, cwd=project)          # working tree current
+            git(project, "add", "README.md")                # the lock is not staged
+            self.assertEqual(run(sys.executable, tool, "--check", cwd=project, check=False).returncode, 0)
+            staged = run(sys.executable, tool, "--check", "--staged", cwd=project, check=False)
+            self.assertEqual(staged.returncode, 2)
+            self.assertIn("STALE: staged", staged.stderr)
+            codes = {c["code"]: c for c in json.loads(acp(project, "status", "--offline", "--json").stdout)["checks"]}
+            self.assertEqual(codes["S013"]["level"], "WARN")
+            self.assertIn("--staged", codes["S013"]["fix"])
+            git(project, "add", ".agents/context-lock.json", ".agents/llms.txt", ".agents/llms-full.txt")
+            self.assertEqual(run(sys.executable, tool, "--check", "--staged", cwd=project, check=False).returncode, 0)
+            codes = {c["code"]: c for c in json.loads(acp(project, "status", "--offline", "--json").stdout)["checks"]}
+            self.assertEqual(codes["S013"]["level"], "OK")
 
     def test_init_is_idempotent_detects_auto_deploy_and_writes_no_secret(self):
         with tempfile.TemporaryDirectory() as tmp:
