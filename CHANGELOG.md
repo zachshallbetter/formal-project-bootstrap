@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.7.0 — Contained layout and one command each for ACP and the bootstrap
+
+- **Everything under `.agents/`.** A project keeps only `AGENTS.md` at its root:
+  - the ACP client in `.agents/acp/`;
+  - bootstrap machinery in `.agents/bootstrap/`;
+  - the project's own intent, profile, bindings, contracts and rules in `.agents/project/`;
+  - the ledgers in `.agents/records/`.
+
+  The bootstrap repository keeps its payload at the same paths.
+- **`.agents/acp/acp`**: `init` generates the ACP settings, `login` stores the token, `status` reports every check with its fix and the client version, and `push` runs the pre-push hook and then gets one approval per step. `record`, `doctor --fix`, `uninstall` and `logout` complete the set. Every decision is kept in a git-ignored per-machine log.
+- **`.agents/bootstrap/bootstrap`**:
+  - `upgrade` fetches and verifies a signed release tag and its `RELEASE.json`, and `--commit` commits exactly the upgrade;
+  - `repair` restores edited machinery;
+  - `uninstall` keeps the project's own files;
+  - `context`, `validate`, `reconcile` and `version` are included.
+- **Migration from 0.6.x.**
+  - The first upgrade moves bootstrap's files under `.agents/` and rewrites known paths in the project's own files.
+  - It reports every other file still quoting an old path, and rollback undoes it.
+  - The installed version lives in `.agents/project/installation.json`, so upgrades stop rewriting the profile (#22).
+- `.agents/bootstrap/scripts/layout.py` is the single table of contained and legacy paths. Project root detection stops at the nearest project, so nested projects and agent worktrees resolve to themselves. A symlinked `.agents/` is refused.
+- A project validates only the protocol adapters it selected.
+
 ## 0.6.3 — Staged context and auto-deploy awareness
 
 - `gen-context.py --staged` compiles the commit being made from the Git index,

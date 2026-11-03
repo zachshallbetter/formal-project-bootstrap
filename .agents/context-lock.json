@@ -1,14 +1,14 @@
 {
   "format": "2",
-  "generatorVersion": "0.6.3",
+  "generatorVersion": "0.7.0",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
-    "includedCount": 150,
-    "includedBytes": 844113,
+    "includedCount": 155,
+    "includedBytes": 941232,
     "excludedCounts": {
-      "extension": 21
+      "extension": 22
     }
   },
   "repositoryState": {
@@ -17,19 +17,19 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "0c83119db3ba454e0681e0fd91ed4a63f050ec00",
+        "commit": "93c432613ff866d5f4d58f62f605eb57ab202604",
         "branch": "feat/contained-layout",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "3329f64bb8963ea215f3e0b9dd60211b1a227c1e71c703169d3f2f1c2d248b74",
+  "aggregateSourceDigest": "6e398566f78bffa5c18ad6413ee4fb23604659d6109d617dd3064857e3766f79",
   "sources": [
     {
       "path": ".agents/acp/README.md",
-      "bytes": 30243,
-      "sha256": "6ed01773a2a214c1a021ebcc9c1a66e0116539c7ab95bd0e77023b3f297afb1d"
+      "bytes": 33024,
+      "sha256": "2278c556b501c6b75c0b2ffcb51618af44fdc777b2c44dd70910d872a0384432"
     },
     {
       "path": ".agents/acp/lib/acp-check.py",
@@ -38,8 +38,13 @@
     },
     {
       "path": ".agents/acp/lib/acp.py",
-      "bytes": 61344,
-      "sha256": "e68ad2fd0d5a0729b68d19d7561311b4ee11ffc91345a6bfcf0f638f32488227"
+      "bytes": 62603,
+      "sha256": "b07c3fc0ae6b3d945e62dfaec1428083ab55e54ddb49d57883f34708128035c1"
+    },
+    {
+      "path": ".agents/acp/lib/acp_commands.py",
+      "bytes": 36693,
+      "sha256": "36220f99c00c74435bdf2ad9b20f40fe3295703b818aee7dc92a12b0cb9a4df2"
     },
     {
       "path": ".agents/acp/lib/acp_endpoint_registry.py",
@@ -70,6 +75,11 @@
       "path": ".agents/bootstrap/NEW_AGENT_PROMPT.md",
       "bytes": 1026,
       "sha256": "3cd69ed7287963b09043046a4b8c25401852b7b5f3b09dbc07379e1593b7887f"
+    },
+    {
+      "path": ".agents/bootstrap/RELEASE.json",
+      "bytes": 15368,
+      "sha256": "b5ab5b2ef854e299084fc0f52ad355c8ee85cfad65b8417adb7197673e190af3"
     },
     {
       "path": ".agents/bootstrap/docs/AGENT_CAPABILITIES.md",
@@ -168,8 +178,8 @@
     },
     {
       "path": ".agents/bootstrap/docs/UPGRADING.md",
-      "bytes": 3449,
-      "sha256": "f82ff47f85be9f6ccc752ca3b253ed2ec87768275b343ceac9a3c6033afb12ad"
+      "bytes": 6147,
+      "sha256": "a6fa7e8e774b8a4493c87dc40831a964a3185050230fc656f101334b5b3e0f7d"
     },
     {
       "path": ".agents/bootstrap/docs/WORK_GRAPH.md",
@@ -199,7 +209,7 @@
     {
       "path": ".agents/bootstrap/profiles/eqp/adapter.json",
       "bytes": 1752,
-      "sha256": "db9341dc7d00809a407e9cdb1eab2c61c389b179f703bf94ba2599f086982204"
+      "sha256": "4e2e5fd6de327ec04bff9601312b791bbc8801bd4c03769c3d13dc55bd3b8e92"
     },
     {
       "path": ".agents/bootstrap/profiles/esp-rcp/README.md",
@@ -209,22 +219,22 @@
     {
       "path": ".agents/bootstrap/profiles/esp-rcp/adapter.json",
       "bytes": 1967,
-      "sha256": "bca0160d5e68588b18e9bef63200a325f548e26bf990ba534b6d6463e60b39ac"
+      "sha256": "59b4c9596771988a3b806a4457d594faa2f5af1db274cf67fb36306768fd0f67"
     },
     {
       "path": ".agents/bootstrap/profiles/icp/adapter.json",
       "bytes": 1804,
-      "sha256": "1399ffa231e0c89d3990b16e7db367028be0312411d6f893815d5d0c1c98de59"
+      "sha256": "0a163f83b6ecfd433313d178d4e522bd3230604de5fff2f189f8b22cd7065970"
     },
     {
       "path": ".agents/bootstrap/profiles/iepe/adapter.json",
       "bytes": 1885,
-      "sha256": "f4e069c9055ad81351f23118a2624614348c73754d40064bdad968ddbce14104"
+      "sha256": "7502e58d9695319feeebd0aa20ebf12679e93c923f4c35446362740b3b7d6848"
     },
     {
       "path": ".agents/bootstrap/profiles/ses-sps/adapter.json",
       "bytes": 1766,
-      "sha256": "80fc0f45964da6cf755d7e830e11d6c9110bd4d6d25ece7657dbf057007e1666"
+      "sha256": "a2142607a27cb320f49df32da07a8adb10fef53672192aa04dab28685a90ac10"
     },
     {
       "path": ".agents/bootstrap/schemas/agent-message.schema.json",
@@ -282,9 +292,14 @@
       "sha256": "a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987"
     },
     {
+      "path": ".agents/bootstrap/scripts/bootstrap_cli.py",
+      "bytes": 16355,
+      "sha256": "386bcbcf98e7f85a42d2fa7153b6fffb8041d3411759bfadc2ec3b78dedaa608"
+    },
+    {
       "path": ".agents/bootstrap/scripts/check-all.py",
-      "bytes": 909,
-      "sha256": "369a0a1da596db2aa8ae44cbdea38bc611eee67ca7fe9be82ca243155cc00d8a"
+      "bytes": 978,
+      "sha256": "21eedfc2cc7613c70fb3dc103d46ee270cd72e26bf967f538d34a51142cdb97d"
     },
     {
       "path": ".agents/bootstrap/scripts/check-negative-results.py",
@@ -323,8 +338,8 @@
     },
     {
       "path": ".agents/bootstrap/scripts/layout.py",
-      "bytes": 14667,
-      "sha256": "c47324d37cfddcd1e42474414a905f053deb5d79f73f64d7efb7d11177040ca9"
+      "bytes": 15303,
+      "sha256": "6a7d25d61942f5533bb3a8d9259241dfaaef29c37fa65e1fd8eb04a78219fe2e"
     },
     {
       "path": ".agents/bootstrap/scripts/package-release.py",
@@ -342,14 +357,19 @@
       "sha256": "26fbecf23e8ceb38bf0b8ce73731ec45154cca94cd23c16476f3117d19fa0438"
     },
     {
+      "path": ".agents/bootstrap/scripts/release-manifest.py",
+      "bytes": 1248,
+      "sha256": "7a9c92b00691e23853066992539c5f9174d612c812e89da2499598b319549c2f"
+    },
+    {
       "path": ".agents/bootstrap/scripts/upgrade-project.py",
       "bytes": 30386,
       "sha256": "95873108edc4ef28330842a0091c6c3d21e588025f18bf8fbe7d82f718a3f18b"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-bootstrap.py",
-      "bytes": 15040,
-      "sha256": "b885fe4e8092581bf7f6c2ba5de27e56d3e15b6e26dce15078391b250fa982ff"
+      "bytes": 15803,
+      "sha256": "70267c0b0ce63355da2292082855b5fb26d5a8027ab6838540925edbf38f1eff"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-formal-files.py",
@@ -663,8 +683,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 13020,
-      "sha256": "a655bc583b70718f1f36dff51746263183d79d565942084e92de0bd2adb8eba6"
+      "bytes": 13041,
+      "sha256": "6c0685d84b9b1950adb2c228a484f9f2c84af869926b06285df902740c930efd"
     },
     {
       "path": "AUTHORITY.md",
@@ -673,8 +693,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 12386,
-      "sha256": "18ff35ede89d4bc32af881677ebd5405409a8b562707b9431a9bd4d92706d7c4"
+      "bytes": 14141,
+      "sha256": "04a4fab5f0499d4ec1bc5144ea79dfc67e0647b90706c5199b086049a3a33cee"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -698,8 +718,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11818,
-      "sha256": "8fed283a09b34cbb3d32f6348ad8d4f3e28452adafe5484b1be65089db9ba922"
+      "bytes": 11837,
+      "sha256": "85c67214f06b3766a8b9f0053b092507a5700e1d3911f9c0ae4c8ac24c35d47d"
     },
     {
       "path": "SECURITY.md",
@@ -724,7 +744,7 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "955a693fd1b8e7b1bf8ee1ed87890d7269bc1f096053f715830bc741973aee3a"
+      "sha256": "e3897de49903a1d34a156dabeccbd5497a19c6a891350b7134d729fb7d57b933"
     },
     {
       "path": "docs/pin-digest-procedure/PROPOSAL.md",
@@ -749,7 +769,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "5b5a10c76bc938e931e71f97c5e0e7387726b611c82ce4defd210d22e3e2dcdc"
+      "sha256": "a11c798f30efe2db4e38302f1b47a193701b7e04a1c189ec3231158ccd4aa34c"
     },
     {
       "path": "requirements-dev.txt",
@@ -760,6 +780,11 @@
       "path": "tests/test_acp_client.py",
       "bytes": 72858,
       "sha256": "261edf9127a2ba80005de9e4ebb94245b1a0cb32fd54f484a3da7ca61d73be48"
+    },
+    {
+      "path": "tests/test_contained_layout.py",
+      "bytes": 17454,
+      "sha256": "2ebaf59a631c420ba4b3a2378854eb9da5310e22cb16fbdb0529e28b4cbaacb6"
     },
     {
       "path": "tests/test_protocol_adapters.py",
