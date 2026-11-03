@@ -44,6 +44,10 @@ def new_project(tmp: str, name: str = "Fixture", git_init: bool = True) -> Path:
     return out
 
 
+HAS_LEGACY_TAG = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--verify", "--quiet", "v0.6.3^{commit}"],
+                                capture_output=True).returncode == 0
+
+
 def legacy_release(tmp: str) -> Path:
     """The v0.6.3 release tree: the last legacy layout."""
     release = Path(tmp) / "release-0.6.3"
@@ -91,6 +95,7 @@ class LayoutTests(unittest.TestCase):
             self.assertIn(".agents is a symbolic link", cp.stderr)
 
 
+@unittest.skipUnless(HAS_LEGACY_TAG, "needs the v0.6.3 tag (fetch tags: git fetch --tags)")
 class MigrationTests(unittest.TestCase):
     def test_a_legacy_project_moves_under_agents_reports_references_and_rolls_back(self):
         with tempfile.TemporaryDirectory() as tmp:

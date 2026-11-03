@@ -60,7 +60,7 @@
     ".agents/bootstrap/schemas/recipient-contract.schema.json": "273e599266d5a87bfc6dec1aea779dd3225f18ec9f6e85b272949577af3a15bc",
     ".agents/bootstrap/schemas/semantic-surface.schema.json": "460473f332f3b6f9eab8efad14a7c6f73d2a4dec4a0f9660138bcb6ed101cefd",
     ".agents/bootstrap/schemas/work-disposition.schema.json": "a0426bb2095e37891627c5b3de78266863522bf36e5305dc0ba525e9617d2987",
-    ".agents/bootstrap/scripts/bootstrap_cli.py": "386bcbcf98e7f85a42d2fa7153b6fffb8041d3411759bfadc2ec3b78dedaa608",
+    ".agents/bootstrap/scripts/bootstrap_cli.py": "52374e173b10ed2758981efd0296e5367ec4f7619cf0b2f740906e0f57c7cbb8",
     ".agents/bootstrap/scripts/check-protocol-integrity.py": "7d06358e117e43a74202f9154e5e5bce3f76190041178acba4ab8312cdd05d20",
     ".agents/bootstrap/scripts/esp-instance.py": "65737b01d617209eea6c7105df9694500305b35a0409e42c565c191985bba1b2",
     ".agents/bootstrap/scripts/esp-record.py": "456148c40a949062c6f22b41bcc6bdd223c5622b8d22028e1a9687eab56de22e",

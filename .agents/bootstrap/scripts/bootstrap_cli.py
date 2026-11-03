@@ -275,6 +275,9 @@ def cmd_uninstall(args) -> int:
     for top in (".agents/acp", ".agents/bootstrap", SHIPPED_SKILLS):
         directory = project / top
         if directory.is_dir():
+            # Interpreter caches the bootstrap's own scripts left behind are not anyone's files.
+            for cache in sorted(directory.rglob("__pycache__"), key=lambda p: -len(p.parts)):
+                shutil.rmtree(cache, ignore_errors=True)
             for sub in sorted((p for p in directory.rglob("*") if p.is_dir()), key=lambda p: -len(p.parts)):
                 try:
                     sub.rmdir()
