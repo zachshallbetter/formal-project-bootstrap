@@ -13,6 +13,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -34,10 +35,12 @@ class Stub(BaseHTTPRequestHandler):
     routes_by_port: dict = {}
     seen: list = []
     drop_post_ports: set[int] = set()
+    delays: dict = {}
 
     def _answer(self, body=None):
         path = self.path.split("?")[0]
         port = self.server.server_address[1]
+        time.sleep(Stub.delays.get(path, 0))
         Stub.seen.append({"method": self.command, "path": path, "url": self.path, "body": body,
                           "port": port,
                           "authorization": self.headers.get("Authorization"),
@@ -135,6 +138,7 @@ class AcpClientTests(unittest.TestCase):
         Stub.routes_by_port = {}
         Stub.seen = []
         Stub.drop_post_ports = set()
+        Stub.delays = {}
 
     def write_endpoint_sets(self, endpoint_sets):
         self.registry.write_text(json.dumps({"formatVersion": 1, "endpointSets": endpoint_sets}, indent=2) + "\n",
@@ -862,6 +866,21 @@ class AcpClientTests(unittest.TestCase):
         self.assertIn("ACP operator", cp.stderr)
         self.assertIn("local E0/E1 work may continue", cp.stderr)
         self.assertNotIn("private-upstream-body", cp.stdout + cp.stderr)
+        self.assertFalse(any(item["path"] == "/notice" for item in Stub.seen))
+
+    def test_slow_but_ready_endpoint_is_selected(self):
+        Stub.delays["/ready"] = 2.5
+        cp = self.acp("notice")
+        self.assertEqual(cp.returncode, 0, cp.stderr)
+        self.assertTrue(any(item["path"] == "/notice" for item in Stub.seen))
+
+    def test_readiness_timeout_names_the_limit_and_the_remedy(self):
+        Stub.delays["/ready"] = 2.5
+        cp = self.acp("--timeout", "1", "notice")
+        self.assertEqual(cp.returncode, 4)
+        self.assertIn("vercel /ready: transport unavailable", cp.stderr)
+        self.assertIn("probe limit 1000ms", cp.stderr)
+        self.assertIn("retry or raise --timeout", cp.stderr)
         self.assertFalse(any(item["path"] == "/notice" for item in Stub.seen))
 
     def test_shared_state_identity_mismatch_stops_failover_before_request(self):

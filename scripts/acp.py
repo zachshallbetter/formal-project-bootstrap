@@ -65,6 +65,9 @@ class _NoRedirect(HTTPRedirectHandler):
 
 _HTTP = build_opener(_NoRedirect())
 MAX_HTTP_RESPONSE_BYTES = 8 * 1024 * 1024
+# A healthy serverless /ready answers in ~1.3-1.6s warm and slower from a cold start; a tighter
+# limit turns a slow but ready endpoint into "no endpoint reports readiness".
+READINESS_PROBE_TIMEOUT = 8.0
 TRANSIENT_READ_ERRORS = frozenset({"UPSTREAM_FAILURE", "TEMPORARY", "SERVICE_UNAVAILABLE"})
 HARD_STOP_READINESS_ERRORS = frozenset({"APP_NOT_CONFIGURED", "POLICY_INVALID", "SECURITY_STATE_UNAVAILABLE",
                                        "STATE_STORE_UNAVAILABLE", "INTEGRITY_INVALID", "INTEGRITY_MISMATCH",
@@ -314,15 +317,17 @@ def select_endpoint(cfg: dict, timeout: float = 15.0, admin: bool = False,
             failures.append("readiness deadline exhausted before remaining endpoints were probed")
             break
         probe = f"{endpoint['name']} /ready"
+        limit = min(remaining, READINESS_PROBE_TIMEOUT)
         started = time.monotonic()
         try:
-            status, body = _http_call(endpoint, "GET", "/ready", auth=False,
-                                      timeout=min(remaining, 2.0))
+            status, body = _http_call(endpoint, "GET", "/ready", auth=False, timeout=limit)
         except ResponseRejected:
             raise
         except Unreachable:
             elapsed = round((time.monotonic() - started) * 1000)
-            failures.append(f"{probe}: transport unavailable after {elapsed}ms")
+            hint = (f" (probe limit {round(limit * 1000)}ms; the endpoint may be cold-starting, retry or raise --timeout)"
+                    if elapsed >= limit * 1000 * 0.9 else "")
+            failures.append(f"{probe}: transport unavailable after {elapsed}ms{hint}")
             continue
         if (status == 200 and isinstance(body, dict) and body.get("status") == "ready"
                 and body.get("storage") == "postgres"):
