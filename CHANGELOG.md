@@ -20,6 +20,10 @@
   after generation.
 - The README standard accepts common equivalent headings: Install, Project
   map, Repository layout and Development.
+- Each upgrade attempt starts with a fresh backup, so a rollback no longer
+  restores copies left by an earlier failed attempt.
+- The protocol integrity check accepts a declared domain profile such as
+  `commercialization`, which ships `PROFILE.yaml` rather than `adapter.json`.
 
 ## 0.6.0 — Comprehensive bootstrap and ACP hardening
 

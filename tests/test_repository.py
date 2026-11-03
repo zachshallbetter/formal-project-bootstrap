@@ -199,6 +199,23 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn(b"\r\n", (project / ".agents/llms-full.txt").read_bytes())
             self.run_ok(sys.executable, "scripts/gen-context.py", "--check", cwd=project)
 
+    def test_integrity_check_accepts_a_bundled_domain_profile(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            self.run_ok(sys.executable, "scripts/init-project.py", "--name", "Profile Fixture",
+                        "--id", "profile-fixture", "--mode", "new", "--profile", "commercialization",
+                        "--output", str(project))
+            profile_path = project / "PROJECT_PROFILE.json"
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            profile["protocolAdapters"] = []
+            profile_path.write_text(json.dumps(profile), encoding="utf-8")
+            check = [sys.executable, "scripts/check-protocol-integrity.py"]
+            self.run_ok(*check, cwd=project)
+            shutil.rmtree(project / "profiles/commercialization")
+            cp = subprocess.run(check, cwd=project, text=True, capture_output=True)
+            self.assertNotEqual(cp.returncode, 0)
+            self.assertIn("declared adapter is not bundled: commercialization", cp.stdout + cp.stderr)
+
     def test_readme_standard_accepts_equivalent_section_names(self):
         spec = importlib.util.spec_from_file_location("validate_bootstrap", ROOT / "scripts/validate-bootstrap.py")
         module = importlib.util.module_from_spec(spec)

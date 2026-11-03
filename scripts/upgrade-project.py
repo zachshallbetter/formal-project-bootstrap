@@ -262,7 +262,11 @@ def apply_plan(project: Path, release: Path, plan_data: dict) -> None:
     release_version = plan_data["toVersion"]
     upgrade_root = project / UPGRADE_DIR / release_version
     backup = upgrade_root / "backup"
-    backup.mkdir(parents=True, exist_ok=True)
+    # Rollback restores every file here, so a failed earlier attempt must not
+    # leave copies behind.
+    if backup.exists():
+        shutil.rmtree(backup)
+    backup.mkdir(parents=True)
     changed = plan_data["classification"]["safe"]
     try:
         marker_path = project / ".formal-bootstrap.json"
