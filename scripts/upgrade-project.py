@@ -108,6 +108,10 @@ def source_map(
     profile["projectId"] = project_id
     profile["projectName"] = project_name
     profile["profileVersion"] = version(release)
+    provider = profile.get("authorizationProvider")
+    if isinstance(provider, dict) and provider.get("gatewayEndpointSet"):
+        provider.pop("gatewayUrlEnv", None)
+        provider.pop("gatewayTokenEnv", None)
     result["PROJECT_PROFILE.json"] = (json.dumps(profile, indent=2) + "\n").encode()
     context_policy = json.loads(
         (release / "CONTEXT_SOURCES_TEMPLATE.json").read_text(encoding="utf-8")

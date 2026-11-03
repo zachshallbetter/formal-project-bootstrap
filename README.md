@@ -1,7 +1,7 @@
 # Formal Project Bootstrap
 
 **Status:** Candidate reusable project substrate  
-**Version:** 0.6.0
+**Version:** 0.6.1
 
 Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
 
@@ -72,7 +72,7 @@ Compiled context consists of:
 .agents/context-lock.json
 ```
 
-These are required operating artifacts once a project is initialized because they make the formal environment cheap for agents to search and load. They are always generated, rebuildable, non-normative, and downstream of canonical sources.
+The source-bound `.agents/context-lock.json` is required after initialization. The two searchable corpora are optional local exports: generate them when needed, keep them ignored by Git, and exclude them from release archives. All are generated and downstream of canonical sources; none is normative authority.
 
 Context validity is source-digest based. Git branch/commit/submodule state is retained as provenance so agents can bound branch-specific or absence claims without creating an impossible self-reference where a generated file must contain the hash of the commit that contains itself.
 
@@ -108,19 +108,22 @@ python3 scripts/init-project.py \
   --output ../commercial-project
 ```
 
-Bind the ACP authorization gateway at initialization (the bearer token is never written; `acp-gateway/scripts/onboard-project.sh` puts it in `.env.local`, and `register-policy.py` registers the repository's policy — see `docs/ACP_INTEGRATION.md` § Onboarding):
+Bind the ACP authorization gateway at initialization (the bearer token is never written; the generated proposal is reviewed and activated through the currently configured gateway operator flow — see `docs/ACP_INTEGRATION.md` § Onboarding):
 
 ```bash
 python3 scripts/init-project.py \
   --name "My Project" \
   --id my-project \
   --mode new \
-  --acp-gateway-url https://acp-gateway-production.up.railway.app \
+  --acp-endpoint-set production \
   --acp-owner my-org --acp-project 3 \
+  --acp-repository my-org/my-project \
   --output ../my-project
 ```
 
-The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and compiled context; then it runs the project validator. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
+With a repository identity supplied, initialization can write a boardless `.formal-bootstrap/acp-policy-proposal.json` before an endpoint set or board exists. This lets a new project establish its local policy proposal and continue bounded E0/E1 work without ACP credentials. The proposal is unregistered and grants no authority. When available, the named endpoint set and board identity can be added separately; the gateway operator must still review, sign, activate, and allowlist policy before protected effects are governed. Bearer values stay in the machine-local secret store and are never written to project files.
+
+The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and the required source-bound context lock; then it runs the project validator. It also creates a standardized entry README while preserving any existing README. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
 
 Installed projects can be upgraded with the non-destructive `scripts/upgrade-project.py` workflow described in `docs/UPGRADING.md`. It plans three-way changes, stages conflicts, applies only safe updates, regenerates context, validates the result, and retains a rollback backup.
 
@@ -131,6 +134,8 @@ Existing projects can be inspected before adoption with the read-only `scripts/r
 Every project binds `acp-gateway` as its protection/authorization provider (`docs/ACP_INTEGRATION.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
 
 `scripts/acp.py` is the client (`authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`, `board`, `policy`); `scripts/acp-check.py` verifies the wiring, including that an ACP policy actually governs the repository — binding the provider in the profile is not enough on its own.
+
+New profiles select a named machine-local endpoint set. Each endpoint uses its own bearer credential; the client selects only a PostgreSQL-ready endpoint. Reads may fail over on typed transient errors, while state-changing requests retry only when `/ready` advertises the shared PostgreSQL idempotency contract for that exact route. Valid denials and control/integrity failures never trigger failover. See `docs/ACP_INTEGRATION.md` for setup.
 
 ## Core invariants
 

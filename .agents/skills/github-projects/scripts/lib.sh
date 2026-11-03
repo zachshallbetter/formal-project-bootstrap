@@ -8,6 +8,8 @@
 #   3. the active project saved by `project.sh use` (a small config file)
 
 GP_CONFIG="${GH_PROJECT_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/github-projects/current}"
+GP_ACP_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+GP_ACP_CLIENT="$GP_ACP_ROOT/scripts/acp.py"
 
 # ── Per-repository board profile ────────────────────────────────────────────────
 # <git-root>/.agents/board.env, when present, binds this repository to its board
@@ -69,14 +71,18 @@ if [ -z "${ACP_GATEWAY_URL:-}" ]; then
   unset _gp_env
 fi
 
-# ACP is on when a gateway is configured -- unless the operator has explicitly
-# asked for the native fallback. Without that second clause the documented
-# escape hatch did nothing: the read paths short-circuited to the gateway on the
-# URL alone, so a board the gateway cannot serve (an installation without
-# owner-level Projects permission, say) was unreachable even with credentials
-# that could read it perfectly well.
+# New formal-bootstrap projects use the shared endpoint-set client. Legacy
+# single-URL projects stay recognizable during migration, but never override
+# the shared client when a named endpoint set is present.
+gp_shared_acp_enabled() {
+  [ -f "$GP_ACP_CLIENT" ] && [ -f "$GP_ACP_ROOT/PROJECT_PROFILE.json" ] \
+    && jq -e '.authorizationProvider.gatewayEndpointSet | type == "string" and length > 0' \
+      "$GP_ACP_ROOT/PROJECT_PROFILE.json" >/dev/null 2>&1
+}
+
 gp_acp_enabled() {
-  [ -n "${ACP_GATEWAY_URL:-}" ] && [ "${ACP_ALLOW_NATIVE_GITHUB:-0}" != 1 ]
+  { gp_shared_acp_enabled || [ -n "${ACP_GATEWAY_URL:-}" ]; } \
+    && [ "${ACP_ALLOW_NATIVE_GITHUB:-0}" != 1 ]
 }
 
 gp_uri() { printf '%s' "$1" | jq -sRr @uri; }
@@ -128,12 +134,28 @@ gp_gateway_explain() {
 # gp_acp_context — the live board snapshot for the active project.
 gp_acp_context() {
   gp_require_target
+  if gp_shared_acp_enabled; then
+    python3 "$GP_ACP_CLIENT" --project-root "$GP_ACP_ROOT" board --owner "$OWNER" --project "$PROJECT"
+    return $?
+  fi
   gp_gateway_get "/internal/project-context?owner=$(gp_uri "$OWNER")&project=$(gp_uri "$PROJECT")"
 }
 
 # gp_target_hint — when no board is selected, ask the gateway what it can see
 # rather than leaving the caller to guess an owner or a number. Best effort.
 gp_target_hint() {
+  if gp_shared_acp_enabled && command -v jq >/dev/null 2>&1; then
+    if [ -n "${OWNER:-}" ]; then
+      python3 "$GP_ACP_CLIENT" --project-root "$GP_ACP_ROOT" projects --owner "$OWNER" 2>/dev/null | jq -r '
+        "  boards on \(.owner):",
+        (.projects[]? | "    --project \(.number)  \(.title)"
+          + (if .allowed then "" else "   [not in the gateway allowlist]" end))' >&2
+    else
+      python3 "$GP_ACP_CLIENT" --project-root "$GP_ACP_ROOT" installations 2>/dev/null | jq -r '
+        "  owners this gateway can read:", (.installations[]? | "    --owner \(.login)")' >&2
+    fi
+    return 0
+  fi
   gp_acp_enabled && [ -n "${ACP_GATEWAY_TOKEN:-}" ] && command -v jq >/dev/null 2>&1 || return 0
   if [ -n "${OWNER:-}" ]; then
     gp_gateway_get "/internal/projects?owner=$(gp_uri "$OWNER")" 2>/dev/null | jq -r '

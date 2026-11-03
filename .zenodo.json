@@ -2,7 +2,7 @@
   "title": "Formal Project Bootstrap",
   "version": "0.6.0",
   "upload_type": "software",
-  "description": "Formal Project Bootstrap version 0.6.0: a formal operating substrate for bounded autonomous agent projects.",
+  "description": "Formal Project Bootstrap (v0.6.0) is a formal operating substrate for bounded autonomous agent projects. It establishes rigorous doctrine, explicit authority hierarchies, evidence-backed verification gates, structured recovery workflows, and cross-session memory architectures so that autonomous agents operate with high epistemic integrity without human intervention drift.",
   "creators": [
     {
       "name": "Shallbetter, Zachary",
@@ -15,15 +15,27 @@
     "authority",
     "evidence",
     "bounded autonomy",
-    "agent projects"
+    "autonomous agents",
+    "epistemic integrity"
   ],
-  "license": "mit-license",
+  "license": "mit",
   "access_right": "open",
+  "language": "eng",
   "related_identifiers": [
     {
       "identifier": "https://github.com/zachshallbetter/formal-project-bootstrap/tree/v0.6.0",
       "relation": "isSupplementTo",
       "resource_type": "software"
+    },
+    {
+      "identifier": "https://github.com/zachshallbetter/formal-project-bootstrap/releases/tag/v0.6.0",
+      "relation": "isIdenticalTo",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.5281/zenodo.23290487",
+      "relation": "references",
+      "resource_type": "publication-preprint"
     }
   ]
 }

@@ -1,7 +1,19 @@
 # Changelog
 
+## 0.6.1 — Shared ACP reads and migration
+
+- Board reads in the GitHub Projects skill now use the shared ACP endpoint-set
+  client, including explicit project discovery and board selection commands.
+- Existing-project upgrades replace legacy per-repository ACP URL/token profile
+  fields with the machine-local endpoint-set selector.
+- Formal-project-bootstrap repositories created or upgraded at this version use
+  the same Vercel/Titan failover client for governance checks and board reads.
+
 ## 0.6.0 — Comprehensive bootstrap and ACP hardening
 
+- Standardized generated project READMEs and added non-destructive README quality checks; ignored generated LLM exports and common build, cache, and temporary artifacts, with matching context and release-package exclusions.
+- Added ordered ACP endpoint failover with endpoint-specific bearer variables, PostgreSQL readiness selection, and explicit loopback-only local opt-in; the client does not retry sent requests or valid denials.
+- Excluded private Codex thread metadata from compiled context and release packages.
 - Added transactional initialization, read-only reconciliation, and non-destructive upgrade tooling.
 - Hardened deterministic context compilation, source selection, sensitive-file exclusion, and CI drift checks.
 - Added production ACP signing, durable-state, audit-chain, and Railway deployment verification alignment.

@@ -1,15 +1,17 @@
 {
   "format": "2",
-  "generatorVersion": "0.6.0",
+  "generatorVersion": "0.6.1",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
-    "includedCount": 143,
-    "includedBytes": 585849,
+    "includedCount": 149,
+    "includedBytes": 763352,
     "excludedCounts": {
-      "excluded-directory": 13,
-      "extension": 8
+      "excluded-directory": 1178,
+      "excluded-path": 4,
+      "extension": 18,
+      "symlink": 3
     }
   },
   "repositoryState": {
@@ -19,13 +21,13 @@
       {
         "path": ".",
         "commit": "bfef2e859bec72feed39f1ebece97c3c0f12293a",
-        "branch": "main",
+        "branch": "codex/issue-16-outage-safe-bootstrap",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "0a809e9ffb1ca246df55a4523feaa428916c6f6f9f1b6024a633a7b66306bb50",
+  "aggregateSourceDigest": "ac1489028d6315b9ed7edbd841f5b166aa660f95e9e9543421c890715c3ec6fd",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -49,8 +51,8 @@
     },
     {
       "path": ".agents/rules/standards.md",
-      "bytes": 3223,
-      "sha256": "2dbf08cffb7497e349c61917f8620caab78a48773149cbc3204f3146b5f35a00"
+      "bytes": 4733,
+      "sha256": "bc59b708ced8d0b55e0aa4bc380ca1241c6cfb0091217a02921a45ee7dfcfef7"
     },
     {
       "path": ".agents/rules/types.md",
@@ -79,8 +81,8 @@
     },
     {
       "path": ".agents/skills/github-projects/SKILL.md",
-      "bytes": 20163,
-      "sha256": "cf7dafb5c6d7fc84193d03c1e4bc414e5919fa039f8f438f81f178fa7ae29c3c"
+      "bytes": 20835,
+      "sha256": "18b1a5b8cd3b07c4b03717a97b197eac2c2273afae6687605f7f143d1d0c2f9b"
     },
     {
       "path": ".agents/skills/github-projects/assets/roles/resolver.md",
@@ -154,8 +156,8 @@
     },
     {
       "path": ".agents/skills/github-projects/scripts/lib.sh",
-      "bytes": 10177,
-      "sha256": "2872ad22f8492acc694c684cc76e2164ef9d7489abcd405857f72eb7d0b7ae0d"
+      "bytes": 11132,
+      "sha256": "46c6b85a26a76f10c8fbcfff6dbb33b0dd2c0a13ca4907254ef7a4943ca0d6c0"
     },
     {
       "path": ".agents/skills/github-projects/scripts/new-item.sh",
@@ -169,8 +171,8 @@
     },
     {
       "path": ".agents/skills/github-projects/scripts/project.sh",
-      "bytes": 2976,
-      "sha256": "1b4fabefb57e05251f63656e08cbe8d6bf58aa86c3285816bb60233b4cb517e4"
+      "bytes": 3281,
+      "sha256": "86af44ab19da84ec1d0a7a095192a345281ad14574c1f412f73d8b03754640ad"
     },
     {
       "path": ".agents/skills/github-projects/scripts/protect.sh",
@@ -204,13 +206,13 @@
     },
     {
       "path": ".agents/skills/github-projects/tests/test_acp_context.sh",
-      "bytes": 3406,
-      "sha256": "f0fcc64c52fc6090823f2828febc78929302f531d20e83543f4b0739a935e850"
+      "bytes": 4918,
+      "sha256": "cc36abb57c3e9ae71c8f2cb291794513aa88b1379f20e7bd2dda137dfd33ef34"
     },
     {
       "path": ".agents/skills/operate-frontier/SKILL.md",
-      "bytes": 1741,
-      "sha256": "72c34f48c763e06656da167a31bd20ead7fe111939a0d734555afac3c0ed37a0"
+      "bytes": 2497,
+      "sha256": "f650f747d70ecf22a800d380bc5d2efcbe19d3e48d7e1bd85e2143333922c4e0"
     },
     {
       "path": ".agents/skills/reconcile-project/SKILL.md",
@@ -263,14 +265,19 @@
       "sha256": "96eaf5e9ec3973911e6cf012fe93c1d9ffb801adda8d23cba9cf2acdff22b644"
     },
     {
+      "path": ".well-known/mcprush.com-claim.txt",
+      "bytes": 37,
+      "sha256": "08970dbef6e42191a465cbe4b61afe8cb83eb36e0121b77b2ceff0634843f764"
+    },
+    {
       "path": ".zenodo.json",
-      "bytes": 738,
-      "sha256": "4306d6bf69e452583b97f520e0a0ed5e097a92a71a5bc49151b9409a2528aa76"
+      "bytes": 1371,
+      "sha256": "888c4a07952dbd2d2f4c5d1f299294630d3559dab06e7c53db9ca4f8e0aedbc4"
     },
     {
       "path": "AGENTS.md",
-      "bytes": 10995,
-      "sha256": "134cf2cc35624445e99d7a800073579c50c6476de94ab9ab85cd4bf2955c1293"
+      "bytes": 12836,
+      "sha256": "1265832052cd59a3de137ae26c57baaeae1d790bcf4db02fa985460e82101b0a"
     },
     {
       "path": "AUTHORITY.md",
@@ -279,8 +286,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 9269,
-      "sha256": "0b87eeb9ab512c7780840bf002bacb03fd7a68d22ce45491c960863cc21a0f1d"
+      "bytes": 10284,
+      "sha256": "b052343de6eb59329af63ff6b4a3ff074de5fda248f89a836e5a853750d40b4f"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -289,8 +296,8 @@
     },
     {
       "path": "CONTEXT_SOURCES_TEMPLATE.json",
-      "bytes": 1213,
-      "sha256": "f400464f8f10972800419c79341ba5a9fdf0c67a812e04c99a7a8317ec104e70"
+      "bytes": 1619,
+      "sha256": "0bb9aa2ff8bfcba454fa5216156064720a8311dcd1c216151401880285ce2694"
     },
     {
       "path": "CONTRIBUTING.md",
@@ -324,13 +331,13 @@
     },
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "bytes": 3391,
-      "sha256": "ad461674bdc1f01e76896c28db4a9dde497a9424476401d2c6cac53739485ff3"
+      "bytes": 3347,
+      "sha256": "b7c27c8b6f9be8512edaed0bc3225b01d25366ab0b86415862f4b023f751640c"
     },
     {
       "path": "README.md",
-      "bytes": 10299,
-      "sha256": "a93641e306bca13657b6fb48b29d4f65373af52f8172d1c11f0e55f1d3eaa5ae"
+      "bytes": 11526,
+      "sha256": "c91638a825b326033188dee4ae16a35a5a10b35924a10bfc40b0a5e7826930a3"
     },
     {
       "path": "SECURITY.md",
@@ -345,7 +352,7 @@
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "97a5d6e540a6120d09c39ddb667e0e8e2bac7fcc2ffef813b82e08fd60365bce"
+      "sha256": "87b241b275c591694846560e9879f50c9da3150f854efdabd782c539772f3033"
     },
     {
       "path": "VERSIONING.md",
@@ -364,13 +371,13 @@
     },
     {
       "path": "contracts/acp-protected-effects.yaml",
-      "bytes": 4146,
-      "sha256": "6fd132dc67c4213fecb65461f0ee70987cfe41b765a55ab89c11d3f1a8a1a7dd"
+      "bytes": 4409,
+      "sha256": "5563eb2dc7be570c748de9197bab1d3952e89981f22e9b7fe42b6d7e786a4d1f"
     },
     {
       "path": "docs/ACP_INTEGRATION.md",
-      "bytes": 15964,
-      "sha256": "8b5bf32e3040581e842718942f52cfd0f00ce1c37f6cc76498b127e4f5f449d9"
+      "bytes": 29258,
+      "sha256": "a42d94a1a771e2f7e258e3583deb9bcf3f5c065f77ddd99c404fa8a46ec26591"
     },
     {
       "path": "docs/AGENT_CAPABILITIES.md",
@@ -389,8 +396,8 @@
     },
     {
       "path": "docs/BOOTSTRAP_SEQUENCE.md",
-      "bytes": 6140,
-      "sha256": "82d04fa96aa477837c64b61a7c5f9e7617d0e325ef3e205dbd037f6ff1e91d51"
+      "bytes": 6713,
+      "sha256": "f1fff8b61e07d89a469d87520504dd9c12dc52696141026e6e4329217b13eaed"
     },
     {
       "path": "docs/CONFORMANCE.md",
@@ -399,8 +406,8 @@
     },
     {
       "path": "docs/CONTEXT_COMPILATION.md",
-      "bytes": 2568,
-      "sha256": "cedad34d38ef2363ab29c40d29f38a5a93168e95ed647b6f729757648d748117"
+      "bytes": 2906,
+      "sha256": "f4340c5afdba5aacf3d912af1ff9edcef21a1caf5bc4256975d23bf603740ed6"
     },
     {
       "path": "docs/EVIDENCE_METHOD.md",
@@ -419,8 +426,8 @@
     },
     {
       "path": "docs/EXISTING_PROJECT_ADOPTION.md",
-      "bytes": 4615,
-      "sha256": "549abfc3926076d522d677ba6dcaec5e6a4e1d9e3043aba70880632ffcdcbbe5"
+      "bytes": 5087,
+      "sha256": "63bdb7b681f9d76d10ee7296b8d035b5c4542426f8897f7ad89ed88101e5fabd"
     },
     {
       "path": "docs/FORMAL_RESOURCES.md",
@@ -458,6 +465,11 @@
       "sha256": "1b546812abd66d29217fb8b11370201760ad43769f5e9c1f5e685625a7bb40aa"
     },
     {
+      "path": "docs/README_STANDARD.md",
+      "bytes": 2217,
+      "sha256": "0a00526dc726037e1ee49e412737cd0043a01138fdd25f34daaa37a2a450b0ed"
+    },
+    {
       "path": "docs/RECOVERY.md",
       "bytes": 1115,
       "sha256": "b084f0a4bbad4012bd9d2525a07239e38ff4f563bbdefbd8491518fec14882e9"
@@ -470,7 +482,7 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "3ac8c85292d0725b95bb10ce58e007e5dff47c70d1850aa6c48e2a6532832e4c"
+      "sha256": "7a36956aa0d43eaa87c60d4c78061e46af3f40142809349c1e8cad1227c2f5e1"
     },
     {
       "path": "docs/UPGRADING.md",
@@ -479,8 +491,8 @@
     },
     {
       "path": "docs/WORK_GRAPH.md",
-      "bytes": 1790,
-      "sha256": "427012a108e0b551cf656690da51c74675d0aa99cb138b8d4cf61bfa32691a22"
+      "bytes": 2838,
+      "sha256": "b7d32fb78d272a75d0f4c6561bafdb75e9e12010f858daa0813f562f6af0766b"
     },
     {
       "path": "docs/pin-digest-procedure/PROPOSAL.md",
@@ -555,7 +567,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "a352b6cc5000e1b3ebb217abe6d9f454a5f79ed01c9b1f6b62c5e289d1289647"
+      "sha256": "f6ae6933df6d4c495dcc96c5fc411e924f287c01b45622cb4ff6e89b4f3d79e6"
     },
     {
       "path": "requirements-dev.txt",
@@ -566,6 +578,11 @@
       "path": "schemas/acp-decision.schema.json",
       "bytes": 5605,
       "sha256": "2a870190e4a3d208b765054b04de35819570770639e93e16ebb52d4365e8c76c"
+    },
+    {
+      "path": "schemas/acp-endpoint-registry.schema.json",
+      "bytes": 1224,
+      "sha256": "a391fd2748e5e41baa78dfc5f8f0bbcd6114989af631cad4edb3b7872ba5f009"
     },
     {
       "path": "schemas/agent-message.schema.json",
@@ -624,13 +641,23 @@
     },
     {
       "path": "scripts/acp-check.py",
-      "bytes": 11196,
-      "sha256": "ef1863692a470634adae144c0b6f3aadfc375543915c7b9c428b6b99f4c9225a"
+      "bytes": 20703,
+      "sha256": "72dc6cb031a2b4ccfb8ae6b79b74341cce31657d72a193f29548a510f9a7956c"
     },
     {
       "path": "scripts/acp.py",
-      "bytes": 25463,
-      "sha256": "6fca8c5738deb7864a77838d95214cf388a6b80dcfac97fe9446eb0aa83176dd"
+      "bytes": 58170,
+      "sha256": "3a27adde85e286a3846691d7eebdb43798e91c40925e4fd3a16ac2acd7b55925"
+    },
+    {
+      "path": "scripts/acp_endpoint_registry.py",
+      "bytes": 12054,
+      "sha256": "e727c4c9bfe5a262faf59e591dca435585bff5bef04a84362bc3bb574e0c8311"
+    },
+    {
+      "path": "scripts/acp_override.py",
+      "bytes": 8207,
+      "sha256": "23e27d11bd554d3ecf69a42757740be4b0aa91b1fcab6de342462d1d06124d84"
     },
     {
       "path": "scripts/check-all.py",
@@ -659,8 +686,8 @@
     },
     {
       "path": "scripts/gen-context.py",
-      "bytes": 13025,
-      "sha256": "eee7f301274b03d452987e5f3eb82891c828a951900454cf983cca3a97b25c87"
+      "bytes": 13729,
+      "sha256": "2cfe60a42f25ec0f20b89838eeaad25f677f102af2c6a285eb88c49f057730f3"
     },
     {
       "path": "scripts/iepe-adopt.py",
@@ -669,13 +696,13 @@
     },
     {
       "path": "scripts/init-project.py",
-      "bytes": 13365,
-      "sha256": "ea89ccd0ed5645a826becce47090a818a4708d5482115ec95f73f50292910a72"
+      "bytes": 22828,
+      "sha256": "1953d9ce1487c5b24338fa011fa8f7e01281085e1a2c0324c01f4349eb8e1e57"
     },
     {
       "path": "scripts/package-release.py",
-      "bytes": 3221,
-      "sha256": "5edc2cb625f5d4e5b451a9706a7f04cb3f15dfae80145611be6e488e069bb1fa"
+      "bytes": 4187,
+      "sha256": "46835fdb1fd1bd83c45eaf2a47b2a397ea2c40d5f523ef8037d391703e93587a"
     },
     {
       "path": "scripts/recipient-status.py",
@@ -684,18 +711,18 @@
     },
     {
       "path": "scripts/reconcile-project.py",
-      "bytes": 11596,
-      "sha256": "a9d4002736f1fef51ba2c124f4abb2414e67fd131016b42604bd57c633facedd"
+      "bytes": 16212,
+      "sha256": "26a2b3dee9d562646d4eeab895b8f2eea1997f0e6a45e5d2ce3f16cc9076e102"
     },
     {
       "path": "scripts/upgrade-project.py",
-      "bytes": 14138,
-      "sha256": "e0ac6478ec44fee27f8ead869ebaae80952a817203d253e1556701b6d522e346"
+      "bytes": 14354,
+      "sha256": "c98487bff3213e4f54747390676de6b526da3b3bacadfa107acdce7084fcf621"
     },
     {
       "path": "scripts/validate-bootstrap.py",
-      "bytes": 10780,
-      "sha256": "0d1815d48fc7d82c818c3c4727d9f3d027803a99e6b924d562a5f3e3e4e9a1c4"
+      "bytes": 14712,
+      "sha256": "52c7b5eef56020d2ef426221017a9446c66afa7ef43262788201aface05c624d"
     },
     {
       "path": "scripts/validate-formal-files.py",
@@ -706,6 +733,11 @@
       "path": "scripts/validate-interaction-contract.py",
       "bytes": 2441,
       "sha256": "74de7cf8d3efa6cca102e2982377d9829f35218632dbea1eb0f6ab7d39706b2a"
+    },
+    {
+      "path": "scripts/validate-local-work-items.py",
+      "bytes": 5856,
+      "sha256": "37b62dd766cbd1bb59f139a488520486a1e92c648cf8ade3ed35dd0a003b5285"
     },
     {
       "path": "scripts/validate-protocol-adapters.py",
@@ -724,8 +756,8 @@
     },
     {
       "path": "tests/test_acp_client.py",
-      "bytes": 15396,
-      "sha256": "34d942572b7dc65f588bd01790d6e8b886ae521979d5629da20db07ea503e3d8"
+      "bytes": 65912,
+      "sha256": "9d158e6badfb380e895263e2d214629a8b298399c509b135a8742c2bcbb47f15"
     },
     {
       "path": "tests/test_protocol_adapters.py",
@@ -734,8 +766,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 17327,
-      "sha256": "8ca0a68a7145e85f9342b20d91c23ea7f82e48375e7c73acc04a7e1df0c4e514"
+      "bytes": 25832,
+      "sha256": "a7e554d0f9650ef689a33e100d5a4460aeb2ca865ae18c95780e3a0c11d8b858"
     },
     {
       "path": "vendor/README.md",

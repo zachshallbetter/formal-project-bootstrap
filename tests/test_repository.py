@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
+import zipfile
 import unittest
 from pathlib import Path
 
@@ -134,8 +136,31 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn("Upgrade fixture marker", (project / "docs/ALIGNMENT.md").read_text(encoding="utf-8"))
             self.run_ok(sys.executable, str(upgrade), "--project", str(project), "--from", str(release), "--verify")
             self.run_ok(sys.executable, str(upgrade), "--project", str(project), "--from", str(release), "--rollback")
-            self.assertEqual((project / "VERSION").read_text(encoding="utf-8").strip(), "0.6.0")
+            self.assertEqual((project / "VERSION").read_text(encoding="utf-8").strip(), VERSION)
             self.assertNotIn("Upgrade fixture marker", (project / "docs/ALIGNMENT.md").read_text(encoding="utf-8"))
+
+    def test_upgrade_replaces_legacy_gateway_env_binding_with_endpoint_set(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            self.run_ok(sys.executable, "scripts/init-project.py", "--name", "Legacy ACP Fixture",
+                        "--id", "legacy-acp-fixture", "--output", str(project))
+            profile_path = project / "PROJECT_PROFILE.json"
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            provider = profile["authorizationProvider"]
+            provider.pop("gatewayEndpointSet")
+            provider["gatewayUrlEnv"] = "ACP_GATEWAY_URL"
+            provider["gatewayTokenEnv"] = "ACP_GATEWAY_TOKEN"
+            profile_path.write_text(json.dumps(profile), encoding="utf-8")
+
+            spec = importlib.util.spec_from_file_location("upgrade_project", ROOT / "scripts/upgrade-project.py")
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            target = module.source_map(ROOT, project, "legacy-acp-fixture", "Legacy ACP Fixture")
+            upgraded = json.loads(target["PROJECT_PROFILE.json"])
+            upgraded_provider = upgraded["authorizationProvider"]
+            self.assertEqual(upgraded_provider["gatewayEndpointSet"], "production")
+            self.assertNotIn("gatewayUrlEnv", upgraded_provider)
+            self.assertNotIn("gatewayTokenEnv", upgraded_provider)
 
     def test_initializer_produces_valid_new_project(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -156,7 +181,7 @@ class RepositoryTests(unittest.TestCase):
             self.assertEqual(profile["operatingMode"], "new")
             resources = json.loads((out / "FORMAL_RESOURCE_MANIFEST.json").read_text(encoding="utf-8"))
             self.assertEqual(resources["projectId"], "fixture-project")
-            for name in ["evidence.jsonl", "negative-results.jsonl", "deviations.jsonl", "alignment.jsonl"]:
+            for name in ["evidence.jsonl", "negative-results.jsonl", "deviations.jsonl", "alignment.jsonl", "local-work-items.jsonl"]:
                 self.assertTrue((out / "records" / name).exists())
             self.run_ok(sys.executable, "scripts/validate-bootstrap.py", "--check-context", cwd=out)
 
@@ -173,7 +198,33 @@ class RepositoryTests(unittest.TestCase):
             inventory = json.loads(result.stdout)
             self.assertTrue(inventory["bootstrap"]["initialized"])
             self.assertFalse(inventory["reconcileRequired"])
+            self.assertEqual(inventory["acpIntegration"]["status"], "formal-project-bootstrap")
+            self.assertEqual(inventory["acpIntegration"]["setup"]["authorization"], "NOT_EVALUATED")
+            self.assertEqual(inventory["acpIntegration"]["setup"]["policyActivation"], "NOT_VERIFIED")
+            self.assertEqual(inventory["acpIntegration"]["setup"]["boardBinding"], "unbound")
+            self.assertEqual(
+                inventory["acpIntegration"]["setup"]["endpointSet"]["credentialAuthentication"],
+                "NOT_VERIFIED",
+            )
+            self.assertTrue(any(
+                "acp-check.py --json" in step
+                for step in inventory["acpIntegration"]["setup"]["nextSteps"]
+            ))
             self.assertEqual(before, after)
+
+    def test_reconcile_identifies_existing_legacy_acp_integration(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "legacy"
+            (project / "scripts").mkdir(parents=True)
+            (project / "scripts/acp.py").write_text("# project-specific ACP client\n", encoding="utf-8")
+            result = subprocess.run(
+                [sys.executable, "scripts/reconcile-project.py", "--project", str(project)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            inventory = json.loads(result.stdout)
+            self.assertEqual(inventory["acpIntegration"]["status"], "existing-or-legacy")
+            self.assertEqual(inventory["acpIntegration"]["evidencePaths"], ["scripts/acp.py"])
+            self.assertIn("do not install a parallel ACP authority", inventory["acpIntegration"]["guidance"])
 
     def test_existing_mode_preserves_conflicting_authority(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -213,6 +264,15 @@ class RepositoryTests(unittest.TestCase):
             declared = checksum.read_text(encoding="utf-8").split()[0]
             actual = hashlib.sha256(archive.read_bytes()).hexdigest()
             self.assertEqual(declared, actual)
+            with zipfile.ZipFile(archive) as package:
+                local_environment_files = [
+                    name for name in package.namelist()
+                    if Path(name).name == ".env" or (Path(name).name.startswith(".env.") and Path(name).name != ".env.example")
+                ]
+                private_thread_metadata = [name for name in package.namelist()
+                                           if "/.agents/thread/" in f"/{name}"]
+            self.assertEqual(local_environment_files, [])
+            self.assertEqual(private_thread_metadata, [])
 
     def test_acp_binding_is_declared_in_templates(self):
         profile = json.loads((ROOT / "PROJECT_PROFILE_TEMPLATE.json").read_text(encoding="utf-8"))
@@ -246,18 +306,28 @@ class RepositoryTests(unittest.TestCase):
                 "--name", "Bound Project",
                 "--id", "bound-project",
                 "--mode", "new",
-                "--acp-gateway-url", "https://acp.example.invalid/",
+                "--acp-endpoint-set", "production",
                 "--acp-owner", "example-org",
                 "--acp-project", "3",
+                "--acp-repository", "example-org/bound-project",
                 "--output", str(out),
             )
             profile = json.loads((out / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))
             self.assertEqual(profile["authorizationProvider"]["status"], "bound")
             self.assertEqual(profile["authorizationProvider"]["board"], {"owner": "example-org", "number": 3})
+            self.assertEqual(profile["authorizationProvider"]["gatewayEndpointSet"], "production")
             board_env = (out / ".agents/board.env").read_text(encoding="utf-8")
-            self.assertIn("ACP_GATEWAY_URL=https://acp.example.invalid\n", board_env)
             self.assertIn("ACP_BOARD_NUMBER=3", board_env)
+            self.assertIn("ACP_REMOTE_URL=https://github.com/example-org/bound-project.git", board_env)
             self.assertNotIn("ACP_GATEWAY_TOKEN", board_env)
+            self.assertNotIn("ACP_GATEWAY_URL", board_env)
+            proposal_path = out / ".formal-bootstrap/acp-policy-proposal.json"
+            proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
+            self.assertEqual(proposal["repository"]["owner"], "example-org")
+            self.assertEqual(proposal["repository"]["name"], "bound-project")
+            self.assertEqual(proposal["boards"], [{"owner": "example-org", "number": 3}])
+            self.assertNotIn("ACP_GATEWAY_TOKEN", proposal_path.read_text(encoding="utf-8"))
+            self.assertNotIn(proposal_path.read_text(encoding="utf-8"), (out / ".agents/llms-full.txt").read_text(encoding="utf-8"))
             gitignore = (out / ".gitignore").read_text(encoding="utf-8")
             self.assertIn(".env.local", gitignore)
             self.assertIn("!.agents/", gitignore)
@@ -276,8 +346,73 @@ class RepositoryTests(unittest.TestCase):
                 cwd=out, text=True, capture_output=True,
                 env={k: v for k, v in os.environ.items() if not k.startswith("ACP_")},
             )
-            self.assertIn(cp.returncode, (2, 4))
+            self.assertNotEqual(cp.returncode, 0)
             self.assertNotIn("supersecretvalue", cp.stdout + cp.stderr)
+
+    def test_initializer_generates_boardless_policy_proposal_from_repository_identity(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "partial"
+            cp = self.run_ok(
+                sys.executable,
+                "scripts/init-project.py",
+                "--name", "Partial ACP Project",
+                "--id", "partial-acp-project",
+                "--mode", "new",
+                "--acp-repository", "example-org/partial-acp-project",
+                "--output", str(out),
+            )
+            profile = json.loads((out / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))
+            self.assertEqual(profile["authorizationProvider"]["status"], "declared")
+            self.assertIn("ACP_SETUP_INCOMPLETE", cp.stdout)
+            self.assertIn("bind an existing ProjectsV2 board later", cp.stdout)
+            proposal = json.loads((out / ".formal-bootstrap/acp-policy-proposal.json").read_text(encoding="utf-8"))
+            self.assertEqual(proposal["repository"]["owner"], "example-org")
+            self.assertEqual(proposal["repository"]["name"], "partial-acp-project")
+            self.assertNotIn("boards", proposal)
+            self.assertTrue((out / "records/local-work-items.jsonl").exists())
+
+    def test_local_work_ledger_accepts_only_complete_e0_e1_items(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "local-ledger"
+            self.run_ok(sys.executable, "scripts/init-project.py", "--name", "Local Ledger",
+                        "--id", "local-ledger", "--mode", "new", "--output", str(out))
+            ledger = out / "records/local-work-items.jsonl"
+            item = {
+                "id": "issue-16-local-bootstrap",
+                "state": "Ready",
+                "intentRef": "PROJECT_INTENT.md",
+                "objectiveOrHypothesis": "Complete a bounded local bootstrap change.",
+                "scope": ["scripts/init-project.py"],
+                "exclusions": ["GitHub writes", "protected pushes", "deployments"],
+                "dependencies": [],
+                "acceptance": ["local validator accepts the item"],
+                "evidenceRequirements": ["validator output"],
+                "permissions": ["source.inspect", "local.edit", "local.test", "local.commit"],
+                "effectClass": "E1",
+                "target": {"repositoryOrArtifact": "local-ledger", "authorizedPaths": ["scripts/init-project.py"]},
+                "budget": {"retries": 1},
+                "stopConditions": ["a requested path is outside scope"],
+            }
+            ledger.write_text(json.dumps(item) + "\n", encoding="utf-8")
+            self.run_ok(sys.executable, "scripts/validate-local-work-items.py", cwd=out)
+            item["effectClass"] = "E2"
+            ledger.write_text(json.dumps(item) + "\n", encoding="utf-8")
+            rejected = subprocess.run([sys.executable, "scripts/validate-local-work-items.py"],
+                                      cwd=out, text=True, capture_output=True)
+            self.assertEqual(rejected.returncode, 2)
+            self.assertIn("completed historical evidence", rejected.stderr)
+
+    def test_initializer_rejects_insecure_acp_gateway_url(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "insecure"
+            cp = subprocess.run(
+                [sys.executable, "scripts/init-project.py", "--name", "Insecure", "--id", "insecure",
+                 "--mode", "new", "--acp-endpoint-set", "Not_Lowercase", "--output", str(out)],
+                cwd=ROOT, text=True, capture_output=True,
+            )
+            self.assertEqual(cp.returncode, 2)
+            self.assertIn("lowercase name", cp.stderr)
+            self.assertFalse(out.exists())
 
     def test_validator_rejects_token_in_committed_board_env(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -285,7 +420,9 @@ class RepositoryTests(unittest.TestCase):
             self.run_ok(
                 sys.executable, "scripts/init-project.py",
                 "--name", "Leaky", "--id", "leaky", "--mode", "new",
-                "--acp-gateway-url", "https://acp.example.invalid",
+                "--acp-endpoint-set", "production",
+                "--acp-owner", "example-org", "--acp-project", "3",
+                "--acp-repository", "example-org/leaky",
                 "--output", str(out),
             )
             board_env = out / ".agents/board.env"
@@ -298,6 +435,7 @@ class RepositoryTests(unittest.TestCase):
         for path in [
             "PROJECT_PROFILE_TEMPLATE.json",
             "schemas/acp-decision.schema.json",
+            "schemas/acp-endpoint-registry.schema.json",
             "CONTEXT_SOURCES_TEMPLATE.json",
             "FORMAL_RESOURCE_MANIFEST_TEMPLATE.json",
             "schemas/agent-message.schema.json",

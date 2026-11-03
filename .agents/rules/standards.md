@@ -35,10 +35,21 @@ Code, generated artifacts, or model outputs never silently alter theory or forma
 
 ## 6. Agent-First Publishing Architecture
 
-- Maintain programmatically generated `llms.txt` manifests and `llms-full.txt` single-file context corpora for zero-search agent context resolution.
-- Downstream Invariant: Generated `llms.txt` and `llms-full.txt` files are downstream projections: never edit them manually. Refresh via `scripts/gen-context.py`.
+- Generate `llms.txt` manifests and `llms-full.txt` context corpora locally when full-text agent search is needed. Keep generated exports ignored and out of Git commits and release archives.
+- Downstream invariant: generated context is a projection, never authority. Do not edit it manually; refresh it with `scripts/gen-context.py`. The source-bound `.agents/context-lock.json` remains the freshness record.
 
 ## 7. Engineering Voice and Attribution
 
 - Clean, human engineering prose.
 - Zero `Co-Authored-By` trailers, no generated-by-AI footers, and no agent session identifiers in tracked code, documentation, or commits.
+
+## 8. Research Paper & Monograph Directory Standard (RPDS)
+
+Where a program or project produces a formal research paper, monograph, or scholarly deposit:
+
+- **Canonical Directory Layout**: Organize under `paper/` (or `docs/research/`) with modular `sections/` (`00` status matrix through `08` conclusions), reproducible `figures/`, archival `latex/`, and `supplementary/`.
+- **Dual-Format Delivery Mandate**: Every paper (monograph and supplementary papers alike) must exist simultaneously as an inspectable Markdown file (`.md`) and a publication-grade compiled PDF (`.pdf`) compiled via XeLaTeX.
+- **Self-Documenting Naming Discipline**: Never use generic filenames like `paper.md` or `paper.pdf`. All paper deliverables must use semantic slugs matching `{stem}.md` and `{stem}.pdf` (e.g. `[project]-[component]-[version].{md,pdf}`).
+- **Sub-Research Paper Invariant**: Supplementary papers are formal research monographs requiring YAML frontmatter, decimal numbered headings, formal model, falsifiability criteria, verified bibliography, and compiled matching PDF.
+- **OpenAIRE & Zenodo FAIR Compliance**: Maintain synchronized `.zenodo.json` and `CITATION.cff` metadata with author ORCID (`0009-0009-9450-3429`), concept and version DOIs, and typed `related_identifiers`.
+- **Automated Verification**: Every paper package must verify with `rdp-check.py --paper-dir <dir>` with zero errors and zero warnings.

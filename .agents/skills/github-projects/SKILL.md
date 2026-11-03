@@ -83,18 +83,26 @@ private data into an issue, draft, field, or comment. Before using bulk, automat
 branch-protection, or merge operations, confirm the project's work item and
 permissions authorize that exact effect.
 
-## Reading through an ACP gateway (optional)
+## Reading through ACP
 
-If the repository (or the environment) sets `ACP_GATEWAY_URL` — `lib.sh` also
-reads it and `ACP_GATEWAY_TOKEN` from `<git-root>/.env.local` — every board
-**read** goes through that gateway instead of your `gh` credentials:
-`snapshot.sh`, `project-ids.sh` and `claims.sh` switch automatically, and no
-`project` scope or GitHub App key is needed locally. Writes are unaffected:
-the gateway is pull-only by design, so `add-item.sh`, `new-item.sh`,
-`set-field.sh` and `claim.sh` keep using your own `gh` credentials.
+A formal-bootstrap project with `authorizationProvider.gatewayEndpointSet`
+routes board reads through `scripts/acp.py`. That shared client resolves the
+machine-local ordered endpoint set, uses a distinct bearer for each endpoint,
+checks shared-state identity, and fails over only under its documented GET
+rules. Do not put a gateway URL or token in the repository or `.env.local`.
+Configure the endpoint set once with `python3 scripts/acp.py endpoints configure`.
 
-With no gateway configured nothing changes — the scripts behave exactly as
-documented everywhere else in this file.
+The `snapshot.sh`, `project-ids.sh`, `claims.sh`, and `project.sh list` read
+paths use ACP when the profile selects an endpoint set. ACP remains pull-only:
+`add-item.sh`, `new-item.sh`, `set-field.sh`, and `claim.sh` use the operator's
+own `gh` credentials for writes. A project without a named endpoint set uses
+the native `gh` path and requires its normal GitHub Projects access.
+
+On board responses, `acp.gate` is the configured read-gate mode; it does not
+mean that the resource is currently locked. Prefer `gate_blocked` and
+`active_block` when present. The shared client labels a successful legacy
+board read `BOARD_READ_ALLOWED`, which establishes only that the read was
+allowed. Protected effects still require a separate exact ACP `ALLOW`.
 
 **When a gateway read fails, read what it says.** Every refusal is JSON with a
 stable `error` code, a `detail`, a `remedy` and the context needed to retry;
@@ -113,7 +121,8 @@ With no board selected, the "no project selected" error also lists the owners
 the gateway can read — or, when an owner is known, that owner's boards and
 their numbers (`/internal/installations`, `/internal/projects?owner=`).
 
-`tests/test_acp_context.sh` covers this path with a stubbed `curl`.
+`tests/test_acp_context.sh` covers the shared-client path and the legacy refusal
+explanation during migration.
 
 ## Selecting the project (switch between boards)
 
@@ -182,7 +191,7 @@ scripts/set-field.sh --owner example-org --project 2 --item "$ITEM" --field Stat
 
 | Goal | How |
 |------|-----|
-| List an owner's projects | `gh project list --owner <o>` |
+| List an owner's projects | `scripts/acp.py projects --owner <o>` for a bound ACP project; otherwise `gh project list --owner <o>` |
 | View a project / its fields | `gh project view <n> --owner <o> [--format json]` |
 | Create / edit / close a project | `gh project create\|edit\|close <n> --owner <o> …` |
 | List items (raise the limit!) | `gh project item-list <n> --owner <o> --limit 500 --format json` |

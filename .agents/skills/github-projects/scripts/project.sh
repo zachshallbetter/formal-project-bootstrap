@@ -44,9 +44,15 @@ case "$cmd" in
     active_owner="$(gp_config_get owner)"; star=""
     [ "$owner" = "$active_owner" ] && star="$(gp_config_get number)"
     echo "projects for $owner  (★ = active):"
-    # Listing boards is a read, so it goes through the gateway when one is set;
-    # it also marks the boards that gateway is not allowed to serve.
+    # Listing boards uses the shared ACP client for endpoint-set projects.
     if gp_acp_enabled; then
+      if gp_shared_acp_enabled; then
+        python3 "$GP_ACP_CLIENT" --project-root "$GP_ACP_ROOT" projects --owner "$owner" \
+          | jq -r --arg a "$star" '.projects[] |
+              "  \(if (.number|tostring)==$a then "★" else " " end) #\(.number)  \(.title)"
+              + (if .allowed then "" else "   [not in the gateway allowlist]" end)'
+        exit 0
+      fi
       gp_gateway_get "/internal/projects?owner=$(gp_uri "$owner")" \
         | jq -r --arg a "$star" '.projects[] |
             "  \(if (.number|tostring)==$a then "★" else " " end) #\(.number)  \(.title)"

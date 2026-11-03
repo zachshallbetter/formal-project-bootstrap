@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import json
 import os
@@ -13,8 +14,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-EXCLUDE_DIRS = {".git", "dist", "build", "__pycache__", ".pytest_cache", ".venv", "venv"}
+EXCLUDE_DIRS = {
+    ".git", "dist", "build", "target", "out", "node_modules", "coverage", "htmlcov",
+    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".venv", "venv",
+    ".cache", ".next", ".turbo", ".vercel", ".reports", "tmp", "temp", "release",
+}
+EXCLUDE_PATH_PREFIXES = (".agents/thread/", ".agents/threads/", ".agents/images/")
+EXCLUDE_DIR_PATTERNS = ("llm-full-docs*",)
 EXCLUDE_FILES = {"PACKAGE_MANIFEST.json"}
+EXCLUDE_FILE_PATTERNS = (
+    "llms*.txt", "llm-full-docs*.txt", "llm-full-docs-all.zip", "*.tmp", "*.temp",
+    "*.bak", "*~", "*.pyc", "*.pyo", "*.tsbuildinfo", "*.log", "*.swp", "*.swo",
+    "*.orig", "*.rej", ".DS_Store",
+)
 FIXED_DATE = (2026, 1, 1, 0, 0, 0)
 
 
@@ -29,9 +41,16 @@ def release_files() -> list[tuple[str, bytes]]:
             continue
         rel = path.relative_to(ROOT).as_posix()
         parts = rel.split("/")
-        if any(part in EXCLUDE_DIRS for part in parts[:-1]):
+        if any(part in EXCLUDE_DIRS or any(fnmatch.fnmatch(part, pattern) for pattern in EXCLUDE_DIR_PATTERNS)
+               for part in parts[:-1]):
+            continue
+        if any(rel.startswith(prefix) for prefix in EXCLUDE_PATH_PREFIXES):
             continue
         if rel in EXCLUDE_FILES:
+            continue
+        if any(fnmatch.fnmatch(path.name, pattern) for pattern in EXCLUDE_FILE_PATTERNS):
+            continue
+        if path.name == ".env" or (path.name.startswith(".env.") and path.name != ".env.example"):
             continue
         items.append((rel, path.read_bytes()))
     return sorted(items, key=lambda item: item[0])
