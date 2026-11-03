@@ -6,10 +6,10 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 143,
-    "includedBytes": 579368,
+    "includedBytes": 585849,
     "excludedCounts": {
-      "excluded-directory": 10,
-      "extension": 6
+      "excluded-directory": 13,
+      "extension": 8
     }
   },
   "repositoryState": {
@@ -18,14 +18,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "f5797681d01a4fee0c62f4f2446e3f8769077053",
-        "branch": "feat/agent-rules-architecture",
+        "commit": "bfef2e859bec72feed39f1ebece97c3c0f12293a",
+        "branch": "main",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "1754ccd5159a810cc0b105c80e8fd3456db20454996b80c121388bdfccc3f38a",
+  "aggregateSourceDigest": "0a809e9ffb1ca246df55a4523feaa428916c6f6f9f1b6024a633a7b66306bb50",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -64,23 +64,23 @@
     },
     {
       "path": ".agents/skills/authorize-protected-effect/SKILL.md",
-      "bytes": 2758,
-      "sha256": "480ffefc42bc4d9d744484149f26a86ddb9b19a8d6adb63053720f5fc0c7865f"
+      "bytes": 3954,
+      "sha256": "f57f61b168c168ca6d97eebae96f29d12a6266e39a9b08cdd3b1564709916cd3"
     },
     {
       "path": ".agents/skills/compile-context/SKILL.md",
-      "bytes": 561,
-      "sha256": "10c8156d05da083eddb606769183d8cabf4f924c241a3e3b462ef76f7aecf28d"
+      "bytes": 1156,
+      "sha256": "83e4e984f67d99aad8a733a1bafa419a5c32f2800d65d6e627f1652d2e928ea8"
     },
     {
       "path": ".agents/skills/coordinate-workers/SKILL.md",
-      "bytes": 593,
-      "sha256": "6be105841accc1f67dc11e12541b3b343fa2029a0ff6e5085c907b36381ba57b"
+      "bytes": 1488,
+      "sha256": "b9d8766ae870785be0fbbcb356fde17497ed1ff0b069c5bc9ce5e95d6218df0b"
     },
     {
       "path": ".agents/skills/github-projects/SKILL.md",
-      "bytes": 18597,
-      "sha256": "89dedcca97249f7a089851ac542328fabc18f5c2d5da2a87aab3e6ce9c916fa5"
+      "bytes": 20163,
+      "sha256": "cf7dafb5c6d7fc84193d03c1e4bc414e5919fa039f8f438f81f178fa7ae29c3c"
     },
     {
       "path": ".agents/skills/github-projects/assets/roles/resolver.md",
@@ -209,18 +209,18 @@
     },
     {
       "path": ".agents/skills/operate-frontier/SKILL.md",
-      "bytes": 1006,
-      "sha256": "96cb68e6961b5b043603ff3c08f3984f504d5075a6b7db64dfbaee6b0fd96c71"
+      "bytes": 1741,
+      "sha256": "72c34f48c763e06656da167a31bd20ead7fe111939a0d734555afac3c0ed37a0"
     },
     {
       "path": ".agents/skills/reconcile-project/SKILL.md",
-      "bytes": 1161,
-      "sha256": "59f47ea393b477949a5e046a021e95032c3e3bf395842f82388c05ddde6d5c66"
+      "bytes": 1945,
+      "sha256": "8e671f9b635f206d78be6fec73d67be5b6e8d8a4b9f125f1f0cc9d9157ea1894"
     },
     {
       "path": ".agents/skills/verify-outcome/SKILL.md",
-      "bytes": 599,
-      "sha256": "331bcc9c5179eef021d9edf48e76bedcaaef6fed17f97e91c6d20a20f1199117"
+      "bytes": 1309,
+      "sha256": "daa4c70bc8011c38b079c8c5a3773361c45b1dad268758d878beba4f4941a7a1"
     },
     {
       "path": ".github/ISSUE_TEMPLATE/config.yml",

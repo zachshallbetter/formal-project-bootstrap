@@ -22,17 +22,28 @@ description: >-
 
 # GitHub Projects (ProjectsV2)
 
-> **Check for a repo-specific version first.** Before acting, look for a copy of
-> this skill inside the current repository — `.agents/skills/github-projects/`
-> (canonical) or `.github/skills/github-projects/` — and if one exists, read
-> **its** `SKILL.md` and follow it where the two disagree. The repo copy carries
-> the org's local law: board field templates, status vocabularies, evidence
-> rules, execution profiles (e.g. Infinite-Verse points board creation at its
-> `docs/PROJECT_BOARDS.md`). This generic copy remains the engine — its
-> `scripts/` and references work everywhere — but structure decisions (creating
-> boards, adding fields, choosing vocabularies) belong to the repo overlay when
-> one is present. Designing a board from this file alone, inside a repo that
-> ships its own profile, is how off-template boards happen.
+## Requirements
+
+Requires GitHub Projects v2 access and the GitHub CLI. Most board scripts also require `jq`; check each script's usage header. The optional ACP read path needs a configured gateway. Worker orchestration is optional and requires the Claude CLI. All scripts and references named below are included in this skill bundle.
+
+> **Check for repository board policy first.** Before designing a board or
+> choosing its field vocabulary, inspect the repository's agent guidance and
+> board documentation (for example, `AGENTS.md` or `docs/PROJECT_BOARDS.md`).
+> Follow local requirements for field templates, status values, evidence, and
+> board creation. This skill provides general operating guidance; repository
+> policy controls local conventions.
+
+## Data handling and privacy
+
+The bundled scripts make requests to GitHub using the active `gh` identity.
+When the optional ACP read path is configured, board-read requests and the
+configured bearer token go to that gateway. When optional worker orchestration
+is used, the ticket prompt and selected role instructions are passed to the
+locally installed Claude CLI. Local snapshots and coordinator logs can contain
+board data. Use only services approved for the repository, minimize copied
+issue content, and do not include credentials, private source files, or
+unrelated personal data in tickets, prompts, logs, or board fields. Review the
+destination and permissions before enabling automated workers or writes.
 
 ## Mental model
 
@@ -55,14 +66,22 @@ scripts exist to erase it.
 
 ## Preflight (do this first)
 
-The token must carry the **`project`** scope, or every command fails:
+Check the active GitHub host and account before working with a board:
 ```bash
-gh auth status      # confirm 'project' appears in the token scopes
-gh auth refresh -s project   # add it if missing
+gh auth status
 ```
-A `GITHUB_TOKEN` env var overrides the keyring token — verify *its* scopes if
-results surprise you. Private org projects also require the account to have access,
-not just the scope (a 404 on a visible project usually means missing access).
+Confirm that this identity can access the selected board and has the permissions
+needed for the requested operation. Some `gh` authentication methods require the
+`project` scope; an environment token may override the stored login. If access or
+scope is missing, explain what is needed and let the operator choose whether to
+change credentials. Private organization boards also require membership or an
+installation with access; a 404 can indicate missing access.
+
+Keep board changes limited to the user's requested work and the project's
+authorization rules. Never put credentials, prompts, source files, or unrelated
+private data into an issue, draft, field, or comment. Before using bulk, automated,
+branch-protection, or merge operations, confirm the project's work item and
+permissions authorize that exact effect.
 
 ## Reading through an ACP gateway (optional)
 
@@ -110,8 +129,9 @@ scripts/project.sh clear             # forget it
 ```
 After `use`, the four scripts below run with **no** `--owner/--project`. Precedence:
 an explicit flag **>** env `GH_PROJECT_OWNER`/`GH_PROJECT_NUMBER` (one-off override)
-**>** the saved active project (`~/.config/github-projects/current`). The example-org org
-board is `example-org` #2.
+**>** the saved active project (`~/.config/github-projects/current`). Owner and
+project values in examples are placeholders; select the board you intend to
+manage before running a write command.
 
 ## The fast path: bundled scripts
 
@@ -207,8 +227,9 @@ Full list with explanations: `references/gotchas.md`.
 
 ## Script index
 
-Every script in `scripts/` — each has a usage header at the top of the file, accepts
-`--owner/--project` (or falls back to the active project), and needs `gh` + `jq`.
+Each script has a usage header. Board scripts generally need `gh` and `jq`; other
+prerequisites vary by script. Check its usage header before running it. Scripts
+accept `--owner/--project` where applicable or fall back to the active project.
 
 **Items & fields**
 
@@ -236,7 +257,7 @@ Every script in `scripts/` — each has a usage header at the top of the file, a
 | `claim.sh` | Claim an item (Agent=branch + In progress) with pre-check + post-verify |
 | `release.sh` | Release a claim (clear Agent), optionally move Status |
 | `claims.sh` | Who's working what, grouped by agent (+ orphaned / stale-claim anomalies) |
-| `spawn.sh` | Spawn a cheap headless `claude -p` worker for one ticket (`--role`, `--resume` for rework) |
+| `spawn.sh` | Spawn a headless Claude CLI worker for one ticket (`--role`, `--resume` for rework; requires the Claude CLI) |
 | `coordinator.sh` | Autonomous loop: pick → claim → worktree → resolve → verify → PR → CI-gated auto-merge → blame/retry |
 | `protect.sh` | Enable a required CI check on a repo branch (opt a repo into safe auto-merge) |
 
@@ -258,7 +279,7 @@ targets that board from anywhere inside it — no flags, no active-project state
 
 ```bash
 # .agents/board.env — committed; the gateway secret lives in .env.local
-GH_PROJECT_OWNER=zachshallbetter
+GH_PROJECT_OWNER=example-org
 GH_PROJECT_NUMBER=37
 GP_FIELD_STATUS=Lifecycle          # this board's workflow field
 GP_STATUS_ACTIVE=In Progress       # ...and its state names
@@ -278,7 +299,7 @@ default once with `project.sh use <owner> <number>`.
 
 The **coordinator / claim layer** additionally assumes a field schema — an `Agent` field,
 `Status` values `Ready` / `In progress` / `In review`, and the `Band` / `Repos` / `Gate`
-customs. Those are **configurable via env vars** (defaults match the example-org board), so a
+customs. Those are **configurable via env vars** (defaults are illustrative), so a
 board with a different schema just exports the differences:
 ```bash
 export GP_FIELD_AGENT=Owner   GP_FIELD_STATUS=Status   GP_FIELD_REPOS=Repos
@@ -315,6 +336,14 @@ Stay in this file for the common 80%. Read a reference file when you need depth:
 - **`references/gotchas.md`** — the complete failure-mode catalog. Read it when an
   error or empty result doesn't make sense.
 
-When verifying a destructive change (delete, bulk move) on a **shared** org board,
-prefer a reversible probe — create a draft, act on it, delete it — rather than
-mutating real items, and clean up anything you create.
+For destructive changes (delete, bulk move), verify the exact target and obtain
+explicit authorization for that effect. On a shared board, use a reversible probe
+only when its creation and cleanup are authorized and the probe cannot affect
+other users' work.
+
+## About the author
+
+Created by **Zach Shallbetter**, a Product & Systems Engineer who builds
+software systems, applied AI tools, and digital products. More about his work:
+[zachshallbetter.com](https://zachshallbetter.com/) ·
+[GitHub](https://github.com/zachshallbetter).
