@@ -36,11 +36,17 @@ class Stub(BaseHTTPRequestHandler):
     seen: list = []
     drop_post_ports: set[int] = set()
     delays: dict = {}
+    generation = 0
 
     def _answer(self, body=None):
         path = self.path.split("?")[0]
         port = self.server.server_address[1]
+        generation = Stub.generation
         time.sleep(Stub.delays.get(path, 0))
+        if generation != Stub.generation:
+            # A delayed answer that outlived its test: the client is gone, so record nothing.
+            self.close_connection = True
+            return
         Stub.seen.append({"method": self.command, "path": path, "url": self.path, "body": body,
                           "port": port,
                           "authorization": self.headers.get("Authorization"),
@@ -139,6 +145,7 @@ class AcpClientTests(unittest.TestCase):
         Stub.seen = []
         Stub.drop_post_ports = set()
         Stub.delays = {}
+        Stub.generation += 1
 
     def write_endpoint_sets(self, endpoint_sets):
         self.registry.write_text(json.dumps({"formatVersion": 1, "endpointSets": endpoint_sets}, indent=2) + "\n",
@@ -465,6 +472,7 @@ class AcpClientTests(unittest.TestCase):
         finally:
             env_file.write_text(original, encoding="utf-8")
 
+    @unittest.skipUnless(sys.platform == "darwin", "macOS Keychain lookup is Darwin-only")
     def test_fallback_bearer_uses_its_own_keychain_account(self):
         self.configure_loopback_fallback()
         env_file = self.project / ".env.local"

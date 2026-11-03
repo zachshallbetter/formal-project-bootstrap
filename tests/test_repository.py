@@ -17,8 +17,9 @@ VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 
 class RepositoryTests(unittest.TestCase):
-    def run_ok(self, *args: str, cwd: Path = ROOT) -> subprocess.CompletedProcess:
-        return subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=True)
+    def run_ok(self, *args: str, cwd: Path = ROOT, env: dict | None = None) -> subprocess.CompletedProcess:
+        return subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=True,
+                              env={**os.environ, **env} if env else None)
 
     def test_version_is_single_source_for_profile(self):
         profile = json.loads((ROOT / "PROJECT_PROFILE_TEMPLATE.json").read_text(encoding="utf-8"))
@@ -192,8 +193,22 @@ class RepositoryTests(unittest.TestCase):
                 sys.executable, "scripts/init-project.py", "--name", "Inventory Fixture",
                 "--id", "inventory-fixture", "--mode", "new", "--output", str(project),
             )
+            # Never read this machine's real endpoint registry: give the run its own.
+            registry = Path(tmp) / "acp-endpoints.json"
+            endpoint_set = json.loads((project / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))[
+                "authorizationProvider"]["gatewayEndpointSet"]
+            registry.write_text(json.dumps({"formatVersion": 1, "endpointSets": {endpoint_set: [
+                {"name": "vercel", "url": "https://acp.example.invalid", "keychainAccount": "ACP_GATEWAY_TOKEN"}]}}),
+                encoding="utf-8")
+            registry.chmod(0o600)
+            missing = json.loads(self.run_ok(
+                sys.executable, "scripts/reconcile-project.py", "--project", str(project),
+                env={"ACP_ENDPOINT_REGISTRY": str(Path(tmp) / "absent-registry.json")}).stdout)
+            self.assertTrue(any("configure the selected machine-local ACP endpoint set" in step
+                                for step in missing["acpIntegration"]["setup"]["nextSteps"]))
             before = subprocess.run(["git", "status", "--short"], cwd=project, text=True, capture_output=True).stdout
-            result = self.run_ok(sys.executable, "scripts/reconcile-project.py", "--project", str(project))
+            result = self.run_ok(sys.executable, "scripts/reconcile-project.py", "--project", str(project),
+                                 env={"ACP_ENDPOINT_REGISTRY": str(registry)})
             after = subprocess.run(["git", "status", "--short"], cwd=project, text=True, capture_output=True).stdout
             inventory = json.loads(result.stdout)
             self.assertTrue(inventory["bootstrap"]["initialized"])
