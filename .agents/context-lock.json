@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 155,
-    "includedBytes": 941795,
+    "includedBytes": 942208,
     "excludedCounts": {
       "extension": 22
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "f2569ea38932c564f115de9eb7ceef7e8ad8396e",
+        "commit": "34df993d97cfde4e573d5f64eb462a3d465b31bb",
         "branch": "feat/contained-layout",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "d21c98cd72079d6827f4bdda0f296863875e8a66d15435048f4f24844877efd1",
+  "aggregateSourceDigest": "bec5621dad6bf366034406e2fb16a6c67d7eb1822f7426e407b4ccd8f9b87789",
   "sources": [
     {
       "path": ".agents/acp/README.md",
@@ -783,8 +783,8 @@
     },
     {
       "path": "tests/test_contained_layout.py",
-      "bytes": 17730,
-      "sha256": "f0267419b3cc1a23710e01c7e80f581a1b180cf7be09ae28c69601ff7ebc33d1"
+      "bytes": 18143,
+      "sha256": "5f750112b0d4d97049674c982e93d7e05ebe627c67eb34dec5ec45514dea0674"
     },
     {
       "path": "tests/test_protocol_adapters.py",

@@ -20,7 +20,11 @@ GIT = ["-c", "user.name=t", "-c", "user.email=t@example.invalid", "-c", "commit.
 
 def run(*argv, cwd=None, check=True, env=None, input=None):
     environment = {k: v for k, v in os.environ.items() if not k.startswith("ACP_")}
-    environment.update({"ACP_KEYCHAIN_LOOKUP": "0", "ACP_ENDPOINT_REGISTRY": "/nonexistent/acp-endpoints.json"})
+    environment.update({"ACP_KEYCHAIN_LOOKUP": "0", "ACP_ENDPOINT_REGISTRY": "/nonexistent/acp-endpoints.json",
+                        # CI runners have no git identity; commits the tools make need one.
+                        "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid",
+                        "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid",
+                        "GIT_CONFIG_COUNT": "1", "GIT_CONFIG_KEY_0": "commit.gpgSign", "GIT_CONFIG_VALUE_0": "false"})
     environment.update(env or {})
     return subprocess.run([str(a) for a in argv], cwd=cwd, text=True, capture_output=True, check=check,
                           env=environment, input=input)
@@ -203,7 +207,7 @@ class AcpCommandTests(unittest.TestCase):
     def test_push_dry_run_lists_each_approval_and_refuses_a_non_fast_forward(self):
         with tempfile.TemporaryDirectory() as tmp:
             remote = Path(tmp) / "remote.git"
-            run("git", "init", "-q", "--bare", remote)
+            run("git", "init", "-q", "--bare", "-b", "main", remote)
             project = new_project(tmp)
             git(project, "remote", "add", "origin", str(remote))
             git(project, "push", "-q", "origin", "main")
@@ -223,7 +227,7 @@ class AcpCommandTests(unittest.TestCase):
             run("git", "clone", "-q", str(remote), other)
             (other / "theirs.txt").write_text("theirs\n")
             commit_all(other, "theirs")
-            git(other, "push", "-q", "origin", "main")
+            git(other, "push", "-q", "origin", "HEAD:main")
             refused = acp(project, "push", "--dry-run")
             self.assertEqual(refused.returncode, 2)
             self.assertIn("only fast-forwards", refused.stderr)
