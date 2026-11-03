@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 770008,
+    "includedBytes": 777952,
     "excludedCounts": {
       "excluded-directory": 1178,
       "excluded-path": 4,
@@ -20,14 +20,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "c1a24a61d1c4fcd3d888a93bb95d39d83d6ecadf",
-        "branch": "feat/issue-16-outage-safe-bootstrap",
+        "commit": "20b58c785008e553e0c55caa7e8615676e3d556d",
+        "branch": "fix/effortless-upgrade",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "d59f236b3314ac960d715f426deefaae4b3b831f51d2032c9c6eab708b6cde2d",
+  "aggregateSourceDigest": "0345b72e27414bf10c75960b971434c7feb935689827100bbb0082511550f647",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -286,8 +286,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 10284,
-      "sha256": "b052343de6eb59329af63ff6b4a3ff074de5fda248f89a836e5a853750d40b4f"
+      "bytes": 10605,
+      "sha256": "a823ef7a2db7dde6e718d67e8499bc8095081c43dbdcf35334fb5f3c37a4d275"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -486,8 +486,8 @@
     },
     {
       "path": "docs/UPGRADING.md",
-      "bytes": 1998,
-      "sha256": "123cf17c5ac29a5530da30388d1342a200b1c09b7543523862c5eeef03627a06"
+      "bytes": 3050,
+      "sha256": "5d68f584e31904d26097f04721b509bbfc02a04be6816eff182c8456f9f0a9c7"
     },
     {
       "path": "docs/WORK_GRAPH.md",
@@ -716,8 +716,8 @@
     },
     {
       "path": "scripts/upgrade-project.py",
-      "bytes": 14354,
-      "sha256": "c98487bff3213e4f54747390676de6b526da3b3bacadfa107acdce7084fcf621"
+      "bytes": 17720,
+      "sha256": "f66be3d6b70898faf80d39cbff632e2044c26408cd4480309c6163c6bfd779b9"
     },
     {
       "path": "scripts/validate-bootstrap.py",
@@ -766,8 +766,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 27024,
-      "sha256": "7011f96198d9b9ef4034468f61e36ae6c0225aec39b9fbf97cec4c2550097028"
+      "bytes": 30229,
+      "sha256": "3947a1cedbfccf7433ebcc81fa3a8a29ceb2ff503a5c3f1e11322aa0f01ef82a"
     },
     {
       "path": "vendor/README.md",

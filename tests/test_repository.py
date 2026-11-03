@@ -140,6 +140,51 @@ class RepositoryTests(unittest.TestCase):
             self.assertEqual((project / "VERSION").read_text(encoding="utf-8").strip(), VERSION)
             self.assertNotIn("Upgrade fixture marker", (project / "docs/ALIGNMENT.md").read_text(encoding="utf-8"))
 
+    def test_upgrade_keeps_project_edits_replaces_machinery_and_finds_its_base_tag(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            release = Path(tmp) / "release"
+            self.run_ok(sys.executable, "scripts/init-project.py", "--name", "Owned Fixture",
+                        "--id", "owned-fixture", "--mode", "new", "--output", str(project))
+            shutil.copytree(ROOT, release, ignore=shutil.ignore_patterns(
+                ".venv", ".git", ".wt", "dist", "build", "__pycache__"))
+            git = ["git", "-C", str(release), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+                   "-c", "commit.gpgSign=false", "-c", "tag.gpgSign=false"]
+            self.run_ok("git", "init", "-q", str(release))
+            self.run_ok(*git, "add", "-A")
+            self.run_ok(*git, "commit", "-q", "-m", "base")
+            self.run_ok(*git, "tag", f"v{VERSION}")
+            (release / "VERSION").write_text("9.9.9\n", encoding="utf-8")
+            for rel in ("AGENTS.md", "scripts/acp.py"):
+                path = release / rel
+                path.write_text(path.read_text(encoding="utf-8") + "\n# release change\n", encoding="utf-8")
+            agents = project / "AGENTS.md"
+            agents.write_text(agents.read_text(encoding="utf-8") + "\n## Project rule\n", encoding="utf-8")
+            client = project / "scripts/acp.py"
+            client.write_text(client.read_text(encoding="utf-8") + "\n# stray local edit\n", encoding="utf-8")
+
+            upgrade = ROOT / "scripts/upgrade-project.py"
+            cp = subprocess.run([sys.executable, str(upgrade), "--project", str(project), "--from", str(release),
+                                 "--apply"], text=True, capture_output=True)
+            self.assertEqual(cp.returncode, 0, cp.stdout + cp.stderr)
+            planned = json.JSONDecoder().raw_decode(cp.stdout)[0]
+            self.assertIn(f"at tag v{VERSION}", planned["base"])
+            self.assertEqual(planned["classification"]["conflicts"], ["AGENTS.md"])
+            self.assertEqual(planned["classification"]["replacedLocalEdits"], ["scripts/acp.py"])
+            self.assertIn("docs/ALIGNMENT.md", planned["classification"]["unchanged"])
+
+            self.assertIn("## Project rule", agents.read_text(encoding="utf-8"))
+            self.assertNotIn("# release change", agents.read_text(encoding="utf-8"))
+            staged = project / ".formal-bootstrap/upgrades/9.9.9/candidates/AGENTS.md"
+            self.assertIn("# release change", staged.read_text(encoding="utf-8"))
+            self.assertIn("# release change", client.read_text(encoding="utf-8"))
+            self.assertNotIn("# stray local edit", client.read_text(encoding="utf-8"))
+            backup = project / ".formal-bootstrap/upgrades/9.9.9/backup/scripts/acp.py"
+            self.assertIn("# stray local edit", backup.read_text(encoding="utf-8"))
+            self.assertIn("project-owned files kept as they are", cp.stderr)
+            self.assertIn("scripts/acp.py", cp.stderr)
+            self.assertEqual((project / ".formal-bootstrap/upgrades/.gitignore").read_text(encoding="utf-8").splitlines()[-1], "*")
+
     def test_upgrade_replaces_legacy_gateway_env_binding_with_endpoint_set(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp) / "project"

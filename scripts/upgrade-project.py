@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import fcntl
 import importlib.util
 import json
@@ -17,6 +18,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 UPGRADE_DIR = ".formal-bootstrap/upgrades"
+# Seeded once, then specialised by the project. An upgrade never overwrites a
+# local edit to one; it stages the release copy as a candidate for review.
+# Every other release file is bootstrap machinery: it is replaced, and a local
+# edit to it is kept in the backup and named in the plan.
+PROJECT_OWNED = frozenset({
+    "AGENTS.md", "PROJECT_INTENT.md", "CONTEXT_SOURCES.json",
+    "FORMAL_RESOURCE_MANIFEST.json", "bindings/PROJECT_BINDINGS.yaml",
+})
+PROJECT_OWNED_PREFIXES = (".agents/rules/", "contracts/")
 
 
 class UpgradeError(RuntimeError):
@@ -126,12 +136,17 @@ def source_map(
     return result
 
 
-def classify(project: Path, target: dict[str, bytes], base: Path | None) -> dict:
+def project_owned(rel: str) -> bool:
+    return rel in PROJECT_OWNED or rel.startswith(PROJECT_OWNED_PREFIXES)
+
+
+def classify(project: Path, target: dict[str, bytes], base: dict[str, bytes] | None) -> dict:
     safe: list[str] = []
     conflicts: list[str] = []
     unchanged: list[str] = []
     additions: list[str] = []
     preserved: list[str] = []
+    replaced: list[str] = []
     always_safe = {"PROJECT_PROFILE.json"}
 
     for rel, desired in sorted(target.items()):
@@ -146,32 +161,61 @@ def classify(project: Path, target: dict[str, bytes], base: Path | None) -> dict
         if rel in always_safe:
             safe.append(rel)
             continue
-        if base is not None and read(base / rel) == current:
+        original = base.get(rel) if base is not None else None
+        if original is not None and original == current:
             safe.append(rel)
             continue
-        if base is not None and read(base / rel) == desired:
+        if original is not None and original == desired:
             preserved.append(rel)
             continue
-        conflicts.append(rel)
+        if project_owned(rel):
+            conflicts.append(rel)
+            continue
+        safe.append(rel)
+        replaced.append(rel)
 
     removed: list[str] = []
     if base is not None:
-        for path in sorted(base.rglob("*")):
-            if not path.is_file():
-                continue
-            rel = path.relative_to(base).as_posix()
-            if rel in target or read(project / rel) != path.read_bytes():
-                continue
-            removed.append(rel)
+        for rel, content in sorted(base.items()):
+            if rel not in target and read(project / rel) == content:
+                removed.append(rel)
 
     return {
         "safe": safe,
         "additions": additions,
         "unchanged": unchanged,
         "preserved": preserved,
+        "replacedLocalEdits": replaced,
         "conflicts": conflicts,
         "removedCandidates": removed,
     }
+
+
+def base_map(base: Path, project: Path, project_id: str, project_name: str) -> dict[str, bytes]:
+    """The files `base` would have installed in this project, rendered like the target."""
+    try:
+        return source_map(base, project, project_id, project_name)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError, AttributeError, UpgradeError) as exc:
+        raise UpgradeError(f"cannot render base release {base}: {exc}") from exc
+
+
+@contextlib.contextmanager
+def resolved_base(release: Path, base: Path | None, installed: str):
+    """The explicit --base, else the release checkout's tag for the installed version."""
+    if base is not None:
+        yield base, str(base)
+        return
+    tag = f"v{installed}"
+    probe = subprocess.run(["git", "-C", str(release), "rev-parse", "--verify", "--quiet",
+                            f"refs/tags/{tag}^{{commit}}"], capture_output=True, text=True)
+    if probe.returncode != 0:
+        yield None, None
+        return
+    with tempfile.TemporaryDirectory(prefix="bootstrap-base-") as tmp:
+        archive = subprocess.run(["git", "-C", str(release), "archive", "--format=tar", tag],
+                                 capture_output=True, check=True)
+        subprocess.run(["tar", "-x", "-C", tmp], input=archive.stdout, check=True)
+        yield Path(tmp), f"{release} at tag {tag}"
 
 
 def plan(project: Path, release: Path, base: Path | None) -> dict:
@@ -181,7 +225,9 @@ def plan(project: Path, release: Path, base: Path | None) -> dict:
     if installed == target_version:
         raise UpgradeError(f"project already reports bootstrap version {target_version}")
     target = source_map(release, project, project_id, project_name)
-    result = classify(project, target, base)
+    with resolved_base(release, base, installed) as (base_dir, base_label):
+        original = base_map(base_dir, project, project_id, project_name) if base_dir else None
+    result = classify(project, target, original)
     return {
         "format": "1",
         "bootstrap": "formal-project-bootstrap",
@@ -189,7 +235,7 @@ def plan(project: Path, release: Path, base: Path | None) -> dict:
         "toVersion": target_version,
         "project": str(project),
         "release": str(release),
-        "base": str(base) if base else None,
+        "base": base_label,
         "generatedAt": datetime.now(timezone.utc).isoformat(),
         "classification": result,
         "targetFiles": sorted(target),
@@ -204,14 +250,10 @@ def write_candidate(project: Path, release_version: str, rel: str, content: byte
 
 
 def apply_plan(project: Path, release: Path, plan_data: dict) -> None:
-    if plan_data["classification"]["conflicts"] or plan_data["classification"]["removedCandidates"]:
-        project_id, project_name, _ = project_identity(project)
-        target = source_map(release, project, project_id, project_name)
-        for rel in plan_data["classification"]["conflicts"]:
-            write_candidate(project, plan_data["toVersion"], rel, target[rel])
-        raise UpgradeError("critical or ambiguous changes remain; resolve the plan before applying")
     project_id, project_name, _ = project_identity(project)
     target = source_map(release, project, project_id, project_name)
+    for rel in plan_data["classification"]["conflicts"]:
+        write_candidate(project, plan_data["toVersion"], rel, target[rel])
     release_version = plan_data["toVersion"]
     upgrade_root = project / UPGRADE_DIR / release_version
     backup = upgrade_root / "backup"
@@ -290,12 +332,34 @@ def main() -> int:
     lock_path = project / UPGRADE_DIR / ".lock"
     try:
         lock_path.parent.mkdir(parents=True, exist_ok=True)
+        ignore = lock_path.parent / ".gitignore"
+        if not ignore.exists():
+            ignore.write_text("# Local upgrade plans, backups and candidates.\n*\n", encoding="utf-8")
         with lock_path.open("w", encoding="utf-8") as lock:
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
             return run_locked(args, project, release, base)
     except (OSError, subprocess.CalledProcessError, UpgradeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+
+
+def summarize(plan_data: dict, applied: bool) -> None:
+    """One line per kind of outcome, on stderr so stdout stays the plan document."""
+    classes = plan_data["classification"]
+    where = f"{UPGRADE_DIR}/{plan_data['toVersion']}"
+    verb = "updated" if applied else "would update"
+    lines = [f"{plan_data['fromVersion']} -> {plan_data['toVersion']}: {verb} {len(classes['safe'])} file(s); "
+             f"base {plan_data['base'] or 'unavailable (pass --base for three-way comparison)'}"]
+    if classes["replacedLocalEdits"]:
+        lines.append(f"bootstrap machinery with local edits {'replaced' if applied else 'to replace'}; "
+                     f"the previous copies are in {where}/backup: " + ", ".join(classes["replacedLocalEdits"]))
+    if classes["conflicts"]:
+        lines.append(f"project-owned files kept as they are; the release copies to review are in "
+                     f"{where}/candidates: " + ", ".join(classes["conflicts"]))
+    if classes["removedCandidates"]:
+        lines.append("no longer shipped, left in place: " + ", ".join(classes["removedCandidates"]))
+    for line in lines:
+        print(line, file=sys.stderr)
 
 
 def run_locked(args, project: Path, release: Path, base: Path | None) -> int:
@@ -316,11 +380,13 @@ def run_locked(args, project: Path, release: Path, base: Path | None) -> int:
         if args.apply:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(json.dumps(plan_data, indent=2) + "\n", encoding="utf-8")
-        print(json.dumps(plan_data, indent=2))
+        print(json.dumps(plan_data, indent=2), flush=True)
         if args.apply:
             apply_plan(project, release, plan_data)
             print(f"applied bootstrap upgrade to {plan_data['toVersion']}")
+            summarize(plan_data, applied=True)
             return 0
+        summarize(plan_data, applied=False)
         if not args.check:
             print("plan only; pass --apply to mutate the project", file=sys.stderr)
         return 3 if plan_data["classification"]["conflicts"] else 0

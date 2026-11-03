@@ -8,6 +8,11 @@
   fields with the machine-local endpoint-set selector.
 - Formal-project-bootstrap repositories created or upgraded at this version use
   the same Vercel/Titan failover client for governance checks and board reads.
+- Upgrades no longer stop on the first customised file. Project-owned files are
+  kept with the release copy staged for review; bootstrap machinery is replaced,
+  with any local edit kept in the backup and named in the plan. The base
+  release is found from the release checkout's version tag when `--base` is
+  omitted.
 
 ## 0.6.0 — Comprehensive bootstrap and ACP hardening
 
