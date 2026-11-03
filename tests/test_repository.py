@@ -227,6 +227,23 @@ class RepositoryTests(unittest.TestCase):
                               "## Current status\n\nx\n", encoding="utf-8")
             self.assertEqual(module.readme_findings(readme), [])
 
+    def test_upgrade_keeps_machinery_a_project_has_taken_over(self):
+        spec = importlib.util.spec_from_file_location("upgrade_project", ROOT / "scripts/upgrade-project.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp)
+            (project / "scripts").mkdir()
+            (project / "scripts/gen-context.py").write_text("# project generator\n", encoding="utf-8")
+            (project / "scripts/acp.py").write_text("# stray edit\n", encoding="utf-8")
+            (project / "PROJECT_PROFILE.json").write_text(
+                json.dumps({"bootstrapOverrides": ["scripts/gen-context.py"]}), encoding="utf-8")
+            target = {"scripts/gen-context.py": b"# release generator\n", "scripts/acp.py": b"# release client\n"}
+            base = {"scripts/gen-context.py": b"# old generator\n", "scripts/acp.py": b"# old client\n"}
+            result = module.classify(project, target, base)
+            self.assertEqual(result["conflicts"], ["scripts/gen-context.py"])
+            self.assertEqual(result["replacedLocalEdits"], ["scripts/acp.py"])
+
     def test_upgrade_replaces_legacy_gateway_env_binding_with_endpoint_set(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp) / "project"

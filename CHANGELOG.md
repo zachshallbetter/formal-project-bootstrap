@@ -24,6 +24,9 @@
   restores copies left by an earlier failed attempt.
 - The protocol integrity check accepts a declared domain profile such as
   `commercialization`, which ships `PROFILE.yaml` rather than `adapter.json`.
+- A project can take over a machinery file by listing it in
+  `PROJECT_PROFILE.json` `bootstrapOverrides`; upgrades then keep it and stage
+  the release copy for review.
 
 ## 0.6.0 — Comprehensive bootstrap and ACP hardening
 
