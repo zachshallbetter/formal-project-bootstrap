@@ -176,10 +176,11 @@ def settings() -> dict:
     if (PROJECT_ROOT / "PROJECT_PROFILE.json").exists():
         profile = json.loads((PROJECT_ROOT / "PROJECT_PROFILE.json").read_text(encoding="utf-8"))
     acp = profile.get("authorizationProvider", {}) or {}
-    env: dict[str, str] = {}
-    env.update(load_env_file(PROJECT_ROOT / acp.get("boardEnvFile", ".agents/board.env")))
-    env.update(load_env_file(PROJECT_ROOT / ".env.local"))
-    env.update({k: v for k, v in os.environ.items() if k.startswith(("ACP_", "GH_PROJECT_"))})
+    board_env_file = acp.get("boardEnvFile", ".agents/board.env")
+    board_env = load_env_file(PROJECT_ROOT / board_env_file)
+    local_env = load_env_file(PROJECT_ROOT / ".env.local")
+    process_env = {k: v for k, v in os.environ.items() if k.startswith(("ACP_", "GH_PROJECT_"))}
+    env: dict[str, str] = {**board_env, **local_env, **process_env}
     board = acp.get("board") or {}
     remote = env.get("ACP_REMOTE_URL") or git("remote", "get-url", "origin")
     remote_owner, remote_name = owner_and_name(remote)
@@ -205,8 +206,16 @@ def settings() -> dict:
         if not token:
             missing_accounts.append(account)
             continue
+        if process_env.get(account):
+            token_source = f"environment variable {account}"
+        elif local_env.get(account):
+            token_source = f".env.local {account}"
+        elif board_env.get(account):
+            token_source = f"{board_env_file} {account}"
+        else:
+            token_source = f"Keychain service '{KEYCHAIN_SERVICE}', account {account}"
         endpoints.append({"name": spec["name"], "url": spec["url"], "token": token,
-                          "token_env": account, "local_only": spec["local_only"],
+                          "token_env": account, "token_source": token_source, "local_only": spec["local_only"],
                           "state_authority_id": spec.get("state_authority_id"),
                           "admin_token": admin_token if index == 0 else ""})
     if endpoint_specs and not endpoints and not endpoint_problems:
@@ -398,6 +407,12 @@ def call(cfg: dict, method: str, path: str, body: dict | None = None, auth: bool
             endpoint = select_endpoint(cfg, timeout=remaining, exclude=excluded)
             continue
         status, reply = result
+        if auth and status == 401 and isinstance(reply, dict):
+            source = endpoint.get("token_source", "the configured bearer")
+            reply = {**reply, "client_credential_source": source,
+                     "client_remedy": (f"ACP answered and rejected the bearer read from {source}. Update that "
+                                       "credential to the current gateway token; this is not a gateway outage.")}
+            result = (status, reply)
         transient = (status in (502, 503, 504) and isinstance(reply, dict)
                      and reply.get("decision") not in DECISIONS
                      and reply.get("error") in TRANSIENT_READ_ERRORS)
@@ -476,6 +491,11 @@ def dispose(action: str, asked: dict, status: int, body: object, fail_closed: bo
     """Turn whatever came back into one decision, failing closed."""
     if not isinstance(body, dict):
         return synthetic(action, "GATEWAY_UNAVAILABLE", f"HTTP {status}: response was not JSON")
+    if status == 401 and body.get("client_credential_source"):
+        return synthetic(action, "GATEWAY_UNAVAILABLE",
+                         f"HTTP 401: {body.get('error')}: {body.get('detail')} {body['client_remedy']}",
+                         gateway_error=body.get("error"), remedy=body["client_remedy"],
+                         credential_rejected=True, credential_source=body["client_credential_source"])
     if status != 200:
         return synthetic(action, "GATEWAY_UNAVAILABLE",
                          f"HTTP {status}: {body.get('error')}: {body.get('detail')}",

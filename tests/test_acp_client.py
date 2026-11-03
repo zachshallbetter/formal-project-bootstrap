@@ -394,6 +394,38 @@ class AcpClientTests(unittest.TestCase):
                 rc, out = self.authorize()
                 self.assertEqual((rc, out["decision"]), (code, name))
 
+    def test_rejected_bearer_names_its_source_and_is_not_called_an_outage(self):
+        env_file = self.project / ".env.local"
+        for label, env, file_token, source in (
+                ("environment", {"ACP_GATEWAY_TOKEN": "rejected-test-bearer"}, TOKEN, "environment variable ACP_GATEWAY_TOKEN"),
+                (".env.local", {}, "rejected-test-bearer", ".env.local ACP_GATEWAY_TOKEN")):
+            with self.subTest(label):
+                env_file.write_text(f"ACP_GATEWAY_TOKEN={file_token}\n", encoding="utf-8")
+                try:
+                    Stub.routes["/internal/authorize"] = (200, decision())
+                    cp = self.acp("authorize", "--action", "git.remote.update", env=env)
+                    out = json.loads(cp.stdout)
+                    jsonschema.validate(out, self.schema)
+                    self.assertEqual((cp.returncode, out["reason"]), (11, "GATEWAY_UNAVAILABLE"))
+                    self.assertTrue(out["credential_rejected"])
+                    self.assertEqual(out["credential_source"], source)
+                    self.assertIn("not a gateway outage", out["detail"])
+                    self.assertNotIn("rejected-test-bearer", json.dumps(out))
+                finally:
+                    env_file.write_text(f"ACP_GATEWAY_TOKEN={TOKEN}\n", encoding="utf-8")
+
+    def test_missing_gateway_url_names_the_setting_to_add(self):
+        profile = json.loads(self.profile_bytes)
+        profile["authorizationProvider"].pop("gatewayEndpointSet", None)
+        (self.project / "PROJECT_PROFILE.json").write_text(json.dumps(profile), encoding="utf-8")
+        cp = self.acp("authorize", "--action", "git.remote.update")
+        out = json.loads(cp.stdout)
+        self.assertEqual((cp.returncode, out["reason"]), (2, "GATEWAY_UNAVAILABLE"))
+        self.assertIn("no ACP gateway URL is configured", out["detail"])
+        self.assertIn("ACP_GATEWAY_URL", out["detail"])
+        self.assertNotIn("identity or keychain binding", out["detail"])
+        self.assertFalse(any(s["path"] == "/internal/authorize" for s in Stub.seen), "nothing was sent")
+
     def test_missing_token_is_a_local_setup_blocker(self):
         env_file = self.project / ".env.local"
         env_file.write_text("", encoding="utf-8")

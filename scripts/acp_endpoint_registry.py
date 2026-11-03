@@ -104,6 +104,13 @@ def _validate_set(name: str, entries: object, *, source: str) -> list[dict]:
     return endpoints
 
 
+def _require_url(env: dict[str, str], url_env: str) -> None:
+    if not env.get(url_env, "").strip():
+        raise EndpointRegistryError(
+            "no ACP gateway URL is configured: set authorizationProvider.gatewayEndpointSet in "
+            f"PROJECT_PROFILE.json to use the machine endpoint registry, or set {url_env}")
+
+
 def _legacy_endpoint(name: object, url: object, account: object, local_only: object = False) -> dict:
     if isinstance(url, str):
         try:
@@ -225,6 +232,7 @@ def resolve(acp: dict, env: dict[str, str]) -> tuple[str, list[dict]]:
         local_only = legacy.get("localOnly", False)
         if not isinstance(url_env, str) or not re.fullmatch(r"ACP_[A-Z0-9_]+", url_env):
             raise EndpointRegistryError("legacy ACP URL environment binding is invalid")
+        _require_url(env, url_env)
         candidate = _legacy_endpoint(name, env.get(url_env, ""), token_account, local_only)
         return "legacy", _validate_set("legacy", [candidate], source="legacy ACP endpoint")
 
@@ -232,5 +240,6 @@ def resolve(acp: dict, env: dict[str, str]) -> tuple[str, list[dict]]:
     token_account = acp.get("gatewayTokenEnv", "ACP_GATEWAY_TOKEN")
     if not isinstance(url_env, str) or not re.fullmatch(r"ACP_[A-Z0-9_]+", url_env):
         raise EndpointRegistryError("legacy ACP URL environment binding is invalid")
+    _require_url(env, url_env)
     candidate = _legacy_endpoint("legacy-primary", env.get(url_env, ""), token_account)
     return "legacy", _validate_set("legacy", [candidate], source="legacy ACP endpoint")
