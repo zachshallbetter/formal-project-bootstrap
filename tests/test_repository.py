@@ -189,6 +189,28 @@ class RepositoryTests(unittest.TestCase):
             self.assertIn("scripts/acp.py", cp.stderr)
             self.assertEqual((project / ".formal-bootstrap/upgrades/.gitignore").read_text(encoding="utf-8").splitlines()[-1], "*")
 
+    def test_context_ignores_git_ignored_files_so_a_clean_checkout_matches(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            project = Path(tmp) / "project"
+            self.run_ok(sys.executable, "scripts/init-project.py", "--name", "Ignore Fixture",
+                        "--id", "ignore-fixture", "--mode", "new", "--output", str(project))
+            git = ["git", "-C", str(project), "-c", "user.name=t", "-c", "user.email=t@example.invalid",
+                   "-c", "commit.gpgSign=false"]
+            self.run_ok("git", "init", "-q", str(project))
+            with (project / ".gitignore").open("a", encoding="utf-8") as ignore:
+                ignore.write("\nlocal-notes.md\n")
+            self.run_ok(*git, "add", "-A")
+            self.run_ok(*git, "commit", "-q", "-m", "fixture")
+            (project / "local-notes.md").write_text("# Only on this machine\n", encoding="utf-8")
+            (project / "docs/new-page.md").write_text("# Not yet committed\n", encoding="utf-8")
+            self.run_ok(sys.executable, "scripts/gen-context.py", cwd=project)
+            sources = {item["path"] for item in json.loads(
+                (project / ".agents/context-lock.json").read_text(encoding="utf-8"))["sources"]}
+            self.assertNotIn("local-notes.md", sources)
+            self.assertIn("docs/new-page.md", sources)
+            (project / "local-notes.md").unlink()
+            self.run_ok(sys.executable, "scripts/gen-context.py", "--check", cwd=project)
+
     def test_context_check_accepts_sources_with_crlf_line_endings(self):
         with tempfile.TemporaryDirectory() as tmp:
             project = Path(tmp) / "project"

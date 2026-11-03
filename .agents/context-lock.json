@@ -6,12 +6,9 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 784597,
+    "includedBytes": 786998,
     "excludedCounts": {
-      "excluded-directory": 1178,
-      "excluded-path": 4,
-      "extension": 18,
-      "symlink": 3
+      "extension": 16
     }
   },
   "repositoryState": {
@@ -20,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "dd2dbac46572bd8daf32d76504f82dc86502e630",
-        "branch": "feat/upgrade-overrides",
+        "commit": "c64346110ffe451d8466b549972cfe8125c57c11",
+        "branch": "fix/context-respects-gitignore",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "2c2a80ef0b5c9f9f3faa421e2d16c7d9fffbbdbb2b795bb49f7043e0ab2da686",
+  "aggregateSourceDigest": "4eb91ad034c0db8a0768c865d546dad0c6fff9e549e6d9abb1cd727aaa0d392f",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -286,8 +283,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 11494,
-      "sha256": "28381c85e7af17ae4657ccb0757bc4710d8f6d4f42a17c7ad3df26ad3b0e501f"
+      "bytes": 11735,
+      "sha256": "8500e1522cc0d72290eaf152f9449424ee720ecc0204e94c6f110f08663ee8fc"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -686,8 +683,8 @@
     },
     {
       "path": "scripts/gen-context.py",
-      "bytes": 13729,
-      "sha256": "0c951731c9b7596de1eb2241a31cbb84723ece20ed830db3af76aa929a112627"
+      "bytes": 14390,
+      "sha256": "1cecc3bc593ef0c89cc24692db223c5a29a5e434561e0ebf4c36bf9464799c1b"
     },
     {
       "path": "scripts/iepe-adopt.py",
@@ -766,8 +763,8 @@
     },
     {
       "path": "tests/test_repository.py",
-      "bytes": 34320,
-      "sha256": "95b4b3bf815b5b24fa0c6a8772ac5821e97a77bdf947f864f0eb9102a246f5ae"
+      "bytes": 35819,
+      "sha256": "7555c081619001dfa2384bb9cdf6461bb814703b17f9ef3d399724ae2d031375"
     },
     {
       "path": "vendor/README.md",

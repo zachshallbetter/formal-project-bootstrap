@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `gen-context.py` reads only files Git tracks or would add, so git-ignored
+  local files no longer enter the corpus and a lock generated on one machine
+  matches a clean checkout of the same commit. Outside Git it still reads
+  every file.
 - A project can take over a machinery file by listing it in
   `PROJECT_PROFILE.json` `bootstrapOverrides`; upgrades then keep it and stage
   the release copy for review.
