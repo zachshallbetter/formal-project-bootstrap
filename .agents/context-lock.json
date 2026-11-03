@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 764579,
+    "includedBytes": 768444,
     "excludedCounts": {
       "excluded-directory": 1178,
       "excluded-path": 4,
@@ -20,14 +20,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "f7448b8af8140011597ae49463509ae55cb3ba19",
+        "commit": "833a1b1b2fe24c3e12e63669ddff0686f507e14f",
         "branch": "feat/issue-16-outage-safe-bootstrap",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "56477944482f3e7b384b7f8af2f76a5e35d0bdd42027c18a8a3374e1dea5b32a",
+  "aggregateSourceDigest": "80a34b151b653a3e739ee47adf9eb3748690ea7e5415822fe7037fb1f634959f",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -646,13 +646,13 @@
     },
     {
       "path": "scripts/acp.py",
-      "bytes": 58569,
-      "sha256": "d80d416674e8634b9457640d81b427186702994846b6169718ffff3edc2ccb75"
+      "bytes": 59939,
+      "sha256": "438ae9b3e8cba6a8adca3bd4079a488342a1d939f7971e4ad06f80cdeb4e010d"
     },
     {
       "path": "scripts/acp_endpoint_registry.py",
-      "bytes": 12054,
-      "sha256": "e727c4c9bfe5a262faf59e591dca435585bff5bef04a84362bc3bb574e0c8311"
+      "bytes": 12450,
+      "sha256": "bf1dcd4727ed4b9863c838df67b41d4909a7ceaa46378e4606cdd98f3e1bbb01"
     },
     {
       "path": "scripts/acp_override.py",
@@ -756,8 +756,8 @@
     },
     {
       "path": "tests/test_acp_client.py",
-      "bytes": 66740,
-      "sha256": "ffc214b0c6ddd7c958ce04f27f1737cdf57d0e71b941a3b0f1ddc003a5a0dc20"
+      "bytes": 68839,
+      "sha256": "3648f816a1af11447578bcdacfcecae217a96bb3df6a99c9800da3af134372cd"
     },
     {
       "path": "tests/test_protocol_adapters.py",
