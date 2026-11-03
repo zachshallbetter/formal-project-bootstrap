@@ -17,8 +17,8 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "3640b41bc4a96f4b559a4f77dd89d3fbaaa469f1",
-        "branch": "release/0.6.3",
+        "commit": "bbe6e77bf94f161a090400fc527eb8553663ec45",
+        "branch": "main",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
