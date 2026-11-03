@@ -8,6 +8,29 @@ ACP is the external authority that decides whether a protected effect may be cau
 
 ACP does not replace project intent, the authority model, pinned resources, or the work graph. It is the instrument that **authorizes** a protected effect; every other record attached to that effect (evidence, receipt, telemetry report, claim, peer message, conversation instruction) merely observes, remembers, or pressures. This is the instrument stratification rule applied to one provider.
 
+## Quick start
+
+Everything ACP needs in a project lives in `.agents/acp/`, and one command runs it:
+
+```bash
+.agents/acp/acp init      # write the ACP settings: repository, endpoint set, board, auto-deploy
+.agents/acp/acp login     # store the gateway token in the macOS Keychain (hidden prompt)
+.agents/acp/acp status    # one line per check: OK / WARN / FAIL, each with its fix
+.agents/acp/acp push      # publish a commit: your pre-push hook, then one exact approval per step
+```
+
+- **`status`** checks, in order: Python, layout, profile, auto-deploy, compiled context, endpoints, gateway readiness, credential (and where it came from), client version against the latest release, policy and containment, the ACP GitHub App for the owner, pinned-file integrity, and the board. Every WARN and FAIL prints its exact fix. Use `--json` for machines, `--offline` for local checks only, and `--strict` to exit 1 on warnings.
+- **`init`** is idempotent. It detects the repository from `origin` (and says so when an `upstream` differs), picks the only visible board or lists the choices, and declares `autoDeploy` when `vercel.json`, `.vercel/project.json` or `netlify.toml` is present. It also makes sure `.gitignore` keeps `.agents/` tracked. It never writes a token.
+- **`push`** runs the project's own `pre-push` hook first, so a slow gate cannot outlive the roughly one-minute approval. For a protected ref it publishes the commit on a temporary `acp/<sha>` branch, updates the ref, and gets `production.deploy` too where `autoDeploy` applies. It pushes the exact commit and removes the temporary branch. `--dry-run` lists each step.
+- **`record`** lists this machine's decisions. Each one is kept in `.agents/records/local/acp-decisions.jsonl`, which is git-ignored, so recording never leaves an uncommitted file behind. `acp record ID…` or `--all` copies chosen ones into `.agents/records/evidence.jsonl` for your next commit.
+- **`doctor --fix`** applies safe local fixes, asking before each: `.gitignore` negations, regenerating the context, the context pre-commit hook, and declaring auto-deploy.
+- **`uninstall`** is a dry run unless `--apply` is given. It moves `.agents/acp/` to a backup, sets the profile's provider to `none` and keeps every record. It warns when a policy still governs the repository on the gateway, where the owner removes it with `policy-admin.py unregister`. `logout` removes the Keychain item, asking first.
+
+Repository owners run three commands on the gateway side, in `acp-gateway`, with their own Keychain credentials:
+- `scripts/policy-admin.py register OWNER/NAME` puts a repository under a policy.
+- `grant` approves a pinned-file change that a released client does not already cover.
+- `repin` moves a pinned policy to the contained layout.
+
 ## What ACP provides
 
 ```text

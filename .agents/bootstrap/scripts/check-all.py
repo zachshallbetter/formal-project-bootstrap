@@ -20,6 +20,7 @@ def run(*args: str) -> None:
 
 def main() -> int:
     run(sys.executable, f"{SCRIPTS}/validate-bootstrap.py", "--check-context")
+    run(sys.executable, f"{SCRIPTS}/release-manifest.py", "--check")
     run(sys.executable, f"{SCRIPTS}/validate-formal-files.py")
     run(sys.executable, f"{SCRIPTS}/check-negative-results.py")
     run(sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v")

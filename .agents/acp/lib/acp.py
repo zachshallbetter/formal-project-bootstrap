@@ -49,9 +49,12 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
-import acp_override
-import acp_endpoint_registry
-import acp_paths
+# One module, however this file is started: acp_commands imports it as `acp`.
+sys.modules.setdefault("acp", sys.modules[__name__])
+
+import acp_override  # noqa: E402
+import acp_endpoint_registry  # noqa: E402
+import acp_paths  # noqa: E402
 
 VERSION = acp_paths.client_version()
 PROJECT_ROOT = acp_paths.find_project_root()
@@ -466,6 +469,21 @@ def emit(value: object, cfg: dict, stream=sys.stdout) -> None:
     print(scrub(json.dumps(value, indent=2, sort_keys=True), cfg), file=stream)
 
 
+def log_local_decision(decision: dict, context: dict) -> None:
+    """Every decision, per machine and git-ignored; `acp record` copies chosen ones into the ledger."""
+    try:
+        path = acp_paths.local_records_dir(PROJECT_ROOT) / "acp-decisions.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        entry = {"observedAt": datetime.now(timezone.utc).isoformat(), "context": context,
+                 **{k: decision.get(k) for k in ("decision", "reason", "action", "request_id", "policy_id",
+                                                 "policy_version", "repository_trust", "authorization_state",
+                                                 "synthetic")}}
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(entry, sort_keys=True) + "\n")
+    except OSError:
+        pass                                   # a log that cannot be written never blocks a decision
+
+
 def record_evidence(entry: dict) -> None:
     path = acp_paths.records_dir(PROJECT_ROOT) / "evidence.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -617,6 +635,7 @@ def cmd_authorize(args, cfg) -> int:
                                                          "authorization_state", "incident_id", "synthetic")}})
 
     decision = decide(args.action, context)
+    log_local_decision(decision, context)
     if args.record:
         record(decision, context)
     exit_code = 2 if problem else EXIT.get(decision["decision"], 11)
@@ -627,6 +646,7 @@ def cmd_authorize(args, cfg) -> int:
             # to perform when the deploy is authorized too.
             deploy_context = {k: v for k, v in context.items() if k in ("ref", "old_sha", "new_sha")}
             deploy = decide("production.deploy", deploy_context)
+            log_local_decision(deploy, deploy_context)
             if args.record:
                 record(deploy, deploy_context)
             decision = {**decision, "deploy_decision": deploy}
@@ -1011,6 +1031,8 @@ def main() -> int:
                         help="Git worktree whose identity and ACP configuration this command uses")
     parser.add_argument("--timeout", type=float, default=15.0)
     sub = parser.add_subparsers(dest="command", required=True)
+    import acp_commands
+    acp_commands.register(sub)
 
     p = sub.add_parser("authorize", help="obtain a decision for one governed effect")
     p.add_argument("--action", required=True)

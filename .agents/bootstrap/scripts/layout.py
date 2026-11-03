@@ -57,7 +57,7 @@ BOOTSTRAP_SCRIPT_FILES = ("gen-context.py", "validate-bootstrap.py", "validate-l
                           "validate-interaction-contract.py", "validate-semantic-surface.py", "recipient-status.py",
                           "check-protocol-integrity.py", "esp-instance.py", "esp-record.py", "iepe-adopt.py",
                           "init-project.py", "package-release.py", "check-all.py", "validate-formal-files.py",
-                          "check-negative-results.py")
+                          "check-negative-results.py", "release-manifest.py")
 
 # Directories whose content a release owns and replaces. Everything else under
 # .agents/ belongs to the project or to other tools and is never touched.
@@ -152,7 +152,7 @@ def migration_moves(docs: tuple[str, ...], scripts: tuple[str, ...], schemas: tu
 REPOSITORY_ONLY = frozenset({
     ".agents/bootstrap/scripts/init-project.py", ".agents/bootstrap/scripts/package-release.py",
     ".agents/bootstrap/scripts/check-all.py", ".agents/bootstrap/scripts/validate-formal-files.py",
-    ".agents/bootstrap/scripts/check-negative-results.py",
+    ".agents/bootstrap/scripts/check-negative-results.py", ".agents/bootstrap/scripts/release-manifest.py",
 })
 SHIPPED_SKILLS = ".agents/skills"
 
@@ -272,3 +272,15 @@ def contained_path(legacy_rel: str) -> str | None:
 
 LEGACY_DIRECTORIES = ("scripts", "schemas", "docs", "bindings", "contracts", "records", "profiles",
                       ".formal-bootstrap", ".agents/rules")
+
+
+RELEASE_MANIFEST = ".agents/bootstrap/RELEASE.json"
+
+
+def release_manifest(release: Path) -> dict:
+    """{version, files: {path: sha256}} for every machinery file a release installs."""
+    import hashlib
+    files = {rel: hashlib.sha256(content).hexdigest()
+             for rel, content in release_machinery(release).items() if rel != RELEASE_MANIFEST}
+    version = (release / PATHS["version"][0]).read_text(encoding="utf-8").strip()
+    return {"format": 1, "bootstrap": "formal-project-bootstrap", "version": version, "files": dict(sorted(files.items()))}

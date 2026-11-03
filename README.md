@@ -1,7 +1,7 @@
 # Formal Project Bootstrap
 
 **Status:** Candidate reusable project substrate  
-**Version:** 0.6.3
+**Version:** 0.7.0
 
 Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
 
@@ -125,7 +125,7 @@ With a repository identity supplied, initialization can write a boardless `.agen
 
 The initializer creates the project intent/profile, formal-resource state, bindings, persistent evidence/negative/deviation/alignment records, context policy, schemas, operating docs, agent skills, and the required source-bound context lock; then it runs the project validator. It also creates a standardized entry README while preserving any existing README. `--mode existing` is non-destructive: conflicting bootstrap candidates are staged for explicit reconciliation rather than overwriting existing authority. Existing-project adoption is a distinct C4c path governed by `.agents/bootstrap/docs/EXISTING_PROJECT_ADOPTION.md`: discover existing authority first, reconcile/bind before synthesis, preserve unresolved contradictions, and add only missing operating primitives.
 
-Installed projects can be upgraded with the non-destructive `.agents/bootstrap/scripts/upgrade-project.py` workflow described in `.agents/bootstrap/docs/UPGRADING.md`. It plans three-way changes, stages conflicts, applies only safe updates, regenerates context, validates the result, and retains a rollback backup.
+Installed projects upgrade with `.agents/bootstrap/bootstrap upgrade --commit`. It fetches and verifies the release, applies it non-destructively with a rollback backup, and commits exactly the upgrade. A project created before 0.7 is moved into the contained layout on the way. See `.agents/bootstrap/docs/UPGRADING.md`.
 
 Existing projects can be inspected before adoption with the read-only `.agents/bootstrap/scripts/reconcile-project.py` inventory; it reports repository identity, bootstrap metadata, expected artifacts, and conflicts without modifying the project.
 
@@ -133,7 +133,7 @@ Existing projects can be inspected before adoption with the read-only `.agents/b
 
 Every project binds `acp-gateway` as its protection/authorization provider (`.agents/acp/README.md`). Protected effects — pushes to protected refs, merges, deploys, history rewrites, credential and policy changes — require an `ALLOW` decision from ACP for the exact action; without a valid decision they fail closed. ACP also serves the work-graph read so workers never hold GitHub App credentials. Capability, evidence, deviations and peer agreement do not substitute for the decision.
 
-`.agents/acp/lib/acp.py` is the client (`authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`, `board`, `policy`); `.agents/acp/lib/acp-check.py` verifies the wiring, including that an ACP policy actually governs the repository — binding the provider in the profile is not enough on its own.
+`.agents/acp/acp` is the client. `init`, `login`, `status` and `push` cover everyday use, and `authorize`, `report`, `snapshot`, `verify-capability`, `recovery-complete`, `board` and `policy` are the decision primitives. `acp status` verifies the wiring, including that an ACP policy actually governs the repository; binding the provider in the profile is not enough on its own.
 
 New profiles select a named machine-local endpoint set. Each endpoint uses its own bearer credential; the client selects only a PostgreSQL-ready endpoint. Reads may fail over on typed transient errors, while state-changing requests retry only when `/ready` advertises the shared PostgreSQL idempotency contract for that exact route. Valid denials and control/integrity failures never trigger failover. See `.agents/acp/README.md` for setup.
 
@@ -163,26 +163,24 @@ The bootstrap may define the operating rule being tested. A transfer experiment 
 
 ## Repository structure
 
+The repository keeps its payload at the paths a project receives, so `init` copies it verbatim:
+
 ```text
-AUTHORITY.md                       repository conflict-resolution authority
-AGENTS.md                          root project execution contract
-GOVERNANCE.md                      normative-change and anti-bloat rules
-VERSION / VERSIONING.md            release identity and compatibility policy
-PROJECT_INTENT_TEMPLATE.md         originating intent template
-PROJECT_PROFILE_TEMPLATE.json      runtime/project bindings template
-.agents/project/formal-resources.json    pinned formal dependencies
-CONTEXT_SOURCES_TEMPLATE.json      deterministic context-source policy
-.agents/bootstrap/NEW_AGENT_PROMPT.md                thin worker entry prompt
-bindings/                          semantic and authority bindings
-contracts/                         project contracts; acp-protected-effects.yaml projects effects onto ACP actions
-docs/                              operating definitions, conformance, and retained negative results
-schemas/                           machine-readable coordination/context/decision schemas
-scripts/                           init, context, validation, and release tooling
-tests/                             repository conformance tests
+AGENTS.md                          the execution contract (rendered into each project)
+AUTHORITY.md / GOVERNANCE.md       repository conflict-resolution authority and change rules
+VERSIONING.md                      release identity and compatibility policy
+.agents/acp/                       the ACP client: `acp` entry point, lib/, schemas/, README.md
+.agents/bootstrap/                 machinery: `bootstrap` entry point, VERSION, RELEASE.json,
+                                   scripts/, schemas/, docs/, profiles/, templates/
+.agents/bootstrap/templates/       what init renders into a project's .agents/project/
 .agents/skills/                    narrow reusable operating procedures
-profiles/commercialization/        optional CALP/PGP overlay
+.agents/records/                   this repository's evidence and negative results
+docs/                              repository-only status and retained negative results
+tests/                             repository conformance tests
 .github/                           CI, release, issue, and PR workflow definitions
 ```
+
+An installed project keeps only `AGENTS.md` at its root, plus its own README and `.gitignore`. Its own intent, profile, bindings, contracts and rules are in `.agents/project/`, and its ledgers are in `.agents/records/`.
 
 ## Conformance
 

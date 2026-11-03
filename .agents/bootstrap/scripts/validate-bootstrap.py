@@ -22,7 +22,7 @@ PROJECT_MODE = LAYOUT.path("installation").exists()
 SHIPPED_SCRIPTS = ("gen-context.py", "upgrade-project.py", "reconcile-project.py", "validate-local-work-items.py",
                    "validate-protocol-adapters.py", "validate-qualification.py", "validate-interaction-contract.py",
                    "recipient-status.py", "check-protocol-integrity.py", "esp-instance.py", "esp-record.py",
-                   "iepe-adopt.py", "validate-semantic-surface.py", "layout.py")
+                   "iepe-adopt.py", "validate-semantic-surface.py", "layout.py", "bootstrap_cli.py")
 BOOTSTRAP_SCHEMAS = ("agent-message.schema.json", "context-lock.schema.json", "context-sources.schema.json",
                      "formal-resource-manifest.schema.json", "work-disposition.schema.json",
                      "protocol-adapter.schema.json", "qualification-record.schema.json",
@@ -30,7 +30,8 @@ BOOTSTRAP_SCHEMAS = ("agent-message.schema.json", "context-lock.schema.json", "c
                      "external-state-instance.schema.json", "semantic-surface.schema.json")
 RULES = ("standards.md", "workflow.md", "codestyle.md", "types.md", "ci.md", "governance.md", "security.md")
 COMMON = [
-    LAYOUT.rel("version"), ".agents/acp/VERSION", "AGENTS.md", ".agents/acp/acp", ".agents/acp/README.md",
+    LAYOUT.rel("version"), "AGENTS.md", ".agents/bootstrap/bootstrap", ".agents/bootstrap/RELEASE.json",
+    ".agents/acp/VERSION", ".agents/acp/acp", ".agents/acp/README.md",
     *(f".agents/bootstrap/docs/{name}" for name in SHIPPED_DOCS if name != "ACP_INTEGRATION.md"),
     *(f".agents/bootstrap/schemas/{name}" for name in BOOTSTRAP_SCHEMAS),
     *(f".agents/acp/schemas/{name}" for name in ACP_SCHEMA_FILES),
@@ -105,8 +106,19 @@ def readme_findings(path: Path) -> list[str]:
     return findings
 
 
+def acp_removed() -> bool:
+    """`.agents/acp/acp uninstall` leaves authorizationProvider {"name": "none"}."""
+    try:
+        profile = json.loads(project_file(LAYOUT.rel("profile")).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return False
+    return (profile.get("authorizationProvider") or {}).get("name") == "none"
+
+
 def validate_acp(profile: dict) -> int:
     acp = profile.get("authorizationProvider")
+    if isinstance(acp, dict) and acp.get("name") == "none":
+        return 0
     if not isinstance(acp, dict):
         print("INVALID: profile must declare authorizationProvider (see .agents/acp/README.md)", file=sys.stderr)
         return 2
@@ -216,6 +228,8 @@ def main() -> int:
         print("INVALID: .agents is a symbolic link; bootstrap needs a real .agents/ directory", file=sys.stderr)
         return 2
     required = COMMON + (PROJECT_ONLY if project_mode else REPOSITORY_ONLY)
+    if project_mode and acp_removed():
+        required = [path for path in required if not path.startswith(".agents/acp/")]
     missing = [path for path in required if not (ROOT / path).exists()]
     if missing:
         print("MISSING:", *missing, sep="\n  ", file=sys.stderr)
@@ -244,13 +258,15 @@ def main() -> int:
     if not version or version.startswith("v"):
         print("INVALID: .agents/bootstrap/VERSION must contain bare SemVer", file=sys.stderr)
         return 2
-    if (ROOT / ".agents/acp/VERSION").read_text(encoding="utf-8").strip() != version:
+    acp_version = ROOT / ".agents/acp/VERSION"
+    if acp_version.exists() and acp_version.read_text(encoding="utf-8").strip() != version:
         print("INVALID: .agents/acp/VERSION and .agents/bootstrap/VERSION must name the same release",
               file=sys.stderr)
         return 2
 
     json_paths = [f".agents/bootstrap/schemas/{name}" for name in BOOTSTRAP_SCHEMAS[:5]]
-    json_paths += [f".agents/acp/schemas/{name}" for name in ACP_SCHEMA_FILES]
+    json_paths += [f".agents/acp/schemas/{name}" for name in ACP_SCHEMA_FILES
+                   if (ROOT / ".agents/acp/schemas" / name).exists()]
     project_json = [LAYOUT.rel(name) for name in ("profile", "formal_resources", "context_sources", "installation")]
     if project_mode:
         json_paths += project_json
