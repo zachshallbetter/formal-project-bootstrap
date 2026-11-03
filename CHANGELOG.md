@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.2 — Upgrades that keep project work and clean-checkout context
 
 - `gen-context.py` reads only files Git tracks or would add, so git-ignored
   local files no longer enter the corpus and a lock generated on one machine

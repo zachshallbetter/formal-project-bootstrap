@@ -1,7 +1,7 @@
 # Formal Project Bootstrap
 
 **Status:** Candidate reusable project substrate  
-**Version:** 0.6.1
+**Version:** 0.6.2
 
 Formal Project Bootstrap creates projects in which agents can operate for long periods with bounded autonomy because intent, authority, work, evidence, context, coordination, and recovery are explicit.
 

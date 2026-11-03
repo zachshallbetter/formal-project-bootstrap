@@ -1,12 +1,12 @@
 {
   "format": "2",
-  "generatorVersion": "0.6.1",
+  "generatorVersion": "0.6.2",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 786998,
+    "includedBytes": 787056,
     "excludedCounts": {
       "extension": 16
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "c64346110ffe451d8466b549972cfe8125c57c11",
-        "branch": "fix/context-respects-gitignore",
+        "commit": "7ee7fc4eba174e9a46cafef53650ed61d30c9c48",
+        "branch": "release/0.6.2",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "4eb91ad034c0db8a0768c865d546dad0c6fff9e549e6d9abb1cd727aaa0d392f",
+  "aggregateSourceDigest": "ea257e3af3ca518b2580371441910408dfcad786f060b8d26a3ed89adb4b6824",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -283,8 +283,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 11735,
-      "sha256": "8500e1522cc0d72290eaf152f9449424ee720ecc0204e94c6f110f08663ee8fc"
+      "bytes": 11793,
+      "sha256": "9d6be12f3a8d5bfa50296ad76c36e6fdbb98afaa0fa1ac685523007d426bc91e"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -329,12 +329,12 @@
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
       "bytes": 3347,
-      "sha256": "b7c27c8b6f9be8512edaed0bc3225b01d25366ab0b86415862f4b023f751640c"
+      "sha256": "6f7e3b82ba309d23bc69ca4247f53d3f24a2e94a9be7fbdcd09404ace9c0cf97"
     },
     {
       "path": "README.md",
       "bytes": 11526,
-      "sha256": "c91638a825b326033188dee4ae16a35a5a10b35924a10bfc40b0a5e7826930a3"
+      "sha256": "6cfe0c0d7ec4344ac6aaefcf8ac6e9a8d5dd9d41a921ffd792b5654114ea70be"
     },
     {
       "path": "SECURITY.md",
@@ -349,7 +349,7 @@
     {
       "path": "VERSION",
       "bytes": 6,
-      "sha256": "87b241b275c591694846560e9879f50c9da3150f854efdabd782c539772f3033"
+      "sha256": "a466ef209f5c3aee5ff0c702e2e9d5cced4783d2a655e8ab66330f21a5557b3f"
     },
     {
       "path": "VERSIONING.md",
@@ -479,7 +479,7 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "7a36956aa0d43eaa87c60d4c78061e46af3f40142809349c1e8cad1227c2f5e1"
+      "sha256": "43f17845da0ddbc701989673520fd286f61c6cfb3454474e3830a2d02b4fb965"
     },
     {
       "path": "docs/UPGRADING.md",
@@ -564,7 +564,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "f6ae6933df6d4c495dcc96c5fc411e924f287c01b45622cb4ff6e89b4f3d79e6"
+      "sha256": "4498c5102dff322e8d338fb32be2f75b1fead047a61c328fe16171ca28871764"
     },
     {
       "path": "requirements-dev.txt",
