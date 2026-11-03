@@ -36,6 +36,7 @@ class Stub(BaseHTTPRequestHandler):
     seen: list = []
     drop_post_ports: set[int] = set()
     delays: dict = {}
+    queues: dict = {}
     generation = 0
 
     def _answer(self, body=None):
@@ -54,6 +55,8 @@ class Stub(BaseHTTPRequestHandler):
                           "idempotency_key": self.headers.get("Idempotency-Key")})
         status, reply = Stub.routes_by_port.get(port, {}).get(
             path, Stub.routes.get(path, (404, {"error": "NOT_FOUND"})))
+        if Stub.queues.get(path):
+            status, reply = Stub.queues[path].pop(0)
         if self.headers.get("Authorization") not in (None, "Bearer " + TOKEN,
                                                        "Bearer " + FALLBACK_TOKEN) and path != "/health":
             status, reply = 401, {"error": "UNAUTHORIZED", "detail": "Missing or wrong bearer token."}
@@ -145,6 +148,7 @@ class AcpClientTests(unittest.TestCase):
         Stub.seen = []
         Stub.drop_post_ports = set()
         Stub.delays = {}
+        Stub.queues = {}
         Stub.generation += 1
 
     def write_endpoint_sets(self, endpoint_sets):
@@ -191,6 +195,61 @@ class AcpClientTests(unittest.TestCase):
         out = json.loads(cp.stdout)
         jsonschema.validate(out, self.schema)
         return cp.returncode, out
+
+    def declare_auto_deploy(self, **rule):
+        path = self.project / "PROJECT_PROFILE.json"
+        profile = json.loads(path.read_text(encoding="utf-8"))
+        profile["authorizationProvider"]["autoDeploy"] = [{"ref": MAIN, "environment": "production", **rule}]
+        path.write_text(json.dumps(profile, indent=2) + "\n", encoding="utf-8")
+
+    def deploy_decision(self, name="ALLOW", **extra):
+        fields = {"action": "production.deploy", "request_id": "r2",
+                  "authorized_action": {"action": "production.deploy", "ref": MAIN, "old_sha": OLD,
+                                        "new_sha": NEW}}
+        return decision(name, **{**fields, **extra})
+
+    def test_updating_an_auto_deployed_ref_also_asks_for_production_deploy(self):
+        self.declare_auto_deploy()
+        Stub.queues["/internal/authorize"] = [(200, decision()), (200, self.deploy_decision())]
+        code, out = self.authorize()
+        self.assertEqual(code, 0)
+        actions = [item["body"]["action"] for item in Stub.seen if item["path"] == "/internal/authorize"]
+        self.assertEqual(actions, ["git.protected_ref.update", "production.deploy"])
+        self.assertEqual(out["deploy_decision"]["decision"], "ALLOW")
+        self.assertEqual(out["deploy_decision"]["request_id"], "r2")
+
+    def test_a_refused_deploy_refuses_the_ref_update_with_a_reason(self):
+        self.declare_auto_deploy()
+        Stub.queues["/internal/authorize"] = [
+            (200, decision()),
+            (200, self.deploy_decision("DENY", reason="PROTECTED_ACTION_REQUIRES_VERIFICATION",
+                                       capability=None, capability_token=None, authorized_action=None))]
+        cp = self.acp("authorize", "--action", "git.protected_ref.update", "--ref", MAIN,
+                      "--old-sha", OLD, "--new-sha", NEW)
+        self.assertEqual(cp.returncode, 11)
+        self.assertIn("deploys production automatically", cp.stderr)
+        self.assertIn("do not update the ref", cp.stderr)
+        self.assertEqual(json.loads(cp.stdout)["deploy_decision"]["decision"], "DENY")
+
+    def test_an_owner_who_made_the_merge_the_deploy_decision_gets_one_request(self):
+        self.declare_auto_deploy(decision="merge")
+        Stub.routes["/internal/authorize"] = (200, decision())
+        code, out = self.authorize()
+        self.assertEqual(code, 0)
+        self.assertNotIn("deploy_decision", out)
+        self.assertEqual(sum(item["path"] == "/internal/authorize" for item in Stub.seen), 1)
+
+    def test_an_undeclared_vercel_project_gets_a_warning_not_a_refusal(self):
+        Stub.routes["/internal/authorize"] = (200, decision())
+        (self.project / "vercel.json").write_text("{}", encoding="utf-8")
+        try:
+            cp = self.acp("authorize", "--action", "git.protected_ref.update", "--ref", MAIN,
+                          "--old-sha", OLD, "--new-sha", NEW)
+        finally:
+            (self.project / "vercel.json").unlink()
+        self.assertEqual(cp.returncode, 0)
+        self.assertIn("vercel.json suggests refs/heads/main deploys automatically", cp.stderr)
+        self.assertIn("authorizationProvider.autoDeploy", cp.stderr)
 
     def test_database_migration_sends_and_checks_the_exact_six_field_scope(self):
         context = {"source_database": "source-project/source-db",

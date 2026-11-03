@@ -6,6 +6,10 @@
   so uncommitted edits to tracked files never reach a committed lock.
   `--install-hook` installs an opt-in pre-commit hook that runs it and stages
   the lock (#18).
+- `authorizationProvider.autoDeploy` declares refs whose update deploys an
+  environment. `acp.py authorize` for such a ref also obtains `production.deploy`
+  and refuses unless both are allowed; a repository with Vercel or Netlify
+  configuration that declares nothing gets a warning (#19).
 
 ## 0.6.2 — Upgrades that keep project work and clean-checkout context
 

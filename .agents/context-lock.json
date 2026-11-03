@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 149,
-    "includedBytes": 799327,
+    "includedBytes": 806620,
     "excludedCounts": {
       "extension": 17
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "923ec4096c0df94f7f426d8c7b78710707fcb280",
+        "commit": "5a9ce2dfc8333630dfb4aff846ea5ec7a07c4a57",
         "branch": "feat/staged-context",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "569ed4947cc6cf6e820de5ff3f58d3567558057d7eed04f546161811bab44e3b",
+  "aggregateSourceDigest": "c3588fe2706ba3c753f835eddbd5db1ed8743d349db4a6ff36298cb2f8d99290",
   "sources": [
     {
       "path": ".agents/rules/ci.md",
@@ -283,8 +283,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 12054,
-      "sha256": "7a9c26cbcb210accbca56599f821c69836b2ad3e2553bd97b35baa29344b323c"
+      "bytes": 12346,
+      "sha256": "2eb37372018479b15aa534afa953699136e883003cf5a84a08e3d662055dc82d"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -328,8 +328,8 @@
     },
     {
       "path": "PROJECT_PROFILE_TEMPLATE.json",
-      "bytes": 3347,
-      "sha256": "6f7e3b82ba309d23bc69ca4247f53d3f24a2e94a9be7fbdcd09404ace9c0cf97"
+      "bytes": 3369,
+      "sha256": "b0427cfe9fb1a66adf8d56999029eda6ba4c66d9ffd19cab72254cdb7b816a1c"
     },
     {
       "path": "README.md",
@@ -373,8 +373,8 @@
     },
     {
       "path": "docs/ACP_INTEGRATION.md",
-      "bytes": 29258,
-      "sha256": "a42d94a1a771e2f7e258e3583deb9bcf3f5c065f77ddd99c404fa8a46ec26591"
+      "bytes": 30075,
+      "sha256": "eb889285bf82813f8c36f0c301cea37526e6a7f6bc5dbccc4e4dfb528958d7ae"
     },
     {
       "path": "docs/AGENT_CAPABILITIES.md",
@@ -573,8 +573,8 @@
     },
     {
       "path": "schemas/acp-decision.schema.json",
-      "bytes": 5605,
-      "sha256": "2a870190e4a3d208b765054b04de35819570770639e93e16ebb52d4365e8c76c"
+      "bytes": 5822,
+      "sha256": "14104b5c057c8e09bcb8ab1f132f9c9e7266e50d8c7b7f4f6973adafb0b02641"
     },
     {
       "path": "schemas/acp-endpoint-registry.schema.json",
@@ -643,8 +643,8 @@
     },
     {
       "path": "scripts/acp.py",
-      "bytes": 59939,
-      "sha256": "438ae9b3e8cba6a8adca3bd4079a488342a1d939f7971e4ad06f80cdeb4e010d"
+      "bytes": 62581,
+      "sha256": "c9610122272b702b81df1a3c27cc3baf127421776d547e96fac2613238035c61"
     },
     {
       "path": "scripts/acp_endpoint_registry.py",
@@ -753,8 +753,8 @@
     },
     {
       "path": "tests/test_acp_client.py",
-      "bytes": 69211,
-      "sha256": "dce4d63c271bcb920273ee2fb54fd0040f7d6d085f57ac20bc5c75215798efc8"
+      "bytes": 72514,
+      "sha256": "98bdab088a4f5f89a4f5c2f58aba4f6ac2b2d03a83891d3bb7823075c37c6382"
     },
     {
       "path": "tests/test_protocol_adapters.py",
