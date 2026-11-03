@@ -10,6 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from layout import (  # noqa: E402
     ACP_LIB_FILES, ACP_SCHEMA_FILES, RECORD_FILES, SHIPPED_DOCS, TEMPLATES, Layout, find_project_root,

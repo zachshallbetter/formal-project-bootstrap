@@ -6,7 +6,7 @@
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 155,
-    "includedBytes": 947756,
+    "includedBytes": 948397,
     "excludedCounts": {
       "extension": 22
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "95965b017fece3d5afd131eeb301c2ed984d411b",
+        "commit": "2c5fa083ce5b122564d9d08f68487ba07424a8cc",
         "branch": "fix/context-counts-tracked-only",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "095c9317449bb376ea008d3d48b8353dfc6c024e83e4553ba5ac345dfc5327aa",
+  "aggregateSourceDigest": "ee86dfaff1d411c60d1510570eee4f048707ea47a71e37b80cc3dd4d1ea1cc26",
   "sources": [
     {
       "path": ".agents/acp/README.md",
@@ -79,7 +79,7 @@
     {
       "path": ".agents/bootstrap/RELEASE.json",
       "bytes": 15368,
-      "sha256": "0ffbb755ac528fa205966b73492001d1ec9c168efc72000887f31e0c86d7ab36"
+      "sha256": "3a46f1b04a6cc6155d75596467b1747a05efe54dce5c9730011211cb7c792e5a"
     },
     {
       "path": ".agents/bootstrap/docs/AGENT_CAPABILITIES.md",
@@ -298,43 +298,43 @@
     },
     {
       "path": ".agents/bootstrap/scripts/check-all.py",
-      "bytes": 978,
-      "sha256": "21eedfc2cc7613c70fb3dc103d46ee270cd72e26bf967f538d34a51142cdb97d"
+      "bytes": 1009,
+      "sha256": "5491fd4a1cba3ac8f2160c0366c0f567719989e71cd6dfcc64e2aaa0482d31b4"
     },
     {
       "path": ".agents/bootstrap/scripts/check-negative-results.py",
-      "bytes": 7569,
-      "sha256": "0e1d37b081a084b4799abe1f022f6f96549148c573e79e576069a3d32d33b697"
+      "bytes": 7600,
+      "sha256": "53366742e688732e9efc8fb4ab6349c6f3bd67d7de1a913b3f48ce2b566e1c41"
     },
     {
       "path": ".agents/bootstrap/scripts/check-protocol-integrity.py",
-      "bytes": 7217,
-      "sha256": "7d06358e117e43a74202f9154e5e5bce3f76190041178acba4ab8312cdd05d20"
+      "bytes": 7248,
+      "sha256": "0d05af5f49412e870deb39e0ee38735ca87a601ad44cada4af51bf3a3c0568a6"
     },
     {
       "path": ".agents/bootstrap/scripts/esp-instance.py",
-      "bytes": 6647,
-      "sha256": "65737b01d617209eea6c7105df9694500305b35a0409e42c565c191985bba1b2"
+      "bytes": 6678,
+      "sha256": "bea9a57577f7c30f551150482ef9d2ef53bd04579a647a4ada625f23aff8c1a5"
     },
     {
       "path": ".agents/bootstrap/scripts/esp-record.py",
-      "bytes": 3460,
-      "sha256": "456148c40a949062c6f22b41bcc6bdd223c5622b8d22028e1a9687eab56de22e"
+      "bytes": 3491,
+      "sha256": "40cb9f23aaecdb379d616f27493e9c753516daeebb309555505fdcb9a91b1b86"
     },
     {
       "path": ".agents/bootstrap/scripts/gen-context.py",
-      "bytes": 21873,
-      "sha256": "95279321b5dacd60cfcdb7398574b375ea65bf60dd4bc528487340af3e69f7c0"
+      "bytes": 22049,
+      "sha256": "06d7b44469116af4a8589e07031cab56190d2bc2ba3623358f168e11b4023388"
     },
     {
       "path": ".agents/bootstrap/scripts/iepe-adopt.py",
-      "bytes": 3661,
-      "sha256": "9f04ba8e331ff99c40ce205b6320b84b3a259440ce29c937cf1b262716c47d6a"
+      "bytes": 3692,
+      "sha256": "2d74eba0614f815d04469a8955478510ad183e6b74557d9e4e6459da5e3d27c8"
     },
     {
       "path": ".agents/bootstrap/scripts/init-project.py",
-      "bytes": 21677,
-      "sha256": "a52e25e18b44d7e6eb58b5baae9835955ab604100f8b3aafbc619acfa0cf49a4"
+      "bytes": 21708,
+      "sha256": "5d4ac27f50f0aafd4b690986c492ad490dc53b7082e8bd13f30cce9c3464007d"
     },
     {
       "path": ".agents/bootstrap/scripts/layout.py",
@@ -343,8 +343,8 @@
     },
     {
       "path": ".agents/bootstrap/scripts/package-release.py",
-      "bytes": 4448,
-      "sha256": "28784b7194cbef3f459ecd3cb61f309f27c1088deaacf25fb7f688f7edd5398a"
+      "bytes": 4479,
+      "sha256": "a3e62e661b7a69eff54ac5d5355f90d358d2357fb61f119f907045d52eb9efb3"
     },
     {
       "path": ".agents/bootstrap/scripts/recipient-status.py",
@@ -353,28 +353,28 @@
     },
     {
       "path": ".agents/bootstrap/scripts/reconcile-project.py",
-      "bytes": 16849,
-      "sha256": "26fbecf23e8ceb38bf0b8ce73731ec45154cca94cd23c16476f3117d19fa0438"
+      "bytes": 16880,
+      "sha256": "6a2243ff90bcb3ee61d3ab37b0cb28deb2576a3e7d23f35c5d9ac8fe449cde8d"
     },
     {
       "path": ".agents/bootstrap/scripts/release-manifest.py",
-      "bytes": 1248,
-      "sha256": "7a9c92b00691e23853066992539c5f9174d612c812e89da2499598b319549c2f"
+      "bytes": 1279,
+      "sha256": "8ca7668c115904bfe35ef8e284f9bc0a8ead1d8d8d7d1db5036146fa40f0efba"
     },
     {
       "path": ".agents/bootstrap/scripts/upgrade-project.py",
-      "bytes": 30508,
-      "sha256": "6c4f6ee578d2e849e3b8fc794986adc857a31bdc411a771d7830a727a9ad40e0"
+      "bytes": 30539,
+      "sha256": "594a43c8298941f6e67c2d4023d2a14ba2088eae91186418d7c970bf934cdeed"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-bootstrap.py",
-      "bytes": 15803,
-      "sha256": "70267c0b0ce63355da2292082855b5fb26d5a8027ab6838540925edbf38f1eff"
+      "bytes": 15834,
+      "sha256": "c324d52123bda6ffa271b8b428152d40e97130346af5958fcf4c0df17b88d990"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-formal-files.py",
-      "bytes": 1815,
-      "sha256": "4c492ed4d54669d137400bd564c9782e51307b54338a347f8450bcc8bae2a6b5"
+      "bytes": 1846,
+      "sha256": "10f70724613bb4a81c096dc29fada389f86650e93d36fd1f749e8bf0b98d6369"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-interaction-contract.py",
@@ -383,13 +383,13 @@
     },
     {
       "path": ".agents/bootstrap/scripts/validate-local-work-items.py",
-      "bytes": 6010,
-      "sha256": "d12f7858bde7e79e42f48a418db6295244d6f39f19df7bf795265c9970e88e32"
+      "bytes": 6041,
+      "sha256": "19b243c3da8b2be7f74324f1c86a4c754838993b4a24c6daf7e2c90b2183fbcf"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-protocol-adapters.py",
-      "bytes": 3325,
-      "sha256": "9cdbb0c01bebc06765631ba208f565fc0d6e6d1151761612cffa2bb95419b5aa"
+      "bytes": 3356,
+      "sha256": "8cea2337ec39cc7b7ca6cda09bbf8149f590f6932ceefaa5c3d270b982eb29d2"
     },
     {
       "path": ".agents/bootstrap/scripts/validate-qualification.py",

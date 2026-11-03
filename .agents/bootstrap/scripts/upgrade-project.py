@@ -22,6 +22,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from layout import (  # noqa: E402
     LEGACY_DIRECTORIES, PATHS, PROJECT_OWNED_DIRS, RECORD_FILES, TEMPLATES, Layout, contained_path,

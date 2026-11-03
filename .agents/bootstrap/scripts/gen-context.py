@@ -293,6 +293,8 @@ def source_files(
     tracked = None if staged else tracked_paths()
 
     def skip(reason: str, rel: str) -> None:
+        if "__pycache__" in rel.split("/") or rel.endswith((".pyc", ".pyo")):
+            return                     # interpreter caches are never sources and vary by machine
         if tracked is None or rel in tracked:
             skipped[reason] = skipped.get(reason, 0) + 1
 
