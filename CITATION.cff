@@ -10,8 +10,8 @@ authors:
   - family-names: Shallbetter
     given-names: Zachary
     orcid: "https://orcid.org/0009-0009-9450-3429"
-version: "0.7.3"
-date-released: "2026-11-03"
+version: "0.7.4"
+date-released: "2026-11-04"
 license: MIT
 repository-code: "https://github.com/zachshallbetter/formal-project-bootstrap"
 url: "https://github.com/zachshallbetter/formal-project-bootstrap"

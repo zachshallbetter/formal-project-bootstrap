@@ -70,7 +70,10 @@ _HTTP = build_opener(_NoRedirect())
 MAX_HTTP_RESPONSE_BYTES = 8 * 1024 * 1024
 # A healthy serverless /ready answers in ~1.3-1.6s warm and slower from a cold start; a tighter
 # limit turns a slow but ready endpoint into "no endpoint reports readiness".
-READINESS_PROBE_TIMEOUT = 8.0
+READINESS_PROBE_TIMEOUT = float(os.environ.get("ACP_READINESS_PROBE_TIMEOUT", "8.0"))
+# A transport timeout on /ready is probed once more while the deadline allows: a cold-starting endpoint usually
+# answers the second request. A refused or malformed answer is never retried.
+READINESS_PROBE_ATTEMPTS = 2
 TRANSIENT_READ_ERRORS = frozenset({"UPSTREAM_FAILURE", "TEMPORARY", "SERVICE_UNAVAILABLE"})
 HARD_STOP_READINESS_ERRORS = frozenset({"APP_NOT_CONFIGURED", "POLICY_INVALID", "SECURITY_STATE_UNAVAILABLE",
                                        "STATE_STORE_UNAVAILABLE", "INTEGRITY_INVALID", "INTEGRITY_MISMATCH",
@@ -325,17 +328,30 @@ def select_endpoint(cfg: dict, timeout: float = 15.0, admin: bool = False,
             failures.append("readiness deadline exhausted before remaining endpoints were probed")
             break
         probe = f"{endpoint['name']} /ready"
-        limit = min(remaining, READINESS_PROBE_TIMEOUT)
-        started = time.monotonic()
-        try:
-            status, body = _http_call(endpoint, "GET", "/ready", auth=False, timeout=limit)
-        except ResponseRejected:
-            raise
-        except Unreachable:
-            elapsed = round((time.monotonic() - started) * 1000)
-            hint = (f" (probe limit {round(limit * 1000)}ms; the endpoint may be cold-starting, retry or raise --timeout)"
-                    if elapsed >= limit * 1000 * 0.9 else "")
-            failures.append(f"{probe}: transport unavailable after {elapsed}ms{hint}")
+        attempts, status, body, timings = 0, None, None, []
+        while True:
+            remaining = deadline - time.monotonic()
+            limit = min(remaining, READINESS_PROBE_TIMEOUT)
+            attempts += 1
+            started = time.monotonic()
+            try:
+                status, body = _http_call(endpoint, "GET", "/ready", auth=False, timeout=limit)
+                break
+            except ResponseRejected:
+                raise
+            except Unreachable:
+                elapsed = round((time.monotonic() - started) * 1000)
+                timings.append(elapsed)
+                timed_out = elapsed >= limit * 1000 * 0.9
+                if timed_out and attempts < READINESS_PROBE_ATTEMPTS and deadline - time.monotonic() > 0.5:
+                    continue
+                break
+        if status is None:
+            tried = " and ".join(f"{ms}ms" for ms in timings)
+            hint = (f" (probe limit {round(READINESS_PROBE_TIMEOUT * 1000)}ms per attempt, {attempts} attempt(s); "
+                    "the endpoint may be cold-starting: retry, or raise --timeout to allow a second attempt)"
+                    if timed_out else "")
+            failures.append(f"{probe}: transport unavailable after {tried}{hint}")
             continue
         if (status == 200 and isinstance(body, dict) and body.get("status") == "ready"
                 and body.get("storage") == "postgres"):
