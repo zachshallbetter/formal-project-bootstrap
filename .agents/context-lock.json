@@ -1,12 +1,12 @@
 {
   "format": "2",
-  "generatorVersion": "0.7.3",
+  "generatorVersion": "0.7.4",
   "root": ".",
   "validityBasis": "aggregate-source-digest",
   "selectedPaths": [],
   "sourceSelection": {
     "includedCount": 155,
-    "includedBytes": 957348,
+    "includedBytes": 960331,
     "excludedCounts": {
       "extension": 22
     }
@@ -17,14 +17,14 @@
     "repositories": [
       {
         "path": ".",
-        "commit": "c43c689b5de09b1e1963a0d6f0d11ef45ccc91e9",
-        "branch": "fix/0.7.3-migration",
+        "commit": "f36fcd1468aaca66fda00f671a2efcc1df225fc6",
+        "branch": "fix/readiness-probe-retry",
         "dirty": true,
         "remote": "https://github.com/zachshallbetter/formal-project-bootstrap.git"
       }
     ]
   },
-  "aggregateSourceDigest": "7da82ea383783ff30e2d6d4ea5624359ca8271a1a8ca52e9e978fb338fe41b30",
+  "aggregateSourceDigest": "d0a84730ef76b2242237c3b745c510fac12b47a25c00f52b4b368fe80e9becf5",
   "sources": [
     {
       "path": ".agents/acp/README.md",
@@ -38,8 +38,8 @@
     },
     {
       "path": ".agents/acp/lib/acp.py",
-      "bytes": 62603,
-      "sha256": "b07c3fc0ae6b3d945e62dfaec1428083ab55e54ddb49d57883f34708128035c1"
+      "bytes": 63515,
+      "sha256": "3ec112bc12ac682e75f8b918da70622a80bf30ac95b86ebf97e9a00c157aca76"
     },
     {
       "path": ".agents/acp/lib/acp_commands.py",
@@ -79,7 +79,7 @@
     {
       "path": ".agents/bootstrap/RELEASE.json",
       "bytes": 15368,
-      "sha256": "408a1b489a03be0380c72ec52d144def28515d1064dce5140dc6a76b8ce3d315"
+      "sha256": "da848b8a66ad41b7af9403bda9b561e70ff8658ff5253884ab4463f99e6b7787"
     },
     {
       "path": ".agents/bootstrap/docs/AGENT_CAPABILITIES.md",
@@ -693,8 +693,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 16391,
-      "sha256": "50b7b7c96b3f21087572a2003c46e9a1e8877eefcaf54a67ca3fde0ebc7b26df"
+      "bytes": 17191,
+      "sha256": "aaba35b2e521fc67427382306c148fa8c38db688674465ba1e6e130fbc2e45ac"
     },
     {
       "path": "CODE_OF_CONDUCT.md",
@@ -719,7 +719,7 @@
     {
       "path": "README.md",
       "bytes": 11837,
-      "sha256": "1f4dfeb21e327bd7f7725da466ce6255b6febfb61e85335086583f881bd6de61"
+      "sha256": "24b25f15a2998169c5b2a2977dfa8f8bde425a41fad93f16002962532822ce63"
     },
     {
       "path": "SECURITY.md",
@@ -744,7 +744,7 @@
     {
       "path": "docs/STATUS.md",
       "bytes": 858,
-      "sha256": "9d7242f50217a90f66f11fa0b7688caf29c556b8ae6e66e056e5470c21700b27"
+      "sha256": "225715ee4d007f07470eb82cb6aadde54bcd5495b0cb149728478df90ba44b44"
     },
     {
       "path": "docs/pin-digest-procedure/PROPOSAL.md",
@@ -769,7 +769,7 @@
     {
       "path": "pyproject.toml",
       "bytes": 222,
-      "sha256": "b88ae142cf1843d0ef59fb290fe6bb4d1ef4450ec0eff6cd4aa057c61c13ff8b"
+      "sha256": "488b688e8183f4cac44c6364cfa87e38b29d8daa44e1de9eae61938e2d712c7c"
     },
     {
       "path": "requirements-dev.txt",
@@ -778,8 +778,8 @@
     },
     {
       "path": "tests/test_acp_client.py",
-      "bytes": 72858,
-      "sha256": "261edf9127a2ba80005de9e4ebb94245b1a0cb32fd54f484a3da7ca61d73be48"
+      "bytes": 74129,
+      "sha256": "41147925a3e6ab277df46651f2f4d51a955e787e1ce252b99a04d432e87139ea"
     },
     {
       "path": "tests/test_contained_layout.py",

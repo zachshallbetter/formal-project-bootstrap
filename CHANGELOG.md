@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.7.4 — Readiness probes that survive a cold start
+
+- `acp` probed an endpoint's `/ready` once, capped at 8 s, whatever `--timeout`
+  said. A gateway whose cold start took just over 8 s failed closed on every
+  governed push, and the hint told the user to raise `--timeout`, which could not
+  help. A transport timeout on `/ready` is now probed once more while the
+  deadline allows: a cold-starting endpoint usually answers the second request.
+  A refused or malformed answer is still never retried, and an endpoint that
+  stays slow still fails closed after two attempts.
+- The failure names each attempt's time, the per-attempt limit and the number of
+  attempts, and says `--timeout` allows the second attempt.
+- `ACP_READINESS_PROBE_TIMEOUT` overrides the per-attempt limit (default 8 s).
+
 ## 0.7.3 — Migrations that leave a project's own files alone
 
 - The 0.7 migration moved every file under a legacy `profiles/` directory into

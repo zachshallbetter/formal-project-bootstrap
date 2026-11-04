@@ -43,7 +43,10 @@ class Stub(BaseHTTPRequestHandler):
         path = self.path.split("?")[0]
         port = self.server.server_address[1]
         generation = Stub.generation
-        time.sleep(Stub.delays.get(path, 0))
+        delay = Stub.delays.get(path, 0)
+        if isinstance(delay, list):  # one delay per request, then none: a cold start followed by a warm one
+            delay = delay.pop(0) if delay else 0
+        time.sleep(delay)
         if generation != Stub.generation:
             # A delayed answer that outlived its test: the client is gone, so record nothing.
             self.close_connection = True
@@ -978,8 +981,25 @@ class AcpClientTests(unittest.TestCase):
         cp = self.acp("--timeout", "1", "notice")
         self.assertEqual(cp.returncode, 4)
         self.assertIn("vercel /ready: transport unavailable", cp.stderr)
-        self.assertIn("probe limit 1000ms", cp.stderr)
-        self.assertIn("retry or raise --timeout", cp.stderr)
+        self.assertIn("probe limit", cp.stderr)
+        self.assertIn("raise --timeout to allow a second attempt", cp.stderr)
+        self.assertFalse(any(item["path"] == "/notice" for item in Stub.seen))
+
+    def test_cold_start_is_probed_again_and_then_selected(self):
+        Stub.delays["/ready"] = [1.5]
+        cp = self.acp("--timeout", "5", "notice", env={"ACP_READINESS_PROBE_TIMEOUT": "1"})
+        self.assertEqual(cp.returncode, 0, cp.stderr)
+        time.sleep(1.6)  # the stub logs a request after its delay; let the timed-out first one land
+        self.assertEqual(sum(item["path"] == "/ready" for item in Stub.seen), 2)
+        self.assertTrue(any(item["path"] == "/notice" for item in Stub.seen))
+
+    def test_an_endpoint_that_stays_slow_is_probed_at_most_twice_and_fails_closed(self):
+        Stub.delays["/ready"] = 1.5
+        cp = self.acp("--timeout", "5", "notice", env={"ACP_READINESS_PROBE_TIMEOUT": "1"})
+        self.assertEqual(cp.returncode, 4)
+        time.sleep(1.6)  # the stub logs a request after its delay; let the timed-out first one land
+        self.assertEqual(sum(item["path"] == "/ready" for item in Stub.seen), 2)
+        self.assertIn("2 attempt(s)", cp.stderr)
         self.assertFalse(any(item["path"] == "/notice" for item in Stub.seen))
 
     def test_shared_state_identity_mismatch_stops_failover_before_request(self):
